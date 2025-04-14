@@ -1,0 +1,26 @@
+<div class="verify-otp-container">
+    <div class="verify-otp-card">
+      <div class="header">
+        <h1>Enter OTP</h1>
+        <div class="timer">Time remaining: <span id="countdown">{{timeLeft}}s</span></div>
+      </div>
+      
+      <form class="verify-otp-form" [formGroup]="otpForm" (ngSubmit)="onConfirm()" >
+        <div class="form-group">
+          <label for="otp">Enter the valid OTP</label>
+          <input type="number" id="otp" formControlName="otp" required>
+        </div>
+        
+        <button type="submit" [disabled]="isBtnDisabled" class="confirm-btn">Confirm</button>
+        
+        <div class="resend-link" [hidden]="isLinkVisible" >
+          <a (click)="resendOtp()" id="resendLink">Resend OTP</a>
+        </div>
+        
+        <div class="terms-text">
+          <p>You may unsubscribe from receiving marketing communications at any time.</p>
+          <p>Notion's websites and communications are subject to our <a href="#">Privacy Policy</a>.</p>
+        </div>
+      </form>
+    </div>
+  </div>

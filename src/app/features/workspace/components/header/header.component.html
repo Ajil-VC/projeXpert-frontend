@@ -1,0 +1,75 @@
+<!-- header.component.html -->
+<header class="app-header">
+  <div class="header-left">
+
+    <nav class="main-nav">
+      <ul>
+        <li class="dropdown">
+          <a href="javascript:void(0)" (click)="toggleWorkspaceMenu()">
+            Projects <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" *ngIf="showWorkspaceMenu">
+            <div class="dropdown-header">Your Projects</div>
+            <a *ngFor="let workspace of currentUser?.workSpaces" href="javascript:void(0)">
+              <!--(click)="selectWorkspace(workspace) Need to give this in the above tag"-->
+              {{currentWorkspace?.name}}
+            </a>
+            <div class="dropdown-divider"></div>
+            <a (click)="createNewWorkspace()" class="create-new">
+              <i class="fas fa-plus-circle"></i> Create New Project
+            </a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="javascript:void(0)">
+            Teams <i class="fas fa-chevron-down"></i>
+          </a>
+        </li>
+        <li class="dropdown">
+          <a href="javascript:void(0)">
+            Plans <i class="fas fa-chevron-down"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="header-right">
+    <div class="current-workspace">
+      <div class="workspace-icon">{{ currentUser?.workSpaces}}</div>
+      <div class="workspace-info">
+        <div class="workspace-name">{{ currentWorkspace?.name }}</div>
+        <div class="workspace-subtitle">Welcome back to {{ currentUser?.name}}</div>
+      </div>
+    </div>
+
+    <div class="header-icons">
+      <button class="icon-button">
+        <i class="far fa-bell"></i>
+      </button>
+      <button class="icon-button">
+        <i class="far fa-question-circle"></i>
+      </button>
+      <button class="icon-button" (click)="toggleUserMenu()">
+        <!-- <img [src]="currentUser.avatar" alt="User avatar" class="user-avatar"> -->
+        <i class="fas fa-cog"></i>
+      </button>
+      <div class="user-menu">
+        <div class="user-dropdown" *ngIf="showUserMenu">
+          <div class="user-dropdown-header">
+            <div class="user-info">
+              <div class="user-name">{{ currentUser?.name }}</div>
+              <div class="user-email">stephen.williamsexample.com</div>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a href="javascript:void(0)">Profile Settings</a>
+          <a href="javascript:void(0)">Account Settings</a>
+          <a href="javascript:void(0)">Subscription Plan</a>
+          <div class="dropdown-divider"></div>
+          <a href="javascript:void(0)" class="logout">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

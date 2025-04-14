@@ -1,0 +1,233 @@
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background-color);
+    color: #ffffff;
+    padding: 0 20px;
+    height: 60px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav ul li {
+    position: relative;
+    margin-right: 15px;
+}
+
+.main-nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.main-nav ul li a i {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--text-color);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    min-width: 200px;
+    z-index: 100;
+}
+
+.dropdown .dropdown-content .dropdown-header {
+    padding: 10px 15px;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.dropdown .dropdown-content a {
+    display: block;
+    padding: 10px 15px;
+    color: #4c4c4c;
+    text-decoration: none;
+}
+
+.dropdown .dropdown-content a:hover {
+    background-color: var(--background-color);
+}
+
+.dropdown .dropdown-content a.create-new {
+    color: #36b37e;
+}
+
+.dropdown .dropdown-content a.create-new i {
+    margin-right: 5px;
+}
+
+.dropdown .dropdown-content .dropdown-divider {
+    border-top: 1px solid #e9ecef;
+    margin: 5px 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.current-workspace {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.current-workspace .workspace-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: #ff5630;
+    color: #ffffff;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.current-workspace .workspace-info .workspace-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.current-workspace .workspace-info .workspace-subtitle {
+    font-size: 12px;
+    color: #a9a9a9;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+}
+
+.header-icons .icon-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 8px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.header-icons .icon-button:hover {
+    color: #36b37e;
+}
+
+.header-icons .user-menu {
+    position: relative;
+    margin-left: 10px;
+}
+
+.header-icons .user-menu .user-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.header-icons .user-menu .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.header-icons .user-menu .user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    z-index: 100;
+}
+
+.header-icons .user-menu .user-dropdown .user-dropdown-header {
+    padding: 15px;
+}
+
+.header-icons .user-menu .user-dropdown .user-dropdown-header .user-name {
+    font-weight: 600;
+    color: #4c4c4c;
+}
+
+.header-icons .user-menu .user-dropdown .user-dropdown-header .user-email {
+    font-size: 12px;
+    color: #a9a9a9;
+}
+
+.header-icons .user-menu .user-dropdown a {
+    display: block;
+    padding: 10px 15px;
+    color: #4c4c4c;
+    text-decoration: none;
+}
+
+.header-icons .user-menu .user-dropdown a:hover {
+    background-color: #f5f5f8;
+}
+
+.header-icons .user-menu .user-dropdown a.logout {
+    color: #ff5630;
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0 10px;
+    }
+
+    .logo {
+        margin-right: 10px;
+    }
+
+    .current-workspace .workspace-subtitle {
+        display: none;
+    }
+
+    .current-workspace .workspace-icon {
+        margin-right: 5px;
+    }
+
+    .header-right .current-workspace {
+        margin-right: 5px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-nav {
+        display: none;
+    }
+
+    .current-workspace .workspace-info {
+        display: none;
+    }
+}

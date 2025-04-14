@@ -1,0 +1,372 @@
+.dashboard-container {
+    padding: 20px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.dashboard-header .path-nav {
+    width: 100%;
+    color: #6b778c;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.dashboard-header .dashboard-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color : white
+}
+
+.dashboard-header .dashboard-actions {
+    display: flex;
+}
+
+.dashboard-header .dashboard-actions .action-button {
+    background: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: var(--text-color);
+    color : var(--dark-gray);
+}
+
+.dashboard-header .dashboard-actions .action-button:hover {
+    background-color: var(--medium-gray);
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-cards .card {
+    background: var(--text-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.summary-cards .card .card-header {
+    padding: 15px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+}
+
+.summary-cards .card .card-header i {
+    font-size: 18px;
+
+}
+
+.summary-cards .card .card-header.card-color-green {
+    background-color: #36b37e;
+}
+
+.summary-cards .card .card-header.card-color-blue {
+    background-color: #0052cc;
+}
+
+.summary-cards .card .card-header.card-color-orange {
+    background-color: #ff9900;
+}
+
+.summary-cards .card .card-header.card-color-red {
+    background-color: #ff5630;
+}
+
+.summary-cards .card .card-body {
+    padding: 15px;
+}
+
+.summary-cards .card .card-body .card-count {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color : white;
+}
+
+.summary-cards .card .card-body .card-label {
+    font-size: 16px;
+    color: white;
+}
+
+.summary-cards .card .card-body .card-sublabel {
+    font-size: 12px;
+    color: #6b778c;
+    margin-top: 5px;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-section {
+    background: var(--text-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-section .section-header {
+    margin-bottom: 20px;
+    color : white
+}
+
+.dashboard-section .section-header h2 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dashboard-section .section-header .section-subtitle {
+    color: #6b778c;
+    font-size: 14px;
+}
+
+.dashboard-section .section-header .section-subtitle a {
+    color: #0052cc;
+    text-decoration: none;
+}
+
+.dashboard-section .section-header .section-subtitle a:hover {
+    text-decoration: underline;
+}
+
+.dashboard-section .section-header .section-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dashboard-section .section-header .section-actions a {
+    color: #0052cc;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dashboard-section .section-header .section-actions a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.status-legend {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.status-legend .status-item {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #6b778c;
+}
+
+.status-legend .status-item i {
+    margin-right: 5px;
+    font-size: 10px;
+}
+
+.status-legend .status-item i.status-done {
+    color: #36b37e;
+}
+
+.status-legend .status-item i.status-progress {
+    color: #0052cc;
+}
+
+.status-legend .status-item i.status-todo {
+    color: #6b778c;
+}
+
+.epic-list .epic-item {
+    margin-bottom: 15px;
+}
+
+.epic-list .epic-item .epic-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.epic-list .epic-item .epic-header .epic-id {
+    display: flex;
+    align-items: center;
+    color: #6b778c;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.epic-list .epic-item .epic-header .epic-id i {
+    margin-right: 5px;
+    color: #0052cc;
+}
+
+.epic-list .epic-item .epic-header .epic-title {
+    font-weight: 500;
+}
+
+.epic-list .epic-item .epic-progress .progress-bar {
+    height: 8px;
+    background-color: #f1f3f5;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.epic-list .epic-item .epic-progress .progress-bar .progress-fill {
+    height: 100%;
+    background-color: #36b37e;
+    border-radius: 4px;
+}
+
+.activity-list .activity-item {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.activity-list .activity-item .activity-avatar {
+    margin-right: 15px;
+}
+
+.activity-list .activity-item .activity-avatar .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #0052cc;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.activity-list .activity-item .activity-content {
+    flex: 1;
+}
+
+.activity-list .activity-item .activity-content .activity-text {
+    margin-bottom: 5px;
+    line-height: 1.4;
+    color : var(--medium-gray);
+}
+
+.activity-list .activity-item .activity-content .activity-text .user-name {
+    font-weight: 600;
+}
+
+.activity-list .activity-item .activity-content .activity-text .target {
+    font-weight: 600;
+}
+
+.activity-list .activity-item .activity-content .activity-time {
+    font-size: 12px;
+    color: #6b778c;
+}
+
+.schedule-section {
+    margin-top: 20px;
+}
+
+.schedule-list .schedule-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.schedule-list .schedule-item .schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.schedule-list .schedule-item .schedule-header .schedule-title {
+    font-weight: 500;
+    color : var(--light-gray)
+}
+
+.schedule-list .schedule-item .schedule-header .toggle-button {
+    background: none;
+    border: none;
+    color: #6b778c;
+    cursor: pointer;
+}
+
+.schedule-list .schedule-item .schedule-header .toggle-button:hover {
+    color: #0052cc;
+}
+
+.schedule-list .schedule-item .schedule-info {
+    padding: 0 15px 15px;
+}
+
+.schedule-list .schedule-item .schedule-info .schedule-time {
+    display: flex;
+    align-items: center;
+    color: #6b778c;
+    font-size: 14px;
+}
+
+.schedule-list .schedule-item .schedule-info .schedule-time i {
+    margin-right: 5px;
+}
+
+.schedule-list .schedule-item .schedule-attendees {
+    padding: 0 15px 15px;
+}
+
+.schedule-list .schedule-item .schedule-attendees .attendee-avatars {
+    display: flex;
+}
+
+.schedule-list .schedule-item .schedule-attendees .attendee-avatars .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #0052cc;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: -10px;
+    border: 2px solid #ffffff;
+}
+
+.schedule-list .schedule-item .schedule-attendees .attendee-avatars .avatar:last-child {
+    margin-right: 0;
+}
+
+@media (max-width: 992px) {
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-header .dashboard-actions {
+        margin-top: 10px;
+    }
+}

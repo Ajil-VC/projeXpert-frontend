@@ -1,0 +1,70 @@
+
+    <header>
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <img [src]="'assets/icons/Projexpert.png'">
+            </div>
+            <div class="navbar-menu" [class.active]="isNavbarActive" >
+                <ul class="navbar-links">
+                    <li><a href="#" class="active">Features</a></li>
+                    <li><a href="#">Solutions</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Resources</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <a [routerLink]="['login']" class="sign-in">Sign in</a>
+                </div>
+            </div>
+            <div class="navbar-toggle" (click)="toggleNavBar()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Streamline Your Projects, Amplify Your Success</h1>
+                    <p>Empower your team with our intuitive project management platform. Collaborate seamlessly, track progress effortlessly, and deliver results consistently.</p>
+                    <button class="cta-button" [routerLink]="['signup']" >Get Start</button>
+                </div>
+                <div class="hero-image">
+                    <img [src]="'assets/images/team.jpg'" alt="ProjeXpert Dashboard Preview">
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2 class="section-title">FEATURES</h2>
+            <h3 class="section-subtitle">Everything you need to manage projects effectively</h3>
+            
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h4>Task Management</h4>
+                    <p>Create, assign, and track tasks with ease. Set priorities, deadlines, and dependencies.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Team Collaboration</h4>
+                    <p>Work together seamlessly with real-time updates, file sharing, and team chat.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Progress Tracking</h4>
+                    <p>Monitor project progress with visual dashboards, reports, and analytics.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+

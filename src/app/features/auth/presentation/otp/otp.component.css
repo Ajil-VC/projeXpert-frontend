@@ -1,0 +1,136 @@
+.verify-otp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .verify-otp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  button:disabled:hover{
+    background-color: #ccc;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  .timer {
+    font-size: 0.95rem;
+    color: #9ca3af;
+    margin-bottom: 15px;
+  }
+  
+  .timer span {
+    font-weight: 500;
+    color: #10b981;
+  }
+  
+  .verify-otp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    padding: 12px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #1e2937;
+    color: #fff;
+    font-size: 1rem;
+  }
+  
+  .confirm-btn {
+    padding: 12px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #10b981;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #059669;
+  }
+  
+  .resend-link {
+    text-align: center;
+    margin-top: -10px;
+  }
+  
+  .resend-link a {
+    font-size: 0.9rem;
+    color: #10b981;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .resend-link a:hover {
+    text-decoration: underline;
+  }
+  
+  .terms-text {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    text-align: center;
+    line-height: 1.5;
+  }
+  
+  .terms-text p {
+    margin-bottom: 5px;
+  }
+  
+  .terms-text a {
+    color: #10b981;
+    text-decoration: none;
+  }
+  
+  .terms-text a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 500px) {
+    .verify-otp-card {
+      padding: 16px;
+    }
+    
+    .header h1 {
+      font-size: 1.75rem;
+    }
+  }
