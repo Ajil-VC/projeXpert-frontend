@@ -26,6 +26,7 @@ export class AuthService implements SignupUseCase {
     return this.currentUser;
   }
   setCurrentUser(user: User): void {
+    this.userSubject.next(user);
     this.currentUser = user;
   }
 
@@ -33,6 +34,8 @@ export class AuthService implements SignupUseCase {
     return this.currentWorkspace;
   }
   setCurrentWorkSpace(workspace: Workspace): void {
+
+    this.workspaceSubject.next(workspace);
     this.currentWorkspace = workspace;
   }
   //** For Initial loading **//
@@ -53,14 +56,9 @@ export class AuthService implements SignupUseCase {
     return this.http.post<AuthResponse>(`${environment.apiUserUrl}create-profile`, { email, userName, passWord })
       .pipe(
         tap(response => {
+
+          if (!response.token) throw new Error('Token Missing');
           localStorage.setItem('authToken', response.token);
-
-          this.setCurrentUser(response.user);
-          this.setCurrentWorkSpace(response.workSpace);
-
-          this.userSubject.next(response.user);
-          this.workspaceSubject.next(response.workSpace);
-
         })
       )
   }
@@ -69,6 +67,9 @@ export class AuthService implements SignupUseCase {
     return this.http.post<AuthResponse>(`${environment.apiUserUrl}login`, { email, passWord })
       .pipe(
         tap(response => {
+
+          if (!response.token) throw new Error('Token Missing');
+          
           localStorage.setItem('authToken', response.token);
         })
       )

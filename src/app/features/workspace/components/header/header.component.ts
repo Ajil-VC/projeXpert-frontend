@@ -24,7 +24,9 @@ export class HeaderComponent {
 
     this.authService.user$.subscribe({
       next: (res) => {
-        this.currentUser = res;
+
+        this.currentUser = res
+
       },
       error: (err) => {
         console.error('Error Occured while populating user data into header.', err);
@@ -33,6 +35,7 @@ export class HeaderComponent {
 
     this.authService.workSpace$.subscribe({
       next: (res) => {
+
         this.currentWorkspace = res;
       },
       error: (err) => {

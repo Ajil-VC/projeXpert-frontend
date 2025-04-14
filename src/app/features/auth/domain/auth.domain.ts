@@ -24,10 +24,9 @@ export abstract class OtpUseCase {
 }
 
 export interface AuthResponse {
-    token: string;
+    token?: string;
     status: boolean;
-    user: User,
-    workSpace: Workspace
+    user: User
 }
 
 
@@ -37,7 +36,7 @@ export interface User {
     email: string;
     plan: string;
     role: string;
-    workSpaces: Array<string>;
+    workSpaces: Array<Workspace>;
 }
 
 export interface Workspace {

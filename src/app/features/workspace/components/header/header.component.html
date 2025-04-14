@@ -10,7 +10,7 @@
           </a>
           <div class="dropdown-content" *ngIf="showWorkspaceMenu">
             <div class="dropdown-header">Your Projects</div>
-            <a *ngFor="let workspace of currentUser?.workSpaces" href="javascript:void(0)">
+            <a *ngFor="let workspace of currentUser?.workSpaces">
               <!--(click)="selectWorkspace(workspace) Need to give this in the above tag"-->
               {{currentWorkspace?.name}}
             </a>
@@ -36,10 +36,10 @@
 
   <div class="header-right">
     <div class="current-workspace">
-      <div class="workspace-icon">{{ currentUser?.workSpaces}}</div>
+      <div class="workspace-icon">A</div>
       <div class="workspace-info">
-        <div class="workspace-name">{{ currentWorkspace?.name }}</div>
-        <div class="workspace-subtitle">Welcome back to {{ currentUser?.name}}</div>
+        <div class="workspace-name">{{ currentUser?.name }}</div>
+        <div class="workspace-subtitle">{{ currentWorkspace?.name}}</div>
       </div>
     </div>
 
