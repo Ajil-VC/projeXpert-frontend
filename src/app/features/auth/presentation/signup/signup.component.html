@@ -1,34 +1,46 @@
 <div class="signup-container">
-    <div class="signup-card">
-      <div class="header">
-        <h1>Your Product, Your Way</h1>
-        <p>Sign Up in to your ProjeXpert account</p>
-      </div>
-      
-      <form class="signup-form" [formGroup]="signUpForm" (ngSubmit)="onContinue()" >
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" (input)="isEmailExists = false" formControlName="email" placeholder="Enter your email address..." required>
-
-          <p class="errorMsg" *ngIf="emailControl?.errors?.['email'] && !emailControl?.errors?.['required'] && (emailControl?.dirty || emailControl?.touched)">Enter valid email id</p>
-
-          <p class="errorMsg"  *ngIf="emailControl?.errors?.['required'] && (emailControl?.dirty || emailControl?.touched)" >Email cant be empty</p>
-          <p class="errorMsg" *ngIf="isEmailExists " >Email already exists</p>
-        </div>
-        
-        <div class="oauth-buttons">
-          <button type="button" class="oauth-btn google-btn">
-            <img src="assets/icons/google_logo.png" alt="Google logo">
-            Continue with Google
-          </button>
-        </div>
-        
-        <button type="submit" [disabled]="signUpForm.invalid || isBtnDisabled"  class="continue-btn">Continue</button>
-        <a class="loginHere"  >or login from here</a>
-        
-        <div class="terms-text">
-          <p>Your name and photo are displayed to users who invite you to a workspace using your email. By continuing, you acknowledge that you understand and agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></p>
-        </div>
-      </form>
+  <div class="signup-card">
+    <div class="header">
+      <h1>Your Product, Your Way</h1>
+      <p>Sign Up in to your ProjeXpert account</p>
     </div>
+
+    <form class="signup-form" [formGroup]="signUpForm" (ngSubmit)="onContinue()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" (input)="isEmailExists = false" formControlName="email"
+          placeholder="Enter your email address..." required>
+
+        <p class="errorMsg"
+          *ngIf="emailControl?.errors?.['email'] && !emailControl?.errors?.['required'] && (emailControl?.dirty || emailControl?.touched)">
+          Enter valid email id</p>
+
+        <p class="errorMsg"
+          *ngIf="emailControl?.errors?.['required'] && (emailControl?.dirty || emailControl?.touched)">Email cant be
+          empty</p>
+        <p class="errorMsg" *ngIf="isEmailExists ">Email already exists</p>
+      </div>
+
+      <button type="submit" [disabled]="signUpForm.invalid || isBtnDisabled" class="continue-btn">Continue</button>
+
+      <div class="make-center">
+        <p>Or</p>
+      </div>
+
+      <div class="oauth-buttons">
+        <button type="button" class="oauth-btn google-btn">
+          <img src="assets/icons/google_logo.png" alt="Google logo">
+          Continue with Google
+        </button>
+      </div>
+
+      <a class="loginHere">or login from here</a>
+
+      <div class="terms-text">
+        <p>Your name and photo are displayed to users who invite you to a workspace using your email. By continuing, you
+          acknowledge that you understand and agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy
+            Policy</a></p>
+      </div>
+    </form>
   </div>
+</div>

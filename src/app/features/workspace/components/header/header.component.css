@@ -3,10 +3,35 @@
     justify-content: space-between;
     align-items: center;
     background-color: var(--background-color);
+
     color: #ffffff;
     padding: 0 20px;
     height: 60px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    border-bottom: 1px solid var(--text-color);
+
+    z-index: 10001;
+
+}
+
+.mobile-toggle{
+    cursor: pointer;
+}
+
+.logo {
+
+    padding: 0.5rem;
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 70px;
+
+}
+
+.logo img {
+    width: 140px;
 }
 
 .header-left {
@@ -44,6 +69,7 @@
 
 .dropdown {
     position: relative;
+    cursor: pointer;
 }
 
 .dropdown .dropdown-content {

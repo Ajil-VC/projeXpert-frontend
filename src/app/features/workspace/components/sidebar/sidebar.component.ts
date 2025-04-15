@@ -40,9 +40,6 @@ export class SidebarComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
 
   setActiveItem(item: MenuItem) {
     this.menuItems.forEach(menuItem => {

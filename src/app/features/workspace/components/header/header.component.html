@@ -2,10 +2,22 @@
 <header class="app-header">
   <div class="header-left">
 
+    <div class="logo">
+
+
+      <!--Mobile menu option here-->
+      <!-- <div class="mobile-toggle" (click)="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+ 
+      </div> -->
+
+      <img src="assets/icons/Projexpert.png" alt="">
+    </div>
+
     <nav class="main-nav">
       <ul>
         <li class="dropdown">
-          <a href="javascript:void(0)" (click)="toggleWorkspaceMenu()">
+          <a  (click)="toggleWorkspaceMenu()">
             Projects <i class="fas fa-chevron-down"></i>
           </a>
           <div class="dropdown-content" *ngIf="showWorkspaceMenu">

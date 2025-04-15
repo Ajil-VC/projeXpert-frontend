@@ -15,6 +15,7 @@ export class HeaderComponent {
 
   showWorkspaceMenu = false;
   showUserMenu = false;
+  isMobileMenuOpen = false;
 
   currentUser!: User | null;
   currentWorkspace!: Workspace | null;
@@ -43,6 +44,11 @@ export class HeaderComponent {
       }
     });
 
+  }
+
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
   toggleWorkspaceMenu() {

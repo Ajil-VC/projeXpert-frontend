@@ -1,29 +1,25 @@
 <!-- sidebar.component.html -->
 <aside class="sidebar" [ngClass]="{'collapsed': isCollapsed, 'mobile-open': isMobileMenuOpen}">
 
-  <div class="logo">
-    <img src="assets/icons/Projexpert.png" alt="">
-  </div>
 
-  <!-- <div class="sidebar-toggle" (click)="toggleSidebar()">
-      <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>
-    </div> -->
-
-  <!-- <div class="mobile-toggle" (click)="toggleMobileMenu()">
-      <i class="fas fa-bars"></i>
-      <span>Menu</span>
-    </div>
-     -->
-
-  <div class="sideMenuPanel">
-    <a class="current-project" >
+  <div class="side-top" >
+    
+    <a class="current-project">
       <!-- <i class="fas fa-briefcase"></i> -->
       <span class="menu-label">Project E-commerce</span>
     </a>
+    <div class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>
+    </div>
+
+  </div>
+
+  <div class="sideMenuPanel">
 
     <ul class="nav-menu">
 
-      <li  class="sideList" *ngFor="let item of menuItems" [ngClass]="{'active': item.active}" (click)="setActiveItem(item)">
+      <li class="sideList" *ngFor="let item of menuItems" [ngClass]="{'active': item.active}"
+        (click)="setActiveItem(item)">
         <a [routerLink]="item.route">
           <i class="fas {{item.icon}}"></i>
           <span class="menu-label">{{item.label}}</span>
