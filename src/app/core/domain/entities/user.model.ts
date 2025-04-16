@@ -1,4 +1,4 @@
-import { Workspace } from "./workspace.model"; 
+import { Workspace } from "./workspace.model";  
 
 export interface User {
     name: string;

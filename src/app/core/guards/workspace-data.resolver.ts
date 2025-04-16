@@ -2,7 +2,7 @@ import { ResolveFn } from '@angular/router';
 import { GuardsService } from '../data/guards.service';
 import { inject } from '@angular/core';
 import { AuthService } from '../../features/auth/data/auth.service';
-import { AuthResponse, User } from '../../features/auth/domain/auth.domain';
+import { AuthResponse } from '../../features/auth/domain/auth.domain';
 
 export const workspaceDataResolver: ResolveFn<boolean> = (route, state) => {
 
@@ -11,10 +11,10 @@ export const workspaceDataResolver: ResolveFn<boolean> = (route, state) => {
 
   guardsService.getWorkSpaceData().subscribe({
 
-    next: (res : AuthResponse) => {
-      
+    next: (res: AuthResponse) => {
+
       const currentWorkSpace = res.user.workSpaces.filter(ele => ele.isDefault === true);
-      
+
       authService.setCurrentUser(res.user);
       authService.setCurrentWorkSpace(currentWorkSpace[0]);
     },

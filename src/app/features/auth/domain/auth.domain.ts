@@ -24,6 +24,7 @@ export abstract class OtpUseCase {
 
 }
 
+
 export interface AuthResponse {
     token?: string;
     status: boolean;

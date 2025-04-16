@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AuthService } from '../../../auth/data/auth.service';
-import { User, Workspace } from '../../../auth/domain/auth.domain';
+import { User } from '../../../../core/domain/entities/user.model';
+import { Workspace } from '../../../../core/domain/entities/workspace.model'; 
 
 @Component({
   selector: 'app-header',

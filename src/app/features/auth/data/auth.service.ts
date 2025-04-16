@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { OtpUseCase, SignupUseCase, User, Workspace } from '../domain/auth.domain';
+import { OtpUseCase, SignupUseCase } from '../domain/auth.domain';
+import { User } from '../../../core/domain/entities/user.model';
+import { Workspace } from '../../../core/domain/entities/workspace.model'; 
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -69,7 +71,7 @@ export class AuthService implements SignupUseCase {
         tap(response => {
 
           if (!response.token) throw new Error('Token Missing');
-          
+
           localStorage.setItem('authToken', response.token);
         })
       )
