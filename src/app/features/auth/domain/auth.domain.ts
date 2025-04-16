@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { User } from "../../../core/domain/entities/user.model";
 
 
 @Injectable({
@@ -27,21 +28,4 @@ export interface AuthResponse {
     token?: string;
     status: boolean;
     user: User
-}
-
-
-export interface User {
-    name: string;
-    profileUrl: string;
-    email: string;
-    plan: string;
-    role: string;
-    workSpaces: Array<Workspace>;
-}
-
-export interface Workspace {
-    name: string;
-    owner: string;
-    isDefault: boolean;
-    members: Array<string>;
 }
