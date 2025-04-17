@@ -4,10 +4,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthFlowService } from '../../data/auth.service';
 import { OtpUseCase } from '../../domain/auth.domain';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-otp',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './otp.component.html',
   styleUrl: './otp.component.css',
   providers: [
@@ -21,12 +22,14 @@ export class OtpComponent {
   isBtnDisabled: boolean = false;
   isLinkVisible: boolean = true;
   otpForm: FormGroup;
+  isValideOtp: boolean = false;
+  otpMsg: string = 'Enter OTP below';
 
   constructor(
     private fb: FormBuilder,
     private getEmail: AuthFlowService,
     private otpUseCaseInterface: OtpUseCase,
-    private router : Router) {
+    private router: Router) {
     this.otpForm = this.fb.group({
       otp: []
     })
@@ -72,13 +75,15 @@ export class OtpComponent {
     const otp = this.otpForm.value.otp;
     const email = this.getEmail.getEmail();
     this.otpUseCaseInterface.validateOtp(email, otp).subscribe({
-      next : (res) => {
-        if(res.status){
-          this.router.navigate(['create-profile']);
+      next: (res) => {
+        if (res.status) {
+          this.router.navigate(['create-company']);
         }
       },
-      error : (err) => {
+      error: (err) => {
         console.error(err);
+        this.isValideOtp = true;
+        this.otpMsg = 'Enter valid OTP';
       }
     })
 

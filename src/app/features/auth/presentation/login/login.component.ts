@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SignupUseCase } from '../../domain/auth.domain';
+import { RegisterUseCase } from '../../domain/auth.domain';
 import { AuthFlowService, AuthService } from '../../data/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   providers: [
-    { provide: SignupUseCase, useExisting: AuthService }
+    { provide: RegisterUseCase, useExisting: AuthService }
   ]
 })
 export class LoginComponent {
@@ -21,7 +21,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private signupuseCaseInterface: SignupUseCase,
+    private registerUseCaseInterface: RegisterUseCase,
     private router: Router) {
 
     this.loginForm = this.fb.group({
@@ -44,7 +44,7 @@ export class LoginComponent {
     this.isBtnDisabled = true;
 
     const { email, password } = this.loginForm.value;
-    this.signupuseCaseInterface.login(email, password).subscribe({
+    this.registerUseCaseInterface.login(email, password).subscribe({
       next: (res) => {
         if (res.status) {
 

@@ -7,9 +7,9 @@ import { User } from "../../../core/domain/entities/user.model";
     providedIn: 'root',
 
 })
-export abstract class SignupUseCase {
+export abstract class RegisterUseCase {
     abstract signup(email: string): Observable<any>;
-    abstract createProfile(email: string, userName: string, passWord: string): Observable<any>;
+    abstract createCompany(email: string, companyName: string, passWord: string): Observable<any>;
     abstract login(email: string, passWord: string): Observable<any>;
 }
 

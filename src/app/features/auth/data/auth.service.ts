@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { OtpUseCase, SignupUseCase } from '../domain/auth.domain';
+import { OtpUseCase, RegisterUseCase } from '../domain/auth.domain';
 import { User } from '../../../core/domain/entities/user.model';
-import { Workspace } from '../../../core/domain/entities/workspace.model'; 
+import { Workspace } from '../../../core/domain/entities/workspace.model';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -10,7 +10,7 @@ import { AuthResponse } from '../domain/auth.domain';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements SignupUseCase {
+export class AuthService implements RegisterUseCase {
 
 
   //******************************//
@@ -49,13 +49,13 @@ export class AuthService implements SignupUseCase {
 
   signup(email: string): Observable<any> {
 
-    return this.http.post(`${environment.apiUserUrl}signup`, { email });
+    return this.http.post(`${environment.apiCompanyUrl}register`, { email });
 
   }
 
-  createProfile(email: string, userName: string, passWord: string): Observable<any> {
+  createCompany(email: string, companyName: string, passWord: string): Observable<any> {
 
-    return this.http.post<AuthResponse>(`${environment.apiUserUrl}create-profile`, { email, userName, passWord })
+    return this.http.post<AuthResponse>(`${environment.apiCompanyUrl}create-company`, { email, companyName, passWord })
       .pipe(
         tap(response => {
 
@@ -90,11 +90,11 @@ export class AuthFlowService implements OtpUseCase {
   constructor(private http: HttpClient) { }
 
   resendOtp(email: string): Observable<any> {
-    return this.http.post(`${environment.apiUserUrl}resend-otp`, { email });
+    return this.http.post(`${environment.apiCompanyUrl}resend-otp`, { email });
   }
 
   validateOtp(email: string, otp: string): Observable<any> {
-    return this.http.post(`${environment.apiUserUrl}validate-otp`, { email, otp });
+    return this.http.post(`${environment.apiCompanyUrl}validate-otp`, { email, otp });
   }
 
 

@@ -2,14 +2,14 @@
   <div class="signup-card">
     <div class="header">
       <h1>Your Product, Your Way</h1>
-      <p>Sign Up in to your ProjeXpert account</p>
+      <p>Register the company</p>
     </div>
 
     <form class="signup-form" [formGroup]="signUpForm" (ngSubmit)="onContinue()">
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" (input)="isEmailExists = false" formControlName="email"
-          placeholder="Enter your email address..." required>
+          placeholder="Enter email address..." required>
 
         <p class="errorMsg"
           *ngIf="emailControl?.errors?.['email'] && !emailControl?.errors?.['required'] && (emailControl?.dirty || emailControl?.touched)">
@@ -19,20 +19,23 @@
           *ngIf="emailControl?.errors?.['required'] && (emailControl?.dirty || emailControl?.touched)">Email cant be
           empty</p>
         <p class="errorMsg" *ngIf="isEmailExists ">Email already exists</p>
+
+
+
       </div>
 
       <button type="submit" [disabled]="signUpForm.invalid || isBtnDisabled" class="continue-btn">Continue</button>
 
-      <div class="make-center">
+      <!-- <div class="make-center">
         <p>Or</p>
-      </div>
+      </div> -->
 
-      <div class="oauth-buttons">
+      <!-- <div class="oauth-buttons">
         <button type="button" class="oauth-btn google-btn">
           <img src="assets/icons/google_logo.png" alt="Google logo">
           Continue with Google
         </button>
-      </div>
+      </div> -->
 
       <a class="loginHere">or login from here</a>
 

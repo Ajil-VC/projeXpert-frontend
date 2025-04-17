@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SignupUseCase } from '../../domain/auth.domain';
+import { RegisterUseCase } from '../../domain/auth.domain';
 import { AuthFlowService, AuthService } from '../../data/auth.service';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -13,7 +13,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
   providers: [
-    { provide: SignupUseCase, useExisting: AuthService }
+    { provide: RegisterUseCase, useExisting: AuthService }
   ]
 })
 export class SignupComponent {
@@ -22,12 +22,12 @@ export class SignupComponent {
   isEmailExists: boolean = false;
   constructor(
     private fb: FormBuilder,
-    private signupuseCaseInterface: SignupUseCase,
+    private signupuseCaseInterface: RegisterUseCase,
     private router: Router,
     private setEmail: AuthFlowService) {
 
     this.signUpForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     })
   }
 

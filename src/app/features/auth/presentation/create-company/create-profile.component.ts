@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthFlowService, AuthService } from '../../data/auth.service';
-import { SignupUseCase } from '../../domain/auth.domain';
+import { RegisterUseCase } from '../../domain/auth.domain';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './create-profile.component.html',
   styleUrl: './create-profile.component.css',
   providers: [
-    { provide: SignupUseCase, useExisting: AuthService }
+    { provide: RegisterUseCase, useExisting: AuthService }
   ]
 })
 export class CreateProfileComponent {
@@ -22,7 +22,7 @@ export class CreateProfileComponent {
   constructor(
     private fb: FormBuilder,
     private getEmail: AuthFlowService,
-    private createProfileInterface: SignupUseCase,
+    private createProfileInterface: RegisterUseCase,
     private router: Router
   ) {
 
@@ -46,11 +46,11 @@ export class CreateProfileComponent {
 
   onSubmit(): void {
 
-    const userName = this.createProfileForm.value.username;
+    const companyName = this.createProfileForm.value.username;
     const passWord = this.createProfileForm.value.password;
     const email = this.getEmail.getEmail();
 
-    this.createProfileInterface.createProfile(email, userName, passWord).subscribe({
+    this.createProfileInterface.createCompany(email, companyName, passWord).subscribe({
 
       next: (res) => {
 

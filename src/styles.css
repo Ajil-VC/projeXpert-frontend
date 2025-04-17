@@ -27,9 +27,18 @@ body {
     line-height: 1.6;
 }
 
-.make-center{
-    width: 100%;;
+.make-center {
+    width: 100%;
+    ;
     display: flex;
     align-items: center;
-    justify-content: center;;
-  }
+    justify-content: center;
+    ;
+}
+
+
+.errorMsg {
+    color: red;
+    font-weight: lighter;
+    font-size: small;
+}

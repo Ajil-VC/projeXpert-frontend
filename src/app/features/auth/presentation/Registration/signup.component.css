@@ -38,11 +38,7 @@
     max-width: 500px;
   }
 
-  .errorMsg{
-   color: red;
-   font-weight: lighter; 
-   font-size: small;
-  }
+
   
   .header {
     text-align: center;
