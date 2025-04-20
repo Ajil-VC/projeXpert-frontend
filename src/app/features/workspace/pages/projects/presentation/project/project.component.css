@@ -1,0 +1,97 @@
+.page-container {
+  padding: 20px;
+}
+
+.project-content {
+
+  max-width: 700px;
+}
+
+.project-section {
+  background: var(--text-color);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  color : white
+}
+
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+button:disabled:hover{
+  background-color: #ccc;
+}
+
+
+.form-header{
+  color : #ccc;
+}
+
+
+#workspace, #priority{
+
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #1e2937;
+  color: #fff;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #1e2937;
+  color: #fff;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+.continue-btn {
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #10b981;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+
+
+
+
+@media (max-width: 992px) {}
+
+@media (max-width: 576px) {}

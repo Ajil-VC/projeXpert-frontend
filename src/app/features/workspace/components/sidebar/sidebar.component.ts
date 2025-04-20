@@ -22,14 +22,14 @@ export class SidebarComponent {
 
 
   menuItems: MenuItem[] = [
-    { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/dashboard', active: false },
+    { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
     { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/backlog', active: false },
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/board', active: false },
     { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
     { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
-    { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/projects', active: false },
+    { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/projects', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
   ];
 

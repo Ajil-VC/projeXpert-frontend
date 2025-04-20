@@ -12,8 +12,6 @@ import { ActivityItem, EpicItem, ScheduleItem, SummaryCard } from '../../domain/
 export class DashboardComponent {
 
 
-  currentPath = 'Projects / Dashboard';
-
   summaryCards: SummaryCard[] = [
     {
       count: 8,

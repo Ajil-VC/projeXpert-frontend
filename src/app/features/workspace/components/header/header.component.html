@@ -48,7 +48,7 @@
 
   <div class="header-right">
     <div class="current-workspace">
-      <div class="workspace-icon">A</div>
+      <div class="workspace-icon">{{currentUser?.name?.charAt(0)?.toUpperCase()}}</div>
       <div class="workspace-info">
         <div class="workspace-name">{{ currentUser?.name }}</div>
         <div class="workspace-subtitle">{{ currentWorkspace?.name}}</div>

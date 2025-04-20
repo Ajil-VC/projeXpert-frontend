@@ -13,10 +13,9 @@ export const workspaceDataResolver: ResolveFn<boolean> = (route, state) => {
 
     next: (res: AuthResponse) => {
 
-      const currentWorkSpace = res.user.workSpaces.filter(ele => ele.isDefault === true);
-
+      const currentWorkSpace = res.user.defaultWorkspace;
       authService.setCurrentUser(res.user);
-      authService.setCurrentWorkSpace(currentWorkSpace[0]);
+      authService.setCurrentWorkSpace(currentWorkSpace);
     },
     error: (err) => {
       console.error("Error occured while retrieving init data.", err);

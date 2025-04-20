@@ -18,9 +18,9 @@
 
     <ul class="nav-menu">
 
-      <li class="sideList" *ngFor="let item of menuItems" [ngClass]="{'active': item.active}"
+      <li class="sideList" *ngFor="let item of menuItems"
         (click)="setActiveItem(item)">
-        <a [routerLink]="item.route">
+        <a [routerLink]="item.route" [ngClass]="{'active': item.active}" >
           <i class="fas {{item.icon}}"></i>
           <span class="menu-label">{{item.label}}</span>
         </a>

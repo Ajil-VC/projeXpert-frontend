@@ -1,6 +1,8 @@
 export interface Workspace {
-    name: string;
-    owner: string;
-    isDefault: boolean;
-    members: Array<string>;
+    _id: String;
+    name: String;
+    members: Array<String>;
+    companyId: String;
+    projects: Array<string>;
+    currentProject: String;
 }

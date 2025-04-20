@@ -1,4 +1,4 @@
-import { Workspace } from "./workspace.model";  
+import { Workspace } from "./workspace.model";
 
 export interface User {
     name: string;
@@ -6,5 +6,6 @@ export interface User {
     email: string;
     plan: string;
     role: string;
+    defaultWorkspace: Workspace;
     workSpaces: Array<Workspace>;
 }
