@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ProjectsUseCase } from '../../domain/projects.domain';
 import { ProjectService } from '../../data/project.service';
 import { Company } from '../../../../../../core/domain/entities/company.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project',
@@ -16,6 +17,7 @@ import { Company } from '../../../../../../core/domain/entities/company.model';
 })
 export class ProjectComponent {
 
+
   projectForm!: FormGroup;
   isButtonDisabled: boolean = false;
 
@@ -23,7 +25,8 @@ export class ProjectComponent {
   priorityOptions = ['low', 'medium', 'high', 'critical']
   constructor(
     private fb: FormBuilder,
-    private projectsInterface: ProjectsUseCase
+    private projectsInterface: ProjectsUseCase,
+    private router : Router
   ) {
 
     this.projectForm = this.fb.group({
@@ -64,13 +67,18 @@ export class ProjectComponent {
 
   onSubmit() {
 
+
+
     this.isButtonDisabled = true;
     console.log(this.projectForm.value);
     const { projectName, workspace, priority } = this.projectForm.value;
     this.projectsInterface.createProject(projectName, workspace, priority).subscribe({
 
       next: (res) => {
-        console.log(res, 'REDfa');
+      
+
+        this.router.navigate(['user/project-info']);
+
       },
       error: (err) => {
         console.error(err);

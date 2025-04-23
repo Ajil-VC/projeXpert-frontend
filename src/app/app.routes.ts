@@ -11,6 +11,8 @@ import { authGuard } from './core/guards/auth.guard';
 import { otpGuard } from './core/guards/otp.guard';
 import { workspaceDataResolver } from './core/guards/workspace-data.resolver';
 import { ProjectComponent } from './features/workspace/pages/projects/presentation/project/project.component';
+import { ProjectinfoComponent } from './features/workspace/pages/projects/presentation/projectinfo/projectinfo.component';
+import { ProjectsData } from './core/guards/projects-data.resolver';
 
 export const routes: Routes = [
 
@@ -24,7 +26,8 @@ export const routes: Routes = [
         path: 'user', component: LayoutComponent,
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], resolve: [workspaceDataResolver] },
-            { path: 'projects', component: ProjectComponent, canActivate: [authGuard] }
+            { path: 'create-project', component: ProjectComponent, canActivate: [authGuard] },
+            { path: 'project-info', component: ProjectinfoComponent, canActivate: [authGuard], resolve: [ProjectsData] }
         ]
     }
 

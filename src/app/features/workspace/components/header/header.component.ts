@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AuthService } from '../../../auth/data/auth.service';
 import { User } from '../../../../core/domain/entities/user.model';
-import { Workspace } from '../../../../core/domain/entities/workspace.model'; 
+import { Workspace } from '../../../../core/domain/entities/workspace.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,7 @@ export class HeaderComponent {
   currentUser!: User | null;
   currentWorkspace!: Workspace | null;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
   ngOnInit() {
 
     this.authService.user$.subscribe({
@@ -73,7 +74,8 @@ export class HeaderComponent {
   }
 
   createNewWorkspace() {
-    // Logic to create new workspace
+
+    this.router.navigate(['/user/create-project']);
     this.showWorkspaceMenu = false;
   }
 

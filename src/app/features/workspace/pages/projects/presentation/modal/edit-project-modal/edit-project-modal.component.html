@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>Edit Project</h2>
+
+<mat-dialog-content class="edit-project-modal">
+    <form #form="ngForm" class="edit-project-form">
+
+        <!-- Project Name -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Project Name</mat-label>
+            <input matInput [(ngModel)]="projectData.name" name="name" required />
+        </mat-form-field>
+
+        <!-- Status -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="projectData.status" name="status">
+                <mat-option value="active">Active</mat-option>
+                <mat-option value="archived">Archived</mat-option>
+                <mat-option value="completed">Completed</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Priority -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Priority</mat-label>
+            <mat-select [(ngModel)]="projectData.priority" name="priority">
+                <mat-option value="low">Low</mat-option>
+                <mat-option value="medium">Medium</mat-option>
+                <mat-option value="high">High</mat-option>
+                <mat-option value="critical">Critical</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Add Member by Email -->
+        <div class="add-member-section">
+            <mat-form-field class="member-email-field">
+                <mat-label>Add Member (email)</mat-label>
+                <input matInput [(ngModel)]="newMemberEmail" name="newMemberEmail" />
+            </mat-form-field>
+            <button mat-mini-button color="primary" class="add-member-btn" (click)="addMember()">Add</button>
+        
+        </div>
+
+        <!-- Current Members -->
+        <div class="members-list">
+            <div class="member-row" *ngFor="let member of projectData.members; let i = index ; trackBy: trackByIndex " >
+                <span>{{ member.email }}</span>
+                <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select">
+                    <mat-option value="admin">Admin</mat-option>
+                    <mat-option value="editor">Editor</mat-option>
+                    <mat-option value="viewer">Viewer</mat-option>
+                </mat-select>
+                <button mat-icon-button color="warn" (click)="removeMember(i)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onSave()">Save</button>
+</mat-dialog-actions>

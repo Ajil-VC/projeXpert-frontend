@@ -29,7 +29,7 @@ export class SidebarComponent {
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
     { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
-    { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/projects', active: false },
+    { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
   ];
 
