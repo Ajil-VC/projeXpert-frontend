@@ -393,7 +393,7 @@
 
 .project-card .project-header .project-actions {
   display: flex;
-  opacity: 0;
+  opacity: 100;
   transition: opacity 0.2s;
 }
 
@@ -404,7 +404,7 @@
 .project-card .project-header .project-actions .icon-action {
   background: none;
   border: none;
-  color: #6b778c;
+  color: white;
   width: 30px;
   height: 30px;
   border-radius: 4px;

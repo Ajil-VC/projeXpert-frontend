@@ -6,6 +6,7 @@ import { ProjectDataService } from '../../../../../../shared/services/project-da
 import { Project } from '../../../../../../core/domain/entities/project.model';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProjectModalComponent } from '../modal/edit-project-modal/edit-project-modal.component';
+import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-projectinfo',
@@ -44,7 +45,6 @@ export class ProjectinfoComponent {
     this.projectService.project$.subscribe({
 
       next: (res) => {
-        console.log(res, 'hmm');
         if (!res) {
           this.projects = [];
           return;
@@ -150,93 +150,50 @@ export class ProjectinfoComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Updated project data:', result);
-        // Call your API to update project
+        
+        this.projectService.updateProject(result).subscribe({
+          next: (res) => {
+            if (!res.status) throw new Error('Projects couldnt retrieve after updation');
+            this.projects = res.data;
+            this.applyFilters();
+          },
+          error: (err) => {
+            console.error('Error occured while updating project.', err);
+          }
+        })
+
+
       }
     });
-    // const dialogRef = this.dialog.open(CreateProjectDialogComponent, {
-    //   width: '600px',
-    //   data: { ...project }
-    // });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.projectService.updateProject(project.id, result).subscribe(
-    //       (updatedProject) => {
-    //         const index = this.projects.findIndex(p => p.id === project.id);
-    //         if (index !== -1) {
-    //           this.projects[index] = updatedProject;
-    //           this.applyFilters();
-    //         }
-    //       },
-    //       (error) => {
-    //         console.error('Error updating project', error);
-    //       }
-    //     );
-    //   }
-    // });
   }
 
   deleteProject(event: Event, project: Project): void {
     event.stopPropagation();
 
-    // const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //   width: '400px',
-    //   data: {
-    //     title: 'Delete Project',
-    //     message: `Are you sure you want to delete ${project.name}? This action cannot be undone.`,
-    //     confirmButton: 'Delete',
-    //     cancelButton: 'Cancel'
-    //   }
-    // });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Project',
+        message: `Are you sure you want to delete ${project.name}? This action cannot be undone.`,
+        confirmButton: 'Delete',
+        cancelButton: 'Cancel'
+      }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.projectService.deleteProject(project.id).subscribe(
-    //       () => {
-    //         this.projects = this.projects.filter(p => p.id !== project.id);
-    //         this.applyFilters();
-    //       },
-    //       (error) => {
-    //         console.error('Error deleting project', error);
-    //       }
-    //     );
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.projectService.deleteProject(project._id as string).subscribe({
+          next: () => {
+            this.projects = this.projects.filter(p => p._id !== project._id);
+            this.applyFilters();
+          },
+          error: (err) => {
+            console.error('Error deleting project', err);
+          }
+        });
+      }
+    });
   }
-
-  archiveProject(event: Event, project: Project): void {
-    event.stopPropagation();
-
-    // const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //   width: '400px',
-    //   data: {
-    //     title: 'Archive Project',
-    //     message: `Are you sure you want to archive ${project.name}?`,
-    //     confirmButton: 'Archive',
-    //     cancelButton: 'Cancel'
-    //   }
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     const updatedProject = { ...project, status: 'archived' };
-    //     this.projectService.updateProject(project.id, updatedProject).subscribe(
-    //       (result) => {
-    //         const index = this.projects.findIndex(p => p.id === project.id);
-    //         if (index !== -1) {
-    //           this.projects[index] = result;
-    //           this.applyFilters();
-    //         }
-    //       },
-    //       (error) => {
-    //         console.error('Error archiving project', error);
-    //       }
-    //     );
-    //   }
-    // });
-  }
-
-
 
 }

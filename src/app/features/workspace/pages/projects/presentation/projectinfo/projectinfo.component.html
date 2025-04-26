@@ -72,14 +72,10 @@
             <div class="project-icon" [style.background-color]="'#36b37e'">
               {{ project.name.charAt(0).toUpperCase() }}
             </div>
-            <div class="project-actions">
+            <div class="project-actions"  >
               <button class="icon-action" (click)="editProject($event, project)">
 
                 <i class="fas fa-pencil-alt"></i>
-              </button>
-              <button class="icon-action" (click)="archiveProject($event, project)">
-
-                <i class="fas fa-archive"></i>
               </button>
               <button class="icon-action danger" (click)="deleteProject($event, project)">
 
@@ -167,6 +163,7 @@
                   </div>
                   {{project.name}}
                 </div>
+                <div hidden>{{project._id}}</div>
               </td>
               <td>{{project.createdAt| date:'mediumDate'}} </td>
               <td>
@@ -181,10 +178,6 @@
                   <button class="icon-action" (click)="editProject($event, project)">
 
                     <i class="fas fa-pencil-alt"></i>
-                  </button>
-                  <button class="icon-action" (click)="archiveProject($event, project)">
-
-                    <i class="fas fa-archive"></i>
                   </button>
                   <button class="icon-action danger" (click)="deleteProject($event, project)">
 

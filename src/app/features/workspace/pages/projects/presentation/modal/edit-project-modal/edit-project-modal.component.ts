@@ -3,14 +3,15 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { Workspace } from '../../../../../../../core/domain/entities/workspace.model';
 import { Project } from '../../../../../../../core/domain/entities/project.model';
 import { User } from '../../../../../../../core/domain/entities/user.model';
 import { projectView } from '../../../domain/projectView.interface';
+import { EditProjectUseCase } from '../../../domain/projectEditing.domain';
+import { EditProjectService } from '../../../data/edit-project.service';
 
 @Component({
   selector: 'app-edit-project-modal',
@@ -24,7 +25,12 @@ import { projectView } from '../../../domain/projectView.interface';
     FormsModule,
     MatSelectModule,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
+  ],
+
+  providers: [
+    { provide: EditProjectUseCase, useExisting: EditProjectService }
   ],
 
   templateUrl: './edit-project-modal.component.html',
@@ -32,23 +38,48 @@ import { projectView } from '../../../domain/projectView.interface';
 })
 export class EditProjectModalComponent {
 
+  editProjectForm!: FormGroup;
+  newMemberEmailControl = new FormControl('', [Validators.email]);
+
+  newMemberEmail = '';
+  projectData!: projectView;
+
+
   constructor(
     public dialogRef: MatDialogRef<EditProjectModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Project
+    @Inject(MAT_DIALOG_DATA) public data: Project,
+    private fb: FormBuilder,
+    private editProjectSer: EditProjectUseCase
   ) {
 
-    console.log(data, "MOda");
-    this.projectData.name = data.name as string;
-    this.projectData.status = data.status;
-    this.projectData.priority = data.priority;
+    this.setupProjectDataForView();
+
+  }
+
+  setupProjectDataForView(data = this.data) {
+
+    const initData = {
+      _id : data._id as string,
+      name: data.name as string,
+      status: data.status,
+      priority: data.priority,
+      members: [] as { email: string; role: 'user' | 'admin' }[]
+    };
     const d = data.members as unknown;
     const mems = d as Array<User>;
-    this.projectData.members = mems.map(ele => {
+    initData.members = mems.map(ele => {
       return {
         email: ele.email,
-        role: ele.role === 'admin' || ele.role === 'user' ? ele.role : 'user'
-      }
-    })
+        role: (ele.role === 'admin' || ele.role === 'user') ? ele.role as 'admin' | 'user' : 'user'
+      };
+    }).reverse();
+
+    this.projectData = initData;
+
+  }
+
+  get members(): FormArray {
+    return this.editProjectForm.get('members') as FormArray;
   }
 
   onCancel(): void {
@@ -56,21 +87,32 @@ export class EditProjectModalComponent {
   }
 
   onSave(): void {
-    this.dialogRef.close(this.data);
+    this.dialogRef.close(this.projectData);
   }
 
 
-  newMemberEmail = '';
-  projectData: projectView = {
-    name: '',
-    status: '',
-    priority: '',
-    members: []
-  };
 
   addMember() {
-    if (this.newMemberEmail) {
-      // this.data.members.push({ email: this.newMemberEmail, role: 'viewer' });
+
+    const confirmAdd = window.confirm('Please ensure the email');
+
+    if (this.newMemberEmail && confirmAdd) {
+    
+      this.editProjectSer.addMember(
+        this.newMemberEmail,
+        this.data._id as string,
+        this.data.workSpace as string
+      ).subscribe({
+        next: (res: { status: boolean, message: string, updatedProjectData: Project }) => {
+
+          if (!res.status) throw new Error('Response wasnt ok');
+
+          this.setupProjectDataForView(res.updatedProjectData);
+        },
+        error: (err) => {
+          console.log(err, "From add members");
+        }
+      })
       this.newMemberEmail = '';
     }
   }
@@ -80,7 +122,7 @@ export class EditProjectModalComponent {
     if (confirmDelete) {
       const updatedMembers = [...this.data.members];
       updatedMembers.splice(index, 1);
-      this.data.members = updatedMembers;
+      // this.data.members = updatedMembers;
     }
   }
 

@@ -6,6 +6,7 @@ interface projectMember {
 }
 
 export interface projectView {
+    _id? : string,
     name: string,
     status: string,
     priority: string,

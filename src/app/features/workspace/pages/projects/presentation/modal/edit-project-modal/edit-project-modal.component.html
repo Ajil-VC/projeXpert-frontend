@@ -34,20 +34,31 @@
         <div class="add-member-section">
             <mat-form-field class="member-email-field">
                 <mat-label>Add Member (email)</mat-label>
-                <input matInput [(ngModel)]="newMemberEmail" name="newMemberEmail" />
+                <input 
+                matInput 
+                type="email" 
+                [(ngModel)] ="newMemberEmail"
+                required 
+                email 
+                #emailCtrl="ngModel" 
+                name="newMemberEmail" />
+
+                <mat-error *ngIf="emailCtrl.invalid && emailCtrl.touched">
+                    <ng-container *ngIf="emailCtrl.errors?.['required']">Email is required</ng-container>
+                    <ng-container *ngIf="emailCtrl.errors?.['email']">Invalid email format</ng-container>
+                </mat-error>
             </mat-form-field>
-            <button mat-mini-button color="primary" class="add-member-btn" (click)="addMember()">Add</button>
-        
+            <button mat-mini-button color="primary" class="add-member-btn" [disabled]="emailCtrl.invalid" (click)="addMember()">Add</button>
+
         </div>
 
         <!-- Current Members -->
         <div class="members-list">
-            <div class="member-row" *ngFor="let member of projectData.members; let i = index ; trackBy: trackByIndex " >
+            <div class="member-row" *ngFor="let member of projectData.members; let i = index ; trackBy: trackByIndex ">
                 <span>{{ member.email }}</span>
                 <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select">
                     <mat-option value="admin">Admin</mat-option>
-                    <mat-option value="editor">Editor</mat-option>
-                    <mat-option value="viewer">Viewer</mat-option>
+                    <mat-option value="user">User</mat-option>
                 </mat-select>
                 <button mat-icon-button color="warn" (click)="removeMember(i)">
                     <mat-icon>delete</mat-icon>
