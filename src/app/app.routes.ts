@@ -23,11 +23,11 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
 
     {
-        path: 'user', component: LayoutComponent,
+        path: 'user', component: LayoutComponent, canActivate: [authGuard],
         children: [
-            { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], resolve: [workspaceDataResolver] },
-            { path: 'create-project', component: ProjectComponent, canActivate: [authGuard] },
-            { path: 'project-info', component: ProjectinfoComponent, canActivate: [authGuard], resolve: [ProjectsData] }
+            { path: 'dashboard', component: DashboardComponent, resolve: [workspaceDataResolver] },
+            { path: 'create-project', component: ProjectComponent },
+            { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] }
         ]
     }
 
