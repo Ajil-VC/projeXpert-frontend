@@ -44,7 +44,6 @@ export class EditProjectModalComponent {
   newMemberEmail = '';
   projectData!: projectView;
 
-
   constructor(
     public dialogRef: MatDialogRef<EditProjectModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Project,
@@ -58,16 +57,17 @@ export class EditProjectModalComponent {
   setupProjectDataForView(data = this.data) {
 
     const initData = {
-      _id : data._id as string,
+      _id: data._id as string,
       name: data.name as string,
       status: data.status,
       priority: data.priority,
-      members: [] as { email: string; role: 'user' | 'admin' }[]
+      members: [] as { id: string, email: string; role: 'user' | 'admin' }[]
     };
     const d = data.members as unknown;
     const mems = d as Array<User>;
     initData.members = mems.map(ele => {
       return {
+        id : ele.id,
         email: ele.email,
         role: (ele.role === 'admin' || ele.role === 'user') ? ele.role as 'admin' | 'user' : 'user'
       };
@@ -86,6 +86,7 @@ export class EditProjectModalComponent {
   }
 
   onSave(): void {
+
     this.dialogRef.close(this.projectData);
   }
 
@@ -96,7 +97,7 @@ export class EditProjectModalComponent {
     const confirmAdd = window.confirm('Please ensure the email');
 
     if (this.newMemberEmail && confirmAdd) {
-    
+
       this.editProjectSer.addMember(
         this.newMemberEmail,
         this.data._id as string,
@@ -116,12 +117,25 @@ export class EditProjectModalComponent {
     }
   }
 
-  removeMember(index: number) {
-    const confirmDelete = window.confirm('Are you sure you want to remove this member?');
+  async removeMember(index: number, userId: string) {
+
+    const confirmDelete = await window.confirm('Are you sure you want to remove this member?');
     if (confirmDelete) {
-      const updatedMembers = [...this.data.members];
-      updatedMembers.splice(index, 1);
-      // this.data.members = updatedMembers;
+      console.log(userId, 'user evedeeeee')
+      const updatedMembers: { email: string; role: 'user' | 'admin' }[] = [...this.projectData.members as { email: string; role: 'user' | 'admin' }[]];
+      const removedUser = updatedMembers.splice(index, 1);
+
+      if (!this.projectData._id) throw new Error('Project Id not exist');
+      this.editProjectSer.removeMember(removedUser[0].email, this.projectData._id).subscribe({
+        next: (res) => {
+          console.log(res, 'From remove member');
+          this.projectData.members = updatedMembers;
+        },
+        error: (err) => {
+          console.error('Error occured while removing member', err);
+        }
+      })
+
     }
   }
 

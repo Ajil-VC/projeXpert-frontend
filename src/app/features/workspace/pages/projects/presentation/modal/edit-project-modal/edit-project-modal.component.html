@@ -56,11 +56,11 @@
         <div class="members-list">
             <div class="member-row" *ngFor="let member of projectData.members; let i = index ; trackBy: trackByIndex ">
                 <span>{{ member.email }}</span>
-                <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select">
+                <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select" >
                     <mat-option value="admin">Admin</mat-option>
                     <mat-option value="user">User</mat-option>
                 </mat-select>
-                <button mat-icon-button color="warn" (click)="removeMember(i)">
+                <button mat-icon-button color="warn" (click)="removeMember(i, member._id)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </div>
