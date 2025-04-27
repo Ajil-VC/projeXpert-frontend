@@ -12,7 +12,6 @@ export const workspaceDataResolver: ResolveFn<boolean> = (route, state) => {
   guardsService.getWorkSpaceData().subscribe({
 
     next: (res: AuthResponse) => {
-    
       const currentWorkSpace = res.user.defaultWorkspace;
       authService.setCurrentUser(res.user);
       authService.setCurrentWorkSpace(currentWorkSpace);

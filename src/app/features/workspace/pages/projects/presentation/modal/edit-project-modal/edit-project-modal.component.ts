@@ -48,7 +48,6 @@ export class EditProjectModalComponent {
   constructor(
     public dialogRef: MatDialogRef<EditProjectModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Project,
-    private fb: FormBuilder,
     private editProjectSer: EditProjectUseCase
   ) {
 

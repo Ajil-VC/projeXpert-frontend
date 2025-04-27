@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../../auth/data/auth.service';
 
 
 interface MenuItem {
@@ -19,6 +20,15 @@ interface MenuItem {
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+
+  constructor(private authSer: AuthService) {
+
+    const isAdmin = this.authSer.isAdmin();
+    if (!isAdmin) {
+      this.menuItems = this.menuItems.filter(item => item.id !== 'projects');
+    }
+
+  }
 
 
   menuItems: MenuItem[] = [

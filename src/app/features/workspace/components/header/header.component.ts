@@ -79,5 +79,8 @@ export class HeaderComponent {
     this.showWorkspaceMenu = false;
   }
 
+  logout(){
+    this.authService.logout()
+  }
 
 }

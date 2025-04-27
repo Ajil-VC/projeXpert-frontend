@@ -223,6 +223,7 @@
 }
 
 .header-icons .user-menu .user-dropdown a.logout {
+    cursor: pointer;
     color: #ff5630;
 }
 

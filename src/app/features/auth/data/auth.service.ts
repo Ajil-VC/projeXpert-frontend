@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { AuthResponse } from '../domain/auth.domain';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,12 @@ export class AuthService implements RegisterUseCase {
   setCurrentUser(user: User): void {
     this.userSubject.next(user);
     this.currentUser = user;
+    localStorage.setItem('role', user.role);
+  }
+
+  isAdmin() {
+    const role = localStorage.getItem('role');
+    return role === 'admin';
   }
 
   getWorkSpace(): Workspace | null {
@@ -45,7 +52,7 @@ export class AuthService implements RegisterUseCase {
 
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   signup(email: string): Observable<any> {
 
@@ -75,6 +82,17 @@ export class AuthService implements RegisterUseCase {
           localStorage.setItem('authToken', response.token);
         })
       )
+  }
+
+  logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('role');
+    this.router.navigate(['/login']);
+
+    this.currentUser = null;
+    this.currentWorkspace = null;
+
+    this.userSubject.next(null);
   }
 
 }
@@ -109,4 +127,17 @@ export class AuthFlowService implements OtpUseCase {
   clearEmail() {
     this.email = '';
   }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PswdChangeService {
+
+  constructor(private http: HttpClient) { }
+
+  changePassword(passWord: string): Observable<any> {
+    return this.http.post(`${environment.apiUserUrl}change-password`, { passWord });
+  }
+
 }

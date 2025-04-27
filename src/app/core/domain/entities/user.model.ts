@@ -8,4 +8,5 @@ export interface User {
     role: string;
     defaultWorkspace: Workspace;
     workSpaces: Array<Workspace>;
+    forceChangePassword?: boolean;
 }

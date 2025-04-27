@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h2 mat-dialog-title>Change Password</h2>
+
+</div>
+<mat-dialog-content class="change-pswd-modal">
+    <form #form="ngForm" class="change-pswd-form">
+
+        <div class="password-section">
+            <mat-form-field appearance="fill" class="full-width password-field">
+                <mat-label>Change your password</mat-label>
+                <input matInput [(ngModel)]="passWord" type="password" minlength="6"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$" name="passWord"
+                    required #passWordField="ngModel" (ngModelChange)="onPasswordChange()" />
+                <mat-error *ngIf="passWordField.errors?.['required']">Password Required</mat-error>
+                <mat-error *ngIf="passWordField.errors?.['minlength']">Password must be at least 6 charecters
+                    long</mat-error>
+                <mat-error *ngIf="passWordField.errors?.['pattern']">Password must contain uppercase, lowercase, number,
+                    and special charecter</mat-error>
+            </mat-form-field>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button class="logout-btn" (click)="logOut()">Logout</button>
+    <button mat-button [disabled]="form.invalid" class="save-btn" color="primary" (click)="onSave()">Save</button>
+</mat-dialog-actions>

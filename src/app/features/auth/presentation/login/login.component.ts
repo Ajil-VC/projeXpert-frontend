@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegisterUseCase } from '../../domain/auth.domain';
-import { AuthFlowService, AuthService } from '../../data/auth.service';
+import { AuthService } from '../../data/auth.service';
 import { CommonModule } from '@angular/common';
 
 
@@ -36,7 +36,7 @@ export class LoginComponent {
   }
 
   isBtnDisabled: boolean = false;
-  errorMsg! : string;
+  errorMsg!: string;
 
   onContinue(): void {
     // Handle form submission
@@ -48,7 +48,6 @@ export class LoginComponent {
       next: (res) => {
         if (res.status) {
 
-          console.log("From login resp", res);
           this.router.navigate(['user/dashboard']);
         }
       },
@@ -59,11 +58,6 @@ export class LoginComponent {
       }
     })
 
-  }
-
-  continueWithGoogle(): void {
-    // Handle Google OAuth
-    console.log('Continue with Google');
   }
 
 }
