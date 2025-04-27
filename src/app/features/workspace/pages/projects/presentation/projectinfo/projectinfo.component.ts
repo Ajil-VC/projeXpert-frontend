@@ -49,6 +49,7 @@ export class ProjectinfoComponent {
           this.projects = [];
           return;
         };
+
         this.projects = res;
         this.applyFilters();
       },
@@ -150,7 +151,7 @@ export class ProjectinfoComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.projectService.updateProject(result).subscribe({
           next: (res) => {
             if (!res.status) throw new Error('Projects couldnt retrieve after updation');

@@ -1,12 +1,13 @@
 
 
 interface projectMember {
-    email : string, 
+    _id: string,
+    email: string,
     role: 'admin' | 'user'
 }
 
 export interface projectView {
-    _id? : string,
+    _id?: string,
     name: string,
     status: string,
     priority: string,

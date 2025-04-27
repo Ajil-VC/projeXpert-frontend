@@ -4,7 +4,6 @@ import { LandingComponent } from './features/landing/landing.component';
 import { OtpComponent } from './features/auth/presentation/otp/otp.component';
 import { CreateProfileComponent } from './features/auth/presentation/create-company/create-profile.component';
 import { LayoutComponent } from './features/workspace/components/layout/layout.component';
-import { BacklogComponent } from './features/workspace/pages/backlog/presentation/backlog/backlog.component';
 import { DashboardComponent } from './features/workspace/pages/dashboard/presentation/dashboard/dashboard.component';
 import { LoginComponent } from './features/auth/presentation/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
@@ -17,10 +16,10 @@ import { loginGuardGuard } from './core/guards/login-guard.guard';
 
 export const routes: Routes = [
 
-    { path: '', component: LandingComponent },
-    { path: `register`, component: SignupComponent },
-    { path: `verify-otp`, component: OtpComponent, canActivate: [otpGuard] },
-    { path: `create-company`, component: CreateProfileComponent, canActivate: [otpGuard] },
+    { path: '', component: LandingComponent,canActivate: [loginGuardGuard] },
+    { path: `register`, component: SignupComponent,canActivate: [loginGuardGuard] },
+    { path: `verify-otp`, component: OtpComponent, canActivate: [otpGuard, loginGuardGuard] },
+    { path: `create-company`, component: CreateProfileComponent, canActivate: [otpGuard, loginGuardGuard] },
     { path: 'login', component: LoginComponent, canActivate: [loginGuardGuard] },
 
     {

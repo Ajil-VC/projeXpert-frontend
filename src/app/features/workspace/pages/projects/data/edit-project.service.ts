@@ -11,9 +11,9 @@ export class EditProjectService implements EditProjectUseCase {
 
   constructor(private http: HttpClient) { }
 
-  removeMember(email: string, projectId: string): Observable<any> {
+  removeMember(userId: string, projectId: string): Observable<any> {
 
-    return this.http.patch(`${environment.apiUserUrl}remove-member`, { email, projectId });
+    return this.http.patch(`${environment.apiUserUrl}remove-member`, { userId, projectId });
   }
 
   addMember(email: string, projectId: string, workSpaceId: string): Observable<any> {

@@ -1,7 +1,7 @@
 import { Workspace } from "./workspace.model";
 
 export interface User {
-    id : string;
+    _id : string;
     name: string;
     profileUrl: string;
     email: string;

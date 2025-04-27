@@ -4,7 +4,7 @@ export interface Project {
     name: String;
     workSpace: String;
     companyId: String;
-    members: Array<String> | Array<{ email: string, role: "admin" | "user" }>;
+    members: Array<String> | Array<{ id: string, email: string, role: "admin" | "user" }>;
     status: 'active' | 'archived' | 'completed';
     priority: 'low' | 'medium' | 'high' | 'critical';
 

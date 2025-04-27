@@ -61,13 +61,14 @@ export class EditProjectModalComponent {
       name: data.name as string,
       status: data.status,
       priority: data.priority,
-      members: [] as { id: string, email: string; role: 'user' | 'admin' }[]
+      members: [] as { _id: string, email: string; role: 'user' | 'admin' }[]
     };
     const d = data.members as unknown;
     const mems = d as Array<User>;
+    
     initData.members = mems.map(ele => {
       return {
-        id : ele.id,
+        _id: ele._id,
         email: ele.email,
         role: (ele.role === 'admin' || ele.role === 'user') ? ele.role as 'admin' | 'user' : 'user'
       };
@@ -121,14 +122,14 @@ export class EditProjectModalComponent {
 
     const confirmDelete = await window.confirm('Are you sure you want to remove this member?');
     if (confirmDelete) {
-      console.log(userId, 'user evedeeeee')
-      const updatedMembers: { email: string; role: 'user' | 'admin' }[] = [...this.projectData.members as { email: string; role: 'user' | 'admin' }[]];
-      const removedUser = updatedMembers.splice(index, 1);
+
+      const updatedMembers: { _id: string, email: string; role: 'user' | 'admin' }[] = [...this.projectData.members as { _id: string, email: string; role: 'user' | 'admin' }[]];
+      updatedMembers.splice(index, 1);
 
       if (!this.projectData._id) throw new Error('Project Id not exist');
-      this.editProjectSer.removeMember(removedUser[0].email, this.projectData._id).subscribe({
+      this.editProjectSer.removeMember(userId, this.projectData._id).subscribe({
         next: (res) => {
-          console.log(res, 'From remove member');
+
           this.projectData.members = updatedMembers;
         },
         error: (err) => {
