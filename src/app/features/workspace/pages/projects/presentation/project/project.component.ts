@@ -5,6 +5,8 @@ import { ProjectsUseCase } from '../../domain/projects.domain';
 import { ProjectService } from '../../data/project.service';
 import { Company } from '../../../../../../core/domain/entities/company.model';
 import { Router } from '@angular/router';
+import { LayoutService } from '../../../../../../shared/services/layout.service';
+import { Project } from '../../../../../../core/domain/entities/project.model';
 
 @Component({
   selector: 'app-project',
@@ -26,7 +28,8 @@ export class ProjectComponent {
   constructor(
     private fb: FormBuilder,
     private projectsInterface: ProjectsUseCase,
-    private router : Router
+    private router: Router,
+    private layoutSer: LayoutService
   ) {
 
     this.projectForm = this.fb.group({
@@ -42,7 +45,6 @@ export class ProjectComponent {
       next: (res) => {
 
         const companyData = res.data as Company;
-        console.log(companyData)
         this.workSpaces = companyData.workspaces.map(ele => {
           return {
             value: ele._id,
@@ -67,23 +69,20 @@ export class ProjectComponent {
 
   onSubmit() {
 
-
-
     this.isButtonDisabled = true;
-    console.log(this.projectForm.value);
     const { projectName, workspace, priority } = this.projectForm.value;
     this.projectsInterface.createProject(projectName, workspace, priority).subscribe({
 
-      next: (res) => {
-      
+      next: (res: { status: boolean, createdProject: Project }) => {
 
         this.router.navigate(['user/project-info']);
+        this.layoutSer.prSubject.next(res.createdProject);
 
       },
       error: (err) => {
         console.error(err);
       }
-      
+
     });
   }
 

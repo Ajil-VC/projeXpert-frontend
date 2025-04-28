@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { AuthService } from '../../../auth/data/auth.service';
 import { User } from '../../../../core/domain/entities/user.model';
 import { Workspace } from '../../../../core/domain/entities/workspace.model';
 import { Router } from '@angular/router';
+import { LayoutService } from '../../../../shared/services/layout.service';
+import { Project } from '../../../../core/domain/entities/project.model';
 
 @Component({
   selector: 'app-header',
@@ -17,22 +19,49 @@ export class HeaderComponent {
 
   showWorkspaceMenu = false;
   showUserMenu = false;
+  showProjectMenu = false;
   isMobileMenuOpen = false;
+  availableProjects: any;
 
-  currentUser!: User | null;
+  currentUser!: any;
   currentWorkspace!: Workspace | null;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  canCreateWorkspace: boolean = false;
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private layoutSer: LayoutService,
+    private cdr : ChangeDetectorRef) {
+
+    const isAdmin = this.authService.isAdmin();
+    if (isAdmin) {
+      this.canCreateWorkspace = true;
+    }
+
+  }
   ngOnInit() {
 
     this.authService.user$.subscribe({
       next: (res) => {
 
         this.currentUser = res
+        this.availableProjects = res?.defaultWorkspace.projects;
 
       },
       error: (err) => {
         console.error('Error Occured while populating user data into header.', err);
+      }
+    });
+
+    this.layoutSer.prSubject.subscribe({
+      next: (res: unknown) => {
+        const project = res as Project;
+        this.availableProjects.push(project);
+        console.log(project, 'This is from header');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error occurred while updating projects list', err);
       }
     });
 
@@ -53,18 +82,44 @@ export class HeaderComponent {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  toggleWorkspaceMenu() {
-    this.showWorkspaceMenu = !this.showWorkspaceMenu;
-    if (this.showWorkspaceMenu) {
-      this.showUserMenu = false;
-    }
-  }
-
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
     if (this.showUserMenu) {
+      this.showWorkspaceMenu = false; // Close workspace menu if user menu opened
+      this.showProjectMenu = false;
+    }
+  }
+
+  toggleWorkspaceMenu() {
+    this.showWorkspaceMenu = !this.showWorkspaceMenu;
+    if (this.showWorkspaceMenu) {
+      this.showUserMenu = false; // Close user menu if workspace menu opened
+      this.showProjectMenu = false;
+    }
+  }
+
+  toggleProjectsMenu() {
+    this.showProjectMenu = !this.showProjectMenu;
+    if (this.showProjectMenu) {
+      this.showUserMenu = false; // Close user menu if workspace menu opened
       this.showWorkspaceMenu = false;
     }
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    const clickedInsideDropdown = target.closest('.dropdown');
+    const clickedInsideUserDropdown = target.closest('.user-menu') || target.closest('.icon-button');
+
+    if (!clickedInsideDropdown && !clickedInsideUserDropdown) {
+      this.showWorkspaceMenu = false;
+      this.showUserMenu = false;
+      this.showProjectMenu = false;
+    }
+
   }
 
   selectWorkspace(workspace: Workspace) {
@@ -79,7 +134,7 @@ export class HeaderComponent {
     this.showWorkspaceMenu = false;
   }
 
-  logout(){
+  logout() {
     this.authService.logout()
   }
 

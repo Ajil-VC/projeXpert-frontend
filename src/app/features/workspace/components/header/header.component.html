@@ -16,32 +16,45 @@
 
     <nav class="main-nav">
       <ul>
+
         <li class="dropdown">
-          <a  (click)="toggleWorkspaceMenu()">
-            Projects <i class="fas fa-chevron-down"></i>
+          <a (click)="toggleWorkspaceMenu(); $event.stopPropagation() " >
+            Workspaces <i class="fas fa-chevron-down"></i>
           </a>
           <div class="dropdown-content" *ngIf="showWorkspaceMenu">
-            <div class="dropdown-header">Your Projects</div>
+            <div class="dropdown-header">Workspaces</div>
             <a *ngFor="let workspace of currentUser?.workSpaces">
               <!--(click)="selectWorkspace(workspace) Need to give this in the above tag"-->
-              {{currentWorkspace?.name}}
+              {{workspace?.name}}
             </a>
             <div class="dropdown-divider"></div>
-            <a (click)="createNewWorkspace()" class="create-new">
-              <i class="fas fa-plus-circle"></i> Create New Project
+            <a (click)="createNewWorkspace()" *ngIf="canCreateWorkspace" class="create-new">
+              <i class="fas fa-plus-circle"></i> Create Workspace
             </a>
           </div>
         </li>
+
         <li class="dropdown">
-          <a href="javascript:void(0)">
-            Teams <i class="fas fa-chevron-down"></i>
+          <a  (click)="toggleProjectsMenu(); $event.stopPropagation() ">
+            Projects <i class="fas fa-chevron-down"></i>
           </a>
+          <div class="dropdown-content" *ngIf="showProjectMenu">
+            <div class="dropdown-header">Your Projects</div>
+            <a *ngFor="let project of availableProjects">
+              <!--(click)="selectWorkspace(workspace) Need to give this in the above tag"-->
+              {{project?.name}}
+            </a>
+            <div class="dropdown-divider"></div>
+            <!-- <a (click)="createNewWorkspace()" class="create-new">
+              <i class="fas fa-plus-circle"></i> Create New Project
+            </a> -->
+          </div>
         </li>
-        <li class="dropdown">
-          <a href="javascript:void(0)">
+        <!-- <li class="dropdown">
+          <a>
             Plans <i class="fas fa-chevron-down"></i>
           </a>
-        </li>
+        </li> -->
       </ul>
     </nav>
   </div>
