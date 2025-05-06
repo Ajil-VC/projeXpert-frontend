@@ -45,14 +45,23 @@ export class LoginComponent {
 
     const { email, password } = this.loginForm.value;
     this.registerUseCaseInterface.login(email, password).subscribe({
-      next: (res) => {
+      next: (res: {
+        forceChangePassword: boolean,
+        status: boolean,
+        token: string
+      }) => {
         if (res.status) {
 
-          this.router.navigate(['user/dashboard']);
+          if (!res.forceChangePassword) {
+
+            this.router.navigate(['user/dashboard']);
+          } else {
+            this.router.navigate(['user/change-password']);
+          }
         }
       },
       error: (err) => {
-        this.errorMsg = err.error.message;
+        this.errorMsg = err.message;
         this.isBtnDisabled = false;
         console.log("Error in login response ", err);
       }

@@ -13,11 +13,15 @@ import { ProjectComponent } from './features/workspace/pages/projects/presentati
 import { ProjectinfoComponent } from './features/workspace/pages/projects/presentation/projectinfo/projectinfo.component';
 import { ProjectsData } from './core/guards/projects-data.resolver';
 import { loginGuardGuard } from './core/guards/login-guard.guard';
+import { ChangePswrdComponent } from './features/workspace/components/change-pswrd/change-pswrd.component';
+import { forceChangePasswordGuard } from './core/guards/force-change-password.guard';
+import { canLeavePasswordchangeGuard } from './core/guards/can-leave-passwordchange.guard';
+import { BacklogComponent } from './features/workspace/pages/backlog/presentation/backlog/backlog.component';
 
 export const routes: Routes = [
 
-    { path: '', component: LandingComponent,canActivate: [loginGuardGuard] },
-    { path: `register`, component: SignupComponent,canActivate: [loginGuardGuard] },
+    { path: '', component: LandingComponent, canActivate: [loginGuardGuard] },
+    { path: `register`, component: SignupComponent, canActivate: [loginGuardGuard] },
     { path: `verify-otp`, component: OtpComponent, canActivate: [otpGuard, loginGuardGuard] },
     { path: `create-company`, component: CreateProfileComponent, canActivate: [otpGuard, loginGuardGuard] },
     { path: 'login', component: LoginComponent, canActivate: [loginGuardGuard] },
@@ -25,7 +29,9 @@ export const routes: Routes = [
     {
         path: 'user', component: LayoutComponent, canActivate: [authGuard],
         children: [
-            { path: 'dashboard', component: DashboardComponent, resolve: [workspaceDataResolver] },
+            { path: 'dashboard', component: DashboardComponent, resolve: [workspaceDataResolver], canActivate: [forceChangePasswordGuard] },
+            { path: 'change-password', component: ChangePswrdComponent, canDeactivate: [canLeavePasswordchangeGuard] },
+            { path: 'backlog', component: BacklogComponent },
             { path: 'create-project', component: ProjectComponent },
             { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] }
         ]

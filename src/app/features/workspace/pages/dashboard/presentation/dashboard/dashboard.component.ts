@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivityItem, EpicItem, ScheduleItem, SummaryCard } from '../../domain/dashboard.domain';
+import { AuthService } from '../../../../../auth/data/auth.service';
 
 
 @Component({
@@ -117,6 +118,9 @@ export class DashboardComponent {
       ]
     }
   ];
+
+  constructor(private authService: AuthService) { }
+
 
   viewEpics() {
     // Logic to view all epics

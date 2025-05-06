@@ -1,0 +1,136 @@
+.sidebar {
+    width: 320px;
+    background-color: #161b22;
+    border-right: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    transition: transform 0.3s ease;
+}
+
+.displayEpic{
+    display:  none;
+}
+.epic-label {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+  
+  .epic-count {
+    background-color: #30363d;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+.epic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #30363d;
+}
+
+.epic-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.epic-list {
+    flex: 1;
+}
+
+.epic-item {
+    border-bottom: 1px solid #30363d;
+}
+
+.epic-item-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+}
+
+.expand-icon {
+    color: #8b949e;
+    font-size: 12px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.epic-color,
+.wishlist-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background-color: #2563EB;
+    margin-right: 8px;
+}
+
+.epic-details {
+    padding: 0 15px 15px 35px;
+}
+
+.wishlist-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.date-info {
+    margin-top: 15px;
+}
+
+.date-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.date-label {
+    font-weight: 500;
+}
+
+.date-value {
+    color: #8b949e;
+}
+
+.view-details-button {
+    width: 100%;
+    background-color: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    padding: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.create-epic-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #8b949e;
+    padding: 15px;
+    cursor: pointer;
+    border-top: 1px solid #30363d;
+}
+
+.create-epic-button span {
+    margin-right: 5px;
+    font-size: 18px;
+}

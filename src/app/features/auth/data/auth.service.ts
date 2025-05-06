@@ -87,6 +87,7 @@ export class AuthService implements RegisterUseCase {
   logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('role');
+    localStorage.removeItem('forceChangePass');
     this.router.navigate(['/login']);
 
     this.currentUser = null;
@@ -136,8 +137,8 @@ export class PswdChangeService {
 
   constructor(private http: HttpClient) { }
 
-  changePassword(passWord: string): Observable<any> {
-    return this.http.post(`${environment.apiUserUrl}change-password`, { passWord });
+  changePassword(oldPassword: string, passWord: string): Observable<any> {
+    return this.http.post(`${environment.apiUserUrl}change-password`, { passWord, oldPassword });
   }
 
 }

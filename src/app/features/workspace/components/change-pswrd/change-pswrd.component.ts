@@ -1,60 +1,70 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { AuthService, PswdChangeService } from '../../../auth/data/auth.service';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { CanComponentDeactivate } from '../../../../core/domain/entities/canCompoDecativate';
 
 @Component({
   selector: 'app-change-pswrd',
+  standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
-    MatDialogContent,
-    MatFormField,
-    MatLabel,
-    MatDialogActions,
-    MatInputModule,
-    CommonModule
+    MatInputModule
   ],
   templateUrl: './change-pswrd.component.html',
   styleUrl: './change-pswrd.component.css'
 })
-export class ChangePswrdComponent {
-
+export class ChangePswrdComponent implements CanComponentDeactivate {
   passWord!: string;
+  oldPassWord!: string;
+  passwordChanged: boolean = false;
+  errorMsg!: string;
+
   @ViewChild('passWordField') passWordField!: NgModel;
+
   constructor(
-    public dialogRef: MatDialogRef<ChangePswrdComponent>,
     private pswdService: PswdChangeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   onPasswordChange(): void {
-    // Triggering form control validation
-    if (this.passWordField) {
-      this.passWordField?.control?.markAsTouched();
-      this.passWordField?.control?.updateValueAndValidity();
+    if (this.passWordField?.control) {
+      this.errorMsg = '';
+      this.passWordField.control.markAsTouched();
+      this.passWordField.control.updateValueAndValidity();
     }
   }
 
+  onSave(): void {
 
-  onSave() {
+    this.pswdService.changePassword(this.oldPassWord, this.passWord).subscribe({
+      next: () => {
 
-    this.pswdService.changePassword(this.passWord).subscribe({
-      next: (res) => {
-        console.log(res, 'from change password');
-        this.dialogRef.close(true);
+        this.passwordChanged = true;
+        this.router.navigate(['/user/dashboard']);
       },
       error: (err) => {
-        console.error('Error on changing password', err);
+        this.errorMsg = err.error.message;
+        console.error('Error changing password:', err);
       }
-    })
-
+    });
+    
   }
 
-  logOut() {
+  logOut(): void {
     this.authService.logout();
-    this.dialogRef.close(true);
+    this.passwordChanged = true;
   }
+
+  canDeactivate(): boolean {
+    if (!this.passwordChanged) {
+      return false;
+    }
+    return true;
+  }
+
 }

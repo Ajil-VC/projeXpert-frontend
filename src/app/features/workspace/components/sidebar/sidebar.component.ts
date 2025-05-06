@@ -33,7 +33,7 @@ export class SidebarComponent {
 
   menuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
-    { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/backlog', active: false },
+    { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false },
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/board', active: false },
     { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/chat', active: false },

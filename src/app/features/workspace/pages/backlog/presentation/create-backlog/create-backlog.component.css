@@ -1,0 +1,118 @@
+.backlog-section {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #21262d;
+  }
+  
+  .header-left, .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .collapse-button {
+    background: none;
+    border: none;
+    color: #c9d1d9;
+    margin-right: 8px;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .section-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  
+  .issue-count {
+    color: #8b949e;
+    margin-left: 8px;
+  }
+  
+  .assignee-indicators {
+    display: flex;
+    margin-right: 5px;
+  }
+  
+  .assignee-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: -5px;
+    border: 2px solid #21262d;
+  }
+  
+  .assignee-circle.blue {
+    background-color: #2563eb;
+  }
+  
+  .assignee-circle.green {
+    background-color: #10b981;
+  }
+  
+  .count {
+    margin: 0 10px;
+  }
+  
+  .start-sprint-button {
+    background-color: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    padding: 6px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .more-options-button {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+  }
+  
+  .backlog-content {
+    padding: 20px;
+  }
+  
+  .empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    border: 1px dashed #30363d;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .empty-state p {
+    color: #8b949e;
+    margin: 0;
+  }
+  
+  .create-issue-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #8b949e;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .create-issue-button span {
+    margin-right: 5px;
+    font-size: 16px;
+  }

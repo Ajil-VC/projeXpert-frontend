@@ -1,0 +1,20 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--background-color);
+    color: #ffffff;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.board-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-left: 20px;
+}

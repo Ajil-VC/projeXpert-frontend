@@ -1,0 +1,67 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #161b22;
+    border-bottom: 1px solid #30363d;
+    height: 60px;
+  }
+  
+  .header-left, .header-middle, .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 5px 10px;
+    width: 300px;
+  }
+  
+  .search-icon {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+  }
+  
+  .search-input {
+    background: none;
+    border: none;
+    color: #c9d1d9;
+    margin-left: 5px;
+    width: 100%;
+    outline: none;
+  }
+  
+  .epic-dropdown {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .epic-label {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+  
+  .epic-count {
+    background-color: #30363d;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+    margin-right: 5px;
+  }
+  
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+  }
+  

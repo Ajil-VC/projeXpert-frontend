@@ -44,3 +44,21 @@ body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+/* Darken the background behind the dialog */
+.custom-backdrop {
+    background-color: #001630 !important;
+    z-index: 1000 !important;
+  }
+  
+  /* Style the modal panel itself */
+  .custom-password-modal {
+    border-radius: 8px;
+    padding: 20px;
+    /* background-color: #fff; */
+    max-width: 400px;
+    width: 100%;
+  }
+  
