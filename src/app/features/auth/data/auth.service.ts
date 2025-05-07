@@ -7,6 +7,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { AuthResponse } from '../domain/auth.domain';
 import { Router } from '@angular/router';
+import { LayoutService } from '../../../shared/services/layout.service';
+import { Project } from '../../../core/domain/entities/project.model';
+import { SharedService } from '../../../shared/services/shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -46,13 +49,25 @@ export class AuthService implements RegisterUseCase {
 
     this.workspaceSubject.next(workspace);
     this.currentWorkspace = workspace;
+
+    const currentProjectId = localStorage.getItem('projectId');
+    if (!currentProjectId) {
+      const curProj = workspace.projects[0] as unknown as Project;
+      localStorage.setItem('projectId', curProj._id as string);
+      this.shared.curProject.next(curProj);
+    }
+
+    const workspaceWithProjects = (workspace.projects as unknown as Project[])
+    .filter(ele => ele._id === currentProjectId);
+    this.shared.curProject.next(workspaceWithProjects[0]);
+
   }
   //** For Initial loading **//
   //******************************//
 
 
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private shared: SharedService) { }
 
   signup(email: string): Observable<any> {
 

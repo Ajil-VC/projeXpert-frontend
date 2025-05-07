@@ -1,10 +1,20 @@
 <div class="app-container">
     <app-backlog-header></app-backlog-header>
-    <div class="main-content">
-        <app-epics></app-epics>
+
+    <div class="main-content" *ngIf="isProjectSelected" >
+        <app-epics [epics]="epics" ></app-epics>
         <div class="board-container">
             <app-sprint></app-sprint>
             <app-create-backlog></app-create-backlog>
         </div>
     </div>
+
+
+    <div class="select-project" *ngIf="!isProjectSelected" >
+        <div class="no-data-icon">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <h3>Please select a project</h3>
+    </div>
+
 </div>

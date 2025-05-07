@@ -1,0 +1,22 @@
+
+<div class="transform-container">
+
+    <button 
+      *ngIf="!isEditing" 
+      (click)="toggleEdit()" 
+      class="epic-button">
+    + Create epic
+    </button>
+    
+    <div *ngIf="isEditing" class="input-container">
+      <input 
+        #inputField
+        type="text" 
+        [value]="inputValue"
+        placeholder="Enter epic name"
+        (input)="updateValue($event)"
+        (blur)="createEpic()"
+        (keyup.enter)="createEpic()"
+        class="transform-input" />
+    </div>
+  </div>

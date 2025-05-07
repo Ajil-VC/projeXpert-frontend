@@ -27,9 +27,9 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [loginGuardGuard] },
 
     {
-        path: 'user', component: LayoutComponent, canActivate: [authGuard],
+        path: 'user', component: LayoutComponent, resolve: [workspaceDataResolver], canActivate: [authGuard],
         children: [
-            { path: 'dashboard', component: DashboardComponent, resolve: [workspaceDataResolver], canActivate: [forceChangePasswordGuard] },
+            { path: 'dashboard', component: DashboardComponent, canActivate: [forceChangePasswordGuard] },
             { path: 'change-password', component: ChangePswrdComponent, canDeactivate: [canLeavePasswordchangeGuard] },
             { path: 'backlog', component: BacklogComponent },
             { path: 'create-project', component: ProjectComponent },

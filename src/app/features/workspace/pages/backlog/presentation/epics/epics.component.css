@@ -9,22 +9,23 @@
     transition: transform 0.3s ease;
 }
 
-.displayEpic{
-    display:  none;
+.displayEpic {
+    display: none;
 }
+
 .epic-label {
     font-weight: 600;
     margin-right: 5px;
-  }
-  
-  .epic-count {
+}
+
+.epic-count {
     background-color: #30363d;
     border-radius: 10px;
     padding: 2px 6px;
     font-size: 12px;
     margin-right: 5px;
     cursor: pointer;
-  }
+}
 
 .epic-header {
     display: flex;
@@ -53,12 +54,19 @@
 
 .epic-item {
     border-bottom: 1px solid #30363d;
+
 }
 
 .epic-item-header {
     display: flex;
     align-items: center;
     padding: 12px 15px;
+    cursor: pointer;
+    justify-content: space-between;
+}
+.epic-item-namepart{
+    display: flex;
+    align-items: center;
     cursor: pointer;
 }
 
@@ -67,6 +75,8 @@
     font-size: 12px;
     margin-right: 8px;
     cursor: pointer;
+
+  
 }
 
 .epic-color,
@@ -75,11 +85,21 @@
     height: 16px;
     border-radius: 4px;
     background-color: #2563EB;
+    color: #2563EB;
     margin-right: 8px;
 }
 
 .epic-details {
     padding: 0 15px 15px 35px;
+
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.epic-details.expanded {
+    padding: 0 15px 15px 35px;
+    max-height: 300px;
 }
 
 .wishlist-item {
@@ -133,4 +153,12 @@
 .create-epic-button span {
     margin-right: 5px;
     font-size: 18px;
+}
+
+.icon-action, .icon-action i{
+    background-color: none;
+    background: none;
+    border: none;
+    color : white;
+    cursor: pointer;
 }

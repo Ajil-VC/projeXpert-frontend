@@ -5,8 +5,9 @@
   <div class="side-top" >
     
     <a class="current-project">
-      <!-- <i class="fas fa-briefcase"></i> -->
-      <span class="menu-label">Project E-commerce</span>
+      
+      <span class="menu-label">Project : </span>
+      <p> {{currentProject}}</p>
     </a>
     <div class="sidebar-toggle" (click)="toggleSidebar()">
       <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>

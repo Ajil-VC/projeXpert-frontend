@@ -1,11 +1,11 @@
-<div [class.displayEpic]="!isHidden" (click)="hideEpics()" >
+<div [class.displayEpic]="!isHidden" (click)="hideEpics()">
     <span class="epic-label">Epic</span>
     <span class="epic-count">{{ epicCount }}</span>
-    <span class="expand-icon" >▶</span>
+    <span class="expand-icon">▶</span>
     <br>
 </div>
 <div class="sidebar" [class.displayEpic]="isHidden">
-    
+
     <div class="epic-header">
         <h2>Epic</h2>
         <button class="close-button" (click)="hideEpics()">×</button>
@@ -13,19 +13,22 @@
 
     <div class="epic-list">
         <div *ngFor="let epic of epics" class="epic-item" [class.selected]="epic === selectedEpic">
-            <div class="epic-item-header" (click)="toggleEpicDetails(epic)">
-                <span class="expand-icon">▶</span>
-                <div class="epic-color"></div>
-                <span class="epic-title">{{ epic.title }}</span>
-            </div>
 
-            <div class="epic-details">
-                <div *ngFor="let wishlist of epic.wishlists" class="wishlist-item">
-                    <div class="wishlist-color"></div>
-                    <span>{{ wishlist }}</span>
+            <div class="epic-item-header">
+                <div class="epic-item-namepart">
+                    <span class="expand-icon" (click)="toggleEpicDetails(epic)"
+                        [ngClass]="isEpicExpanded(epic._id) ? 'fa-chevron-right ' : 'fa-chevron-down'"></span>
+                    <input class="epic-color" type="checkbox" (change)="updateCheckStatus(epic._id, $event)" >
+                    <span class="epic-title" (click)="toggleEpicDetails(epic)" >{{ epic.title }}</span>
+
                 </div>
 
-                <!-- <div class="date-info">
+                <button class="icon-action danger" (click)="deleteProject($event, epic._id)">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+            <div class="epic-details" [ngClass]="{'expanded': isEpicExpanded(epic._id)}" id="{{epic._id}}">
+                <div class="date-info">
                     <div class="date-row">
                         <span class="date-label">Start Date</span>
                         <span class="date-value">None</span>
@@ -34,14 +37,15 @@
                         <span class="date-label">End Date</span>
                         <span class="date-value">None</span>
                     </div>
-                </div> -->
-
+                </div>
                 <button class="view-details-button">View all details</button>
             </div>
+
+
         </div>
     </div>
 
     <button class="create-epic-button">
-        <span>+</span> Create epic
+        <app-transform-button (response)="addEpicToList($event)"></app-transform-button>
     </button>
 </div>

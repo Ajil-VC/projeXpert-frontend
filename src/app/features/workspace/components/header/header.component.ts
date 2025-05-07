@@ -6,6 +6,7 @@ import { Workspace } from '../../../../core/domain/entities/workspace.model';
 import { Router } from '@angular/router';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { Project } from '../../../../core/domain/entities/project.model';
+import { SharedService } from '../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-header',
@@ -31,6 +32,7 @@ export class HeaderComponent {
     private authService: AuthService, 
     private router: Router, 
     private layoutSer: LayoutService,
+    private shared : SharedService,
     private cdr : ChangeDetectorRef) {
 
     const isAdmin = this.authService.isAdmin();
@@ -57,7 +59,6 @@ export class HeaderComponent {
       next: (res: unknown) => {
         const project = res as Project;
         this.availableProjects.push(project);
-        console.log(project, 'This is from header');
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -126,6 +127,24 @@ export class HeaderComponent {
     // this.currentUser.currentWorkspace = workspace.name;
     this.showWorkspaceMenu = false;
     // Logic to switch workspace would go here
+  }
+
+  selectProject(projectId:string){
+    
+    this.showProjectMenu = false;
+    
+    this.layoutSer.getProject(projectId).subscribe({
+      next: (res : {status : boolean, result : Project}) => {
+        
+        
+        this.layoutSer.setProjectId(res.result._id as string);
+        this.shared.curProject.next(res.result);
+      },
+      error : (err) => {
+        console.log("Error while getting project data",err);
+      }
+    })
+
   }
 
   createNewWorkspace() {

@@ -40,8 +40,8 @@
           </a>
           <div class="dropdown-content" *ngIf="showProjectMenu">
             <div class="dropdown-header">Your Projects</div>
-            <a *ngFor="let project of availableProjects">
-              <!--(click)="selectWorkspace(workspace) Need to give this in the above tag"-->
+            <a *ngFor="let project of availableProjects" (click)="selectProject(project._id)" >
+              
               {{project?.name}}
             </a>
             <div class="dropdown-divider"></div>

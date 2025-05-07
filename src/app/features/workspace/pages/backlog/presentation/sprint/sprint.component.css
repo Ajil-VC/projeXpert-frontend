@@ -106,7 +106,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 10px 20px;
     border: 1px dashed #30363d;
     border-radius: 6px;
     text-align: center;
@@ -115,13 +115,14 @@
 
 .empty-state h3 {
     margin: 0 0 10px 0;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .empty-state p {
     color: #8b949e;
     margin: 0;
     max-width: 500px;
+    font-size: 15px;
 }
 
 .create-issue-button {

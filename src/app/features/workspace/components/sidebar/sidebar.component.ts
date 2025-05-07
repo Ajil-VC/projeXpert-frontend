@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../auth/data/auth.service';
+import { LayoutService } from '../../../../shared/services/layout.service';
+import { Project } from '../../../../core/domain/entities/project.model';
+import { SharedService } from '../../../../shared/services/shared.service';
 
 
 interface MenuItem {
@@ -21,7 +24,9 @@ interface MenuItem {
 })
 export class SidebarComponent {
 
-  constructor(private authSer: AuthService) {
+  public currentProject: string = '';
+
+  constructor(private authSer: AuthService, private shared: SharedService) {
 
     const isAdmin = this.authSer.isAdmin();
     if (!isAdmin) {
@@ -30,6 +35,18 @@ export class SidebarComponent {
 
   }
 
+  ngOnInit() {
+
+    this.shared.currentPro$.subscribe({
+      next: (res: any) => {
+        console.log(res,'re')
+        this.currentProject = (res as Project).name as string;
+      },
+      error: (err) => {
+        console.log('Error occured while getting current project', err);
+      }
+    })
+  }
 
   menuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },

@@ -13,6 +13,19 @@
     padding: 20px;
 }
 
+.select-project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: lightslategray;
+}
+
+.no-data-icon {
+    font-size: 48px;
+
+}
+
 .board-container {
     flex: 1;
     overflow-y: auto;

@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TransformButtonComponent } from "../transform-button/transform-button.component";
+import { Task } from '../../../../../../core/domain/entities/task.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-epics',
   imports: [
-    CommonModule
+    CommonModule,
+    TransformButtonComponent,
+    FormsModule
   ],
   templateUrl: './epics.component.html',
   styleUrl: './epics.component.css'
@@ -12,32 +17,57 @@ import { Component } from '@angular/core';
 export class EpicsComponent {
 
 
-  isHidden : boolean = false;
-  epicCount = 2;
+  isHidden: boolean = false;
 
-  // : Epic[]
-  epics = [
-    {
-      id: '1',
-      title: 'Epic',
-      wishlists: ['Wishlist', 'Wishlist', 'Wishlist', 'Wishlist'],
-      startDate: null,
-      endDate: null
-    }
-  ];
+  @Input() epics: Task[] = [];
+  epicCount = this.epics.length;
+  selectedEpic = this.epics[0];
 
-  selectedEpic  = this.epics[0];
+  expandedEpics: Set<string> = new Set();
+  checkedEpics: Set<string> = new Set();
 
-  toggleEpicDetails(epic :any ): void {
+  ngOnInit() {
+
   }
-  
-  hideEpics(){
+
+  toggleEpicDetails(epic: Task): void {
+    const epicId = epic._id;
+
+    if (this.expandedEpics.has(epicId)) {
+      this.expandedEpics.delete(epicId);
+    } else {
+      this.expandedEpics.add(epicId);
+    }
+
+    this.selectedEpic = epic;
+  }
+  isEpicExpanded(epicId: string): boolean {
+    return this.expandedEpics.has(epicId);
+  }
+
+
+  hideEpics() {
     this.isHidden = !this.isHidden;
 
   }
 
   createNewEpic(): void {
-    // Logic to create a new epic
+
+  }
+
+  addEpicToList(res: Task) {
+    this.epics.push(res);
+  }
+  deleteProject(epic: any, epicId: string) {
+
+    console.log(epicId);
+  }
+  updateCheckStatus(epicId: string, event: any) {
+    if(this.checkedEpics.has(epicId)){
+      this.checkedEpics.delete(epicId);
+    }else{
+      this.checkedEpics.add(epicId);
+    }
   }
 
 
