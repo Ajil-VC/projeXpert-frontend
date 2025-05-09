@@ -13,7 +13,7 @@
                 <div class="assignee-circle green"></div>
             </div>
             <span class="count">0</span>
-            <button class="start-sprint-button">Start sprint</button>
+            <button class="start-sprint-button">Create sprint</button>
             <button class="more-options-button">
                 <i class="fa fa-ellipsis-h"></i>
             </button>
@@ -21,12 +21,13 @@
     </div>
 
     <div class="backlog-content">
-        <div class="empty-state">
+
+        <div class="empty-state" *ngIf="!isBacklog">
             <p>Backlog is empty, or create new issues</p>
         </div>
 
-        <button class="create-issue-button">
-            <span>+</span> Create issue
-        </button>
+        <app-issue-row *ngFor="let backlog of filteredBacklogs" [issue]="backlog"></app-issue-row>
+
+        <app-create-issue-button [from]="issueCreationButton"></app-create-issue-button>
     </div>
 </div>

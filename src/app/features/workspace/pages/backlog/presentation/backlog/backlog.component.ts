@@ -19,6 +19,7 @@ export class BacklogComponent {
   title = 'scrum-board';
   isProjectSelected: boolean = true;
   epics!: Task[];
+  backlogs!: Task[];
 
   constructor(private shared: SharedService) { }
 
@@ -41,10 +42,32 @@ export class BacklogComponent {
       next: (res: { status: boolean, result: Task[] }) => {
 
         this.epics = res.result.filter(epic => epic.type === 'epic');
-        console.log(res.result, 'gettasks');
+        this.backlogs = res.result.filter(epic => (epic.sprintId == null && epic.type !== 'epic'));
       },
       error: (err) => {
         console.log("Error occured while getting tasks", err);
+      }
+    })
+
+    //Getting tasks on project change from header
+    this.shared.taskSub$.subscribe({
+      next: (res) => {
+        const tasks = res as Task[];
+        this.epics = tasks.filter(epic => epic.type === 'epic');
+        this.backlogs = tasks.filter(epic => epic.sprintId == null && epic.type !== 'epic');
+      },
+      error: (err) => {
+        console.log("Error occured while getting tasks", err);
+      }
+    });
+
+    //Getting Teammembers 
+    this.shared.getTeamMembers().subscribe({
+      next: (res) => {
+        console.log(res, 'Re data');
+      },
+      error: (err) => {
+        console.error('Error occured while getting team members.', err);
       }
     })
 

@@ -1,0 +1,20 @@
+<div class="transform-container">
+
+    <button *ngIf="!isEditing" (click)="toggleEdit()" class="issue-button">
+        <span>+</span>Create issue
+    </button>
+
+    <div #inputFieldContainer *ngIf="isEditing" class="input-container">
+
+        <div class="input-with-type">
+            <select [(ngModel)]="issueType" class="type-dropdown">
+                <option [hidden]="issueType == 'task' " value="task">Task</option>
+                <option [hidden]="issueType == 'story'" value="story">Story</option>
+                <option [hidden]="issueType == 'bug'" value="bug">Bug</option>
+            </select>
+        </div>
+
+        <input #inputField type="text" [value]="inputValue" placeholder="What needs to be done?"
+            (input)="updateValue($event)" (keyup.enter)="createIssue()" class="transform-input" />
+    </div>
+</div>

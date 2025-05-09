@@ -1,0 +1,37 @@
+<div class="issue-row" id="{{ issue._id }}"  >
+
+    <label class="checkbox-container" id="{{issue._id}}" >
+        <input [(ngModel)]="isClicked" type="checkbox"/>
+    </label>
+
+    <!-- Issue Type Badge -->
+    <div class="issue-type" [ngClass]="getTypeClass()">
+        {{ issue.type }}
+    </div>
+
+    <!-- Issue Title -->
+    <div class="issue-title">
+        {{ issue.title }}
+    </div>
+
+    <!-- Spacer -->
+    <div class="flex-spacer"></div>
+
+    <!-- Status Dropdown -->
+    <div class="status-container">
+        <select [(ngModel)]="issue.status" class="status-select " [ngClass]="getStatusClass()">
+            <option class="{{defaultStatus}}" value="todo">To Do</option>
+            <option class="{{defaultStatus}}" value="in-progress">In Progress</option>
+            <option class="{{defaultStatus}}" value="done">Done</option>
+        </select>
+    </div>
+
+    <div>
+        <span>{{issue.assignedTo}}</span>
+    </div>
+
+    <!-- Assign Button -->
+    <button class="assign-button" (click)="assignIssue()">
+        <span class="plus-icon">+</span>
+    </button>
+</div>

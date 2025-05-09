@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
 
 @Component({
   selector: 'app-sprint',
-  imports: [],
+  imports: [CreateIssueButtonComponent],
   templateUrl: './sprint.component.html',
   styleUrl: './sprint.component.css'
 })

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { Project } from '../../../../core/domain/entities/project.model';
 import { SharedService } from '../../../../shared/services/shared.service';
+import { Task } from '../../../../core/domain/entities/task.model';
 
 @Component({
   selector: 'app-header',
@@ -29,11 +30,11 @@ export class HeaderComponent {
 
   canCreateWorkspace: boolean = false;
   constructor(
-    private authService: AuthService, 
-    private router: Router, 
+    private authService: AuthService,
+    private router: Router,
     private layoutSer: LayoutService,
-    private shared : SharedService,
-    private cdr : ChangeDetectorRef) {
+    private shared: SharedService,
+    private cdr: ChangeDetectorRef) {
 
     const isAdmin = this.authService.isAdmin();
     if (isAdmin) {
@@ -129,19 +130,19 @@ export class HeaderComponent {
     // Logic to switch workspace would go here
   }
 
-  selectProject(projectId:string){
-    
+  selectProject(projectId: string) {
+
     this.showProjectMenu = false;
-    
+
     this.layoutSer.getProject(projectId).subscribe({
-      next: (res : {status : boolean, result : Project}) => {
-        
-        
+      next: (res: { status: boolean, result: Project, tasks: Task[] }) => {
+
         this.layoutSer.setProjectId(res.result._id as string);
         this.shared.curProject.next(res.result);
+        this.shared.tasksSubject.next(res.tasks);
       },
-      error : (err) => {
-        console.log("Error while getting project data",err);
+      error: (err) => {
+        console.log("Error while getting project data", err);
       }
     })
 

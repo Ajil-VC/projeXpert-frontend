@@ -13,11 +13,17 @@ export class SharedService {
   public curProject = new Subject();
   public currentPro$ = this.curProject.asObservable();
 
-  private tasksSubject = new Subject();
+  public tasksSubject = new Subject();
+  public taskSub$ = this.tasksSubject.asObservable();
 
-  getTasksInProject():Observable<any>{
+  getTasksInProject(): Observable<any> {
     const projectId = localStorage.getItem('projectId');
     return this.http.get(`${environment.apiUserUrl}tasks?projectId=${projectId}`);
+  }
+
+  getTeamMembers(): Observable<any> {
+    const projectId = localStorage.getItem('projectId');
+    return this.http.get(`${environment.apiUserUrl}team?projectId=${projectId}`);
   }
 
 }

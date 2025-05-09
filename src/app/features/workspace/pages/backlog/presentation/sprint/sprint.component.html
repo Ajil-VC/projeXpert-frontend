@@ -1,39 +1,36 @@
-
-
 <div class="sprint-section">
-    <div class="section-header">
-      <div class="header-left">
-        <button class="collapse-button">
-          <i class="fa fa-chevron-down"></i>
-        </button>
-        <h3>{{ sprint.title }}</h3>
-        <button class="add-dates-button">
-          <i class="fa fa-calendar"></i>
-          Add dates
-        </button>
-        <span class="issue-count">({{ issueCount }} issues)</span>
-      </div>
-      <div class="header-right">
-        <div class="assignee-indicators">
-          <div class="assignee-circle blue"></div>
-          <div class="assignee-circle green"></div>
-        </div>
-        <span class="count">0</span>
-        <button class="start-sprint-button">Start sprint</button>
-        <button class="more-options-button">
-          <i class="fa fa-ellipsis-h"></i>
-        </button>
-      </div>
+  <div class="section-header">
+    <div class="header-left">
+      <button class="collapse-button">
+        <i class="fa fa-chevron-down"></i>
+      </button>
+      <h3>{{ sprint.title }}</h3>
+      <button class="add-dates-button">
+        <i class="fa fa-calendar"></i>
+        Add dates
+      </button>
+      <span class="issue-count">({{ issueCount }} issues)</span>
     </div>
-    
-    <div class="sprint-content">
-      <div class="empty-state">
-        <h3>Plan your sprint</h3>
-        <p>Plan a sprint by dragging work items into it.</p>
+    <div class="header-right">
+      <div class="assignee-indicators">
+        <div class="assignee-circle blue"></div>
+        <div class="assignee-circle green"></div>
       </div>
-      
-      <button class="create-issue-button">
-        <span>+</span> Create issue
+      <span class="count">0</span>
+      <button class="start-sprint-button">Start sprint</button>
+      <button class="more-options-button">
+        <i class="fa fa-ellipsis-h"></i>
       </button>
     </div>
   </div>
+
+  <div class="sprint-content">
+    <div class="empty-state">
+      <h3>Plan your sprint</h3>
+      <p>Plan a sprint by dragging work items into it.</p>
+    </div>
+
+    <app-create-issue-button></app-create-issue-button>
+
+  </div>
+</div>

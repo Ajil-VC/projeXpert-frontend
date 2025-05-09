@@ -5,7 +5,7 @@ export interface Task {
     _id: string;
     title: string;
     description: string;
-    type: "task" | "epic" | "story" | "subtask";
+    type: "task" | "epic" | "story" | "subtask" | "bug";
     status: "in-progress" | "todo" | "done";
     priority: 'low' | 'medium' | 'high' | 'critical';
     assignedTo: string;

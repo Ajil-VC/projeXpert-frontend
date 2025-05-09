@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { TransformButtonComponent } from "../transform-button/transform-button.component";
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { FormsModule } from '@angular/forms';
+import { BacklogService } from '../../data/backlog.service';
 
 @Component({
   selector: 'app-epics',
@@ -26,6 +27,7 @@ export class EpicsComponent {
   expandedEpics: Set<string> = new Set();
   checkedEpics: Set<string> = new Set();
 
+  constructor(private backlogSer: BacklogService) { }
   ngOnInit() {
 
   }
@@ -63,11 +65,13 @@ export class EpicsComponent {
     console.log(epicId);
   }
   updateCheckStatus(epicId: string, event: any) {
-    if(this.checkedEpics.has(epicId)){
+    if (this.checkedEpics.has(epicId)) {
       this.checkedEpics.delete(epicId);
-    }else{
+    } else {
       this.checkedEpics.add(epicId);
     }
+
+    this.backlogSer.setEpicIds(this.checkedEpics);
   }
 
 
