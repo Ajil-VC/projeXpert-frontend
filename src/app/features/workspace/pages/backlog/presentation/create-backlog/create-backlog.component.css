@@ -2,7 +2,7 @@
     background-color: #161b22;
     border: 1px solid #30363d;
     border-radius: 6px;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   
   .section-header {

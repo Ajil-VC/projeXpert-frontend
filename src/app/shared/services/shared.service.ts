@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Team } from '../../core/domain/entities/team.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,15 @@ export class SharedService {
     return this.http.get(`${environment.apiUserUrl}tasks?projectId=${projectId}`);
   }
 
-  getTeamMembers(): Observable<any> {
+
+  private teamMembersSubject = new BehaviorSubject<{ status: boolean, message: string, data: Team[] }>({ status: false, message: 'No team data', data: [] });
+  teamMembers$ = this.teamMembersSubject.asObservable();
+
+  fetchTeamMembers() {
     const projectId = localStorage.getItem('projectId');
-    return this.http.get(`${environment.apiUserUrl}team?projectId=${projectId}`);
+    this.http.get(`${environment.apiUserUrl}team?projectId=${projectId}`)
+      .subscribe(data => this.teamMembersSubject.next(data as { status: boolean, message: string, data: Team[] }));
   }
+
 
 }

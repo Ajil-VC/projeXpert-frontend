@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, NgZone } from '@angular/core';
 import { AuthService } from '../../../auth/data/auth.service';
 import { User } from '../../../../core/domain/entities/user.model';
 import { Workspace } from '../../../../core/domain/entities/workspace.model';
@@ -8,6 +8,8 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { Project } from '../../../../core/domain/entities/project.model';
 import { SharedService } from '../../../../shared/services/shared.service';
 import { Task } from '../../../../core/domain/entities/task.model';
+import { BacklogService } from '../../pages/backlog/data/backlog.service';
+import { Sprint } from '../../../../core/domain/entities/sprint.model';
 
 @Component({
   selector: 'app-header',
@@ -34,7 +36,9 @@ export class HeaderComponent {
     private router: Router,
     private layoutSer: LayoutService,
     private shared: SharedService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private backlogSer: BacklogService,
+    private ngZone: NgZone) {
 
     const isAdmin = this.authService.isAdmin();
     if (isAdmin) {
@@ -144,7 +148,25 @@ export class HeaderComponent {
       error: (err) => {
         console.log("Error while getting project data", err);
       }
-    })
+    });
+
+    this.backlogSer.getSprints(projectId).subscribe({
+      next: (res: { status: boolean, result: Sprint[] }) => {
+        if (!res.status) {
+          console.error('Error occured while getting sprints');
+          return;
+        }
+
+        this.ngZone.run(() => {
+        this.backlogSer.sprintSubject.next(res.result);
+        });
+
+      },
+      error: (err) => {
+        console.error('Error occured while getting sprints', err);
+      }
+    });
+
 
   }
 

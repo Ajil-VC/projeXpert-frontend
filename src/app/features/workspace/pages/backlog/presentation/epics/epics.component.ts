@@ -28,9 +28,6 @@ export class EpicsComponent {
   checkedEpics: Set<string> = new Set();
 
   constructor(private backlogSer: BacklogService) { }
-  ngOnInit() {
-
-  }
 
   toggleEpicDetails(epic: Task): void {
     const epicId = epic._id;
@@ -53,9 +50,7 @@ export class EpicsComponent {
 
   }
 
-  createNewEpic(): void {
 
-  }
 
   addEpicToList(res: Task) {
     this.epics.push(res);

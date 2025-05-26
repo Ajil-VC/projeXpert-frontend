@@ -1,16 +1,20 @@
 <div class="app-container">
     <app-backlog-header></app-backlog-header>
 
-    <div class="main-content" *ngIf="isProjectSelected" >
-        <app-epics [epics]="epics" ></app-epics>
-        <div class="board-container">
-            <app-sprint></app-sprint>
-            <app-create-backlog [backlogs]="backlogs" ></app-create-backlog>
+    <div class="main-content" *ngIf="isProjectSelected">
+        <app-epics [epics]="epics"></app-epics>
+        <div class="board-container backlog-content" >
+            <app-sprint 
+            *ngFor="let sprint of sprints ; trackBy:trackBySprintId" 
+            [sprint]="sprint"
+            [allSprintIds]="sprintIds"
+            ></app-sprint>
+            <app-create-backlog [backlogs]="backlogs" [allSprintIds]="sprintIds" ></app-create-backlog>
         </div>
     </div>
 
 
-    <div class="select-project" *ngIf="!isProjectSelected" >
+    <div class="select-project" *ngIf="!isProjectSelected">
         <div class="no-data-icon">
             <i class="fas fa-folder-open"></i>
         </div>

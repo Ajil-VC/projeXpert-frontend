@@ -151,3 +151,97 @@
     /* Modern browsers support this */
     cursor: pointer;
 }
+
+
+.assign-btn {
+    padding: 6px 12px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.assignee-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.assignee-dropdown {
+
+    width: 240px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1000;
+
+
+    position: absolute;
+
+    top: 100%;
+    right:25px;
+    /* Places below the button */
+
+
+    max-height: 300px;
+    overflow-y: auto;
+
+}
+
+.assignee-container {
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    background-color: #00875a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.danger {
+    background-color: red;
+    color: white;
+}
+
+.search-input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.member-list {
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.member-list li {
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.member-list li:hover {
+    background-color: #022d5e;
+}
+
+.member-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.email {
+    font-weight: 500;
+}
+
+.role {
+    color: gray;
+}

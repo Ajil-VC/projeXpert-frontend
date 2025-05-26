@@ -13,20 +13,25 @@
                 <div class="assignee-circle green"></div>
             </div>
             <span class="count">0</span>
-            <button class="start-sprint-button">Create sprint</button>
+            <button class="start-sprint-button" (click)="createSprint()">Create sprint</button>
             <button class="more-options-button">
                 <i class="fa fa-ellipsis-h"></i>
             </button>
         </div>
     </div>
 
-    <div class="backlog-content">
+    <div class="backlog-content" cdkDropList id="backlog-drop-list" [cdkDropListData]="filteredBacklogs"
+        [cdkDropListConnectedTo]="connectedSprintIds" (cdkDropListDropped)="onDrop($event)">
 
-        <div class="empty-state" *ngIf="!isBacklog">
+
+        <div class="empty-state" *ngIf="isBacklog">
             <p>Backlog is empty, or create new issues</p>
         </div>
 
-        <app-issue-row *ngFor="let backlog of filteredBacklogs" [issue]="backlog"></app-issue-row>
+        <div *ngFor="let backlog of filteredBacklogs" cdkDrag [cdkDragData]="backlog" >
+            <app-issue-row [issue]="backlog" (idFromIssueRow)="handleDropdown($event)" (assign)="handleIssued($event)"
+                (seletedIssueResponse)="handleSelectedIssue($event)" [openIdFromBacklog]="currentDivId"></app-issue-row>
+        </div>
 
         <app-create-issue-button [from]="issueCreationButton"></app-create-issue-button>
     </div>

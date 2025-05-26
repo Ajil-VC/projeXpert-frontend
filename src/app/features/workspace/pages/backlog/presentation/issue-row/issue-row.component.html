@@ -1,7 +1,7 @@
-<div class="issue-row" id="{{ issue._id }}"  >
+<div class="issue-row" id="{{ issue._id }}">
 
-    <label class="checkbox-container" id="{{issue._id}}" >
-        <input [(ngModel)]="isClicked" type="checkbox"/>
+    <label class="checkbox-container" id="{{issue._id}}">
+        <input (change)="updateSelectionStatus(issue._id)" type="checkbox" />
     </label>
 
     <!-- Issue Type Badge -->
@@ -19,19 +19,42 @@
 
     <!-- Status Dropdown -->
     <div class="status-container">
-        <select [(ngModel)]="issue.status" class="status-select " [ngClass]="getStatusClass()">
+        <select [(ngModel)]="issue.status" class="status-select " [ngClass]="getStatusClass()"
+        (change)="onStatusChange(issue.status)">
             <option class="{{defaultStatus}}" value="todo">To Do</option>
             <option class="{{defaultStatus}}" value="in-progress">In Progress</option>
             <option class="{{defaultStatus}}" value="done">Done</option>
         </select>
     </div>
 
-    <div>
-        <span>{{issue.assignedTo}}</span>
+    <div class="assignee-container" [ngClass]="getAssigneeLabel(issue) ==='!' ?'danger' : ''" >
+        <span>{{getAssigneeLabel(issue)}}</span>
     </div>
 
     <!-- Assign Button -->
-    <button class="assign-button" (click)="assignIssue()">
-        <span class="plus-icon">+</span>
-    </button>
+
+    <div class="assignee-wrapper" >
+
+        <button class="assign-button" (click)="toggleAssigneeDropdown()">
+            <span class="plus-icon">+</span>
+        </button>
+    
+    
+        <div *ngIf="isDropdownOpen" class="assignee-dropdown">
+            <input type="text" [(ngModel)]="searchText" placeholder="Search team member..." class="search-input" />
+    
+            <ul class="member-list">
+                <li (click)="assignIssueTo('')">UnAssign</li>
+                <li *ngFor="let member of filteredMembers()" (click)="assignIssueTo(member)">
+                    <div class="member-info">
+                        <div class="email">{{ member.email }}</div>
+                        <div class="role">{{ member.role }}</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+
 </div>
