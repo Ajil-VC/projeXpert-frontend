@@ -43,9 +43,14 @@ export class ChangePswrdComponent implements CanComponentDeactivate {
 
     this.pswdService.changePassword(this.oldPassWord, this.passWord).subscribe({
       next: () => {
-
         this.passwordChanged = true;
+        const user = this.authService.getCurrentUser();
+        if(!user) throw new Error('User is not available');
+        user.forceChangePassword = false;
+        this.authService.setCurrentUser(user);
+        
         this.router.navigate(['/user/dashboard']);
+
       },
       error: (err) => {
         this.errorMsg = err.error.message;

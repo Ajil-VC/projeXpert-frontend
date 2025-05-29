@@ -25,6 +25,7 @@ export class AuthService implements RegisterUseCase {
   private userSubject = new BehaviorSubject<User | null>(null);
   private workspaceSubject = new BehaviorSubject<Workspace | null>(null);
 
+
   user$ = this.userSubject.asObservable();
   workSpace$ = this.workspaceSubject.asObservable();
 
@@ -38,7 +39,10 @@ export class AuthService implements RegisterUseCase {
   }
 
   isAdmin() {
+    console.log('FFFF')
     const role = localStorage.getItem('role');
+    console.log('FFFF')
+    console.log(role);
     return role === 'admin';
   }
 
@@ -94,7 +98,9 @@ export class AuthService implements RegisterUseCase {
 
           if (!response.token) throw new Error('Token Missing');
 
+          localStorage.setItem('forceChangePass', String(response.forceChangePassword));
           localStorage.setItem('authToken', response.token);
+
         })
       )
   }

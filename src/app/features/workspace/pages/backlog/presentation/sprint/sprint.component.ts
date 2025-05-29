@@ -8,6 +8,10 @@ import { BacklogService } from '../../data/backlog.service';
 import { CommonModule } from '@angular/common';
 
 import { DragDropModule, CdkDragDrop, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { SprintDialogComponent } from '../sprint-dialog/sprint-dialog.component';
+import { Router } from '@angular/router';
+import { SharedService } from '../../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-sprint',
@@ -33,7 +37,10 @@ export class SprintComponent implements OnChanges {
   issueCreationButton: string = this.sprint?._id as string || '';
   isIssueInSprint: boolean = false;
 
-  constructor(private backlogSer: BacklogService) { }
+  constructor(private backlogSer: BacklogService, 
+    private dialog: MatDialog, 
+    private router: Router,
+    private shared : SharedService) { }
 
 
   onDrop(event: CdkDragDrop<Task[]>) {
@@ -92,7 +99,8 @@ export class SprintComponent implements OnChanges {
       error: (err) => {
         console.error('Error occured while getting selected epics', err);
       }
-    })
+    });
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -163,6 +171,33 @@ export class SprintComponent implements OnChanges {
 
   startSprint(): void {
     // Logic to start the sprint
+    const dialogRef = this.dialog.open(SprintDialogComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (result: { sprintName: string, duration: number, startDate: Date }) => {
+        if (result) {
+          if (result.sprintName == '') {
+            result.sprintName = this.sprint.name as string;
+          }
+          this.backlogSer.startSprint(this.sprint._id as string, result.sprintName, result.duration, result.startDate).subscribe({
+            next: (res: { status: boolean, message: string, result: Sprint }) => {
+              this.sprint.name = res.result.name;
+              this.sprint.status = res.result.status;
+              this.router.navigate(['/user/board']);
+            },
+            error: (err) => {
+              console.error('something went wrong while starting sprint', err);
+            }
+          })
+        }
+      }
+    })
+  }
+
+  completeSprint() {
+    console.log('wORKING');
   }
 
 

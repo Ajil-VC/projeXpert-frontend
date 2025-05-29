@@ -1,0 +1,65 @@
+.cancel-button {
+    border-radius: 8px;
+    font-weight: 500;
+    text-transform: capitalize;
+    padding: 8px 20px;
+    transition: all 0.2s ease-in-out;
+}
+.cancel-button:hover {
+    background-color: #ffeaea;
+    border-color: #f44336;
+}
+
+.save-button {
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: capitalize;
+    padding: 8px 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    margin-left: 10px;
+}
+.save-button:hover {
+    background-color: #1976d2;
+
+}
+
+
+.full-width {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 0 30px;
+
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 8px;
+
+}
+
+.modal-actions {
+    margin-top: 10px;
+}
+
+.dialog-container {
+    background-color: var(--background-color)
+}
+
+h2{
+    color:white;
+    margin-left: 25px;   
+    margin-top: 15px;
+}
+
+input{
+    width:100%
+}

@@ -1,0 +1,25 @@
+<div>
+    <h2 mat-dialog-title>Create new Workspace</h2>
+
+    <form [formGroup]="workspaceForm">
+        <mat-dialog-content>
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Workspace Name</mat-label>
+                <input matInput formControlName="workspaceName" />
+                <mat-error *ngIf="workspaceForm.get('workspaceName')?.hasError('required')">
+                    Workspace name is required
+                </mat-error>
+            </mat-form-field>
+
+        </mat-dialog-content>
+
+        <mat-dialog-actions align="end">
+            <button mat-button (click)="onCancel()" class="cancel-button">Cancel</button>
+            <button mat-button color="primary" (click)="onSave()" class="save-button"
+                [disabled]="workspaceForm.invalid">
+                Save
+            </button>
+        </mat-dialog-actions>
+    </form>
+
+</div>

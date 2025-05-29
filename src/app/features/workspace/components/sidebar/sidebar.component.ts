@@ -5,6 +5,7 @@ import { AuthService } from '../../../auth/data/auth.service';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { Project } from '../../../../core/domain/entities/project.model';
 import { SharedService } from '../../../../shared/services/shared.service';
+import { User } from '../../../../core/domain/entities/user.model';
 
 
 interface MenuItem {
@@ -28,22 +29,28 @@ export class SidebarComponent {
 
   constructor(private authSer: AuthService, private shared: SharedService) {
 
-    const isAdmin = this.authSer.isAdmin();
-    if (!isAdmin) {
-      this.menuItems = this.menuItems.filter(item => item.id !== 'projects');
-    }
-
   }
 
   ngOnInit() {
 
     this.shared.currentPro$.subscribe({
       next: (res: any) => {
-        console.log(res,'re')
         this.currentProject = (res as Project).name as string;
       },
       error: (err) => {
         console.log('Error occured while getting current project', err);
+      }
+    });
+
+    this.authSer.user$.subscribe({
+      next: (res:User | null) => {
+        if(res){
+
+          if (res.role !== 'admin') {
+            this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog'));
+          }
+        }
+
       }
     })
   }
@@ -51,7 +58,7 @@ export class SidebarComponent {
   menuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
     { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false },
-    { id: 'board', icon: 'fa-columns', label: 'Board', route: '/board', active: false },
+    { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false },
     { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },

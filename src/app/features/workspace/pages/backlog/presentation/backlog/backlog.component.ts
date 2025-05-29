@@ -93,6 +93,7 @@ export class BacklogComponent {
     this.shared.taskSub$.subscribe({
       next: (res) => {
         const tasks = res as Task[];
+        console.log(tasks,'h l k j')
         this.epics = tasks.filter(issue => issue.type === 'epic');
         this.backlogs = tasks.filter(issue => issue.sprintId == null && issue.type !== 'epic');
 

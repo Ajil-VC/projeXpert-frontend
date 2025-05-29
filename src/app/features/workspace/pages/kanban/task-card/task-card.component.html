@@ -1,0 +1,13 @@
+
+<div class="task-card">
+  <div class="task-title">{{ task.title }}</div>
+  <div class="task-details">
+    <span class="tag" [class.billing]="task.tag === 'BILLING'" [class.accounts]="task.tag === 'ACCOUNTS'">{{ task.tag }}</span>
+    <span class="ticket">{{ task.ticket }}</span>
+  </div>
+  <div class="task-meta">
+    <span>{{ task.time }}</span>
+    <span class="flag" [class.red]="task.priority === 'red'" [class.yellow]="task.priority === 'yellow'" *ngIf="task.priority"></span>
+    <span *ngIf="task.status === 'done'">✔</span>
+  </div>
+</div>

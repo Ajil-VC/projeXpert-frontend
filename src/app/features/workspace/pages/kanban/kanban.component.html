@@ -1,0 +1,22 @@
+<div class="kanban-header">
+    <input type="text" placeholder="Search" [(ngModel)]="searchQuery" class="search-bar" />
+    <button class="complete-btn" (click)="completeSprint()">Complete Sprint</button>
+</div>
+
+
+<div class="kanban-container">
+    <div class="kanban-column">
+        <h3>TO DO ({{ todoTasks.length }})</h3>
+        <app-task-card *ngFor="let task of filteredTasks(todoTasks)" [task]="task"></app-task-card>
+    </div>
+
+    <div class="kanban-column">
+        <h3>IN PROGRESS ({{ inProgressTasks.length }})</h3>
+        <app-task-card *ngFor="let task of inProgressTasks" [task]="task"></app-task-card>
+    </div>
+
+    <div class="kanban-column">
+        <h3>DONE ({{ doneTasks.length }})</h3>
+        <app-task-card *ngFor="let task of doneTasks" [task]="task"></app-task-card>
+    </div>
+</div>

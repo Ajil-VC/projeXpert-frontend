@@ -10,6 +10,8 @@ import { SharedService } from '../../../../shared/services/shared.service';
 import { Task } from '../../../../core/domain/entities/task.model';
 import { BacklogService } from '../../pages/backlog/data/backlog.service';
 import { Sprint } from '../../../../core/domain/entities/sprint.model';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateWorkspaceComponent } from '../create-workspace/create-workspace.component';
 
 @Component({
   selector: 'app-header',
@@ -38,7 +40,10 @@ export class HeaderComponent {
     private shared: SharedService,
     private cdr: ChangeDetectorRef,
     private backlogSer: BacklogService,
-    private ngZone: NgZone) {
+    private ngZone: NgZone,
+    private dialog: MatDialog,
+
+  ) {
 
     const isAdmin = this.authService.isAdmin();
     if (isAdmin) {
@@ -158,7 +163,7 @@ export class HeaderComponent {
         }
 
         this.ngZone.run(() => {
-        this.backlogSer.sprintSubject.next(res.result);
+          this.backlogSer.sprintSubject.next(res.result);
         });
 
       },
@@ -172,8 +177,24 @@ export class HeaderComponent {
 
   createNewWorkspace() {
 
-    this.router.navigate(['/user/create-project']);
-    this.showWorkspaceMenu = false;
+    const dialogRef = this.dialog.open(CreateWorkspaceComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (result:{workspaceName: string}) => {
+      if (result.workspaceName !== '') {
+        this.layoutSer.createWorkspace(result.workspaceName).subscribe({
+          next:(res)=> {
+            console.log(res);
+          },
+          error: (err) => {
+            console.error("Error occured while creating workspace.",err);
+          }
+        })
+      }
+    }
+    });
   }
 
   logout() {

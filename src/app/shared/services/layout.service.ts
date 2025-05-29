@@ -29,4 +29,9 @@ export class LayoutService {
     return this.http.get(`${environment.apiUserUrl}get-project?project_id=${projectId}&workspace_id=${workSpaceId}`);
   }
 
+  //The bottom method is not shared one. It will be just used to create workspace.
+  createWorkspace(workspaceName: string): Observable<any> {
+    return this.http.post(`${environment.apiUserUrl}create-workspace`, { workspaceName });
+  }
+
 }

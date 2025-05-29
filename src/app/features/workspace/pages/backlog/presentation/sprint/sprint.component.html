@@ -17,7 +17,8 @@
         <div class="assignee-circle green"></div>
       </div>
       <span class="count">0</span>
-      <button class="start-sprint-button">Start sprint</button>
+      <button class="start-sprint-button" [hidden]="sprint.status !== 'not-started'" (click)="startSprint()" >Start sprint</button>
+      <button class="start-sprint-button" [hidden]="sprint.status !== 'active'" (click)="completeSprint()" >Complete sprint</button>
       <button class="more-options-button">
         <i class="fa fa-ellipsis-h"></i>
       </button>

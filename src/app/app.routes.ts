@@ -17,6 +17,8 @@ import { ChangePswrdComponent } from './features/workspace/components/change-psw
 import { forceChangePasswordGuard } from './core/guards/force-change-password.guard';
 import { canLeavePasswordchangeGuard } from './core/guards/can-leave-passwordchange.guard';
 import { BacklogComponent } from './features/workspace/pages/backlog/presentation/backlog/backlog.component';
+import { KanbanComponent } from './features/workspace/pages/kanban/kanban.component';
+import { CreateWorkspaceComponent } from './features/workspace/components/create-workspace/create-workspace.component';
 
 export const routes: Routes = [
 
@@ -32,8 +34,11 @@ export const routes: Routes = [
             { path: 'dashboard', component: DashboardComponent, canActivate: [forceChangePasswordGuard] },
             { path: 'change-password', component: ChangePswrdComponent, canDeactivate: [canLeavePasswordchangeGuard] },
             { path: 'backlog', component: BacklogComponent },
+            { path: 'create-workspace', component: CreateWorkspaceComponent },
             { path: 'create-project', component: ProjectComponent },
-            { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] }
+            { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] },
+
+            { path: 'board', component: KanbanComponent }
         ]
     }
 

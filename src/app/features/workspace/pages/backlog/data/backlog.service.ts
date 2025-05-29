@@ -65,5 +65,8 @@ export class BacklogService {
     return this.http.put(`${environment.apiUserUrl}change-taskstatus`, { taskId, status });
   }
 
+  startSprint(sprintId: string, sprintName: string, duration: number, startDate: Date): Observable<any> {
+    return this.http.put(`${environment.apiUserUrl}start-sprint`, { sprintId, sprintName, duration, startDate });
+  }
 
 }
