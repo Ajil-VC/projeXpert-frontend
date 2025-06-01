@@ -1,0 +1,154 @@
+.sidebar {
+    width: 380px;
+    height: 85vh;
+    background-color: #121212;
+    border-right: 1px solid #333;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.chat-header {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 0.75rem;
+    margin-bottom: 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    background-color: rgb(25, 25, 25);
+}
+
+.chat-item:hover,
+.chat-item.selected {
+    background-color: #2a2a2a;
+}
+
+.chat-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.name {
+    font-weight: 600;
+}
+
+.preview {
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.time {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+
+
+.member-search-container {
+    position: relative;
+    padding: 0.5rem;
+    margin-bottom: 15px;
+    /* background-color: #1a1a1a; */
+    border-bottom: 1px solid #333;
+}
+
+.member-search-input {
+    width: 100%;
+    padding: 0.6rem 2.5rem 0.6rem 1rem;
+    border-radius: 20px;
+    border: none;
+    background-color: #2a2a2a;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.member-search-input::placeholder {
+    color: #aaa;
+}
+
+.search-icon {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    pointer-events: none;
+}
+
+
+.profileData{
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    
+}
+.name-time{
+    min-width: 250px;
+    max-width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.email-lastmessage{
+    display: flex;
+    flex-direction: column;
+}
+.assignee-container {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    margin-right: 10px;
+    background-color: #00875a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.member-list {
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 160px;
+    overflow-y: auto;
+
+}
+
+.member-list li {
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.member-list li:hover {
+    background-color: #022d5e;
+}
+
+.member-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.email {
+    font-weight: 500;
+}

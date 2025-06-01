@@ -4,6 +4,7 @@ import { HeaderComponent } from '../header/header.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../auth/data/auth.service';
 import { SharedService } from '../../../../shared/services/shared.service';
+import { SocketService } from '../../../../shared/services/socket.service';
 
 
 @Component({
@@ -14,13 +15,20 @@ import { SharedService } from '../../../../shared/services/shared.service';
 })
 export class LayoutComponent {
 
-  constructor(private authService: AuthService, private shared: SharedService) { }
+  constructor(private shared: SharedService, private socketService: SocketService) { }
 
   ngOnInit() {
+
+    //Connecting to socket
+    this.socketService.connect();
 
     //Fetching Teammembers 
     this.shared.fetchTeamMembers();
 
+  }
+
+  ngOnDestroy() {
+    this.socketService.disconnect();
   }
 
 }

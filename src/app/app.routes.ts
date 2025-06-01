@@ -19,6 +19,7 @@ import { canLeavePasswordchangeGuard } from './core/guards/can-leave-passwordcha
 import { BacklogComponent } from './features/workspace/pages/backlog/presentation/backlog/backlog.component';
 import { KanbanComponent } from './features/workspace/pages/kanban/kanban.component';
 import { CreateWorkspaceComponent } from './features/workspace/components/create-workspace/create-workspace.component';
+import { ChatPageComponent } from './features/workspace/pages/chat/chat-page/chat-page.component';
 
 export const routes: Routes = [
 
@@ -38,7 +39,8 @@ export const routes: Routes = [
             { path: 'create-project', component: ProjectComponent },
             { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] },
 
-            { path: 'board', component: KanbanComponent }
+            { path: 'board', component: KanbanComponent },
+            { path: 'chat', component: ChatPageComponent }
         ]
     }
 

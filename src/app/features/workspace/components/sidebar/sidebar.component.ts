@@ -60,7 +60,7 @@ export class SidebarComponent {
     { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false },
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false },
     { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
-    { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/chat', active: false },
+    { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
     { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },

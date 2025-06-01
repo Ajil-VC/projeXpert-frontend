@@ -5,18 +5,23 @@
 
 
 <div class="kanban-container">
-    <div class="kanban-column">
+
+    <div class="kanban-column" id="todo" cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoTasks"
+        [cdkDropListConnectedTo]="[inProgressList, doneList]" (cdkDropListDropped)="onDrop($event)">
         <h3>TO DO ({{ todoTasks.length }})</h3>
-        <app-task-card *ngFor="let task of filteredTasks(todoTasks)" [task]="task"></app-task-card>
+        <app-task-card *ngFor="let task of todoTasks" [task]="task" cdkDrag [cdkDragData]="task"></app-task-card>
     </div>
 
-    <div class="kanban-column">
+    <div class="kanban-column" id="in-progress" cdkDropList #inProgressList="cdkDropList"
+        [cdkDropListData]="inProgressTasks" [cdkDropListConnectedTo]="[todoList, doneList]"
+        (cdkDropListDropped)="onDrop($event)">
         <h3>IN PROGRESS ({{ inProgressTasks.length }})</h3>
-        <app-task-card *ngFor="let task of inProgressTasks" [task]="task"></app-task-card>
+        <app-task-card *ngFor="let task of inProgressTasks" cdkDrag [cdkDragData]="task" [task]="task"></app-task-card>
     </div>
 
-    <div class="kanban-column">
+    <div class="kanban-column" id="done" cdkDropList #doneList="cdkDropList" [cdkDropListData]="doneTasks"
+        [cdkDropListConnectedTo]="[todoList, inProgressList]" (cdkDropListDropped)="onDrop($event)">
         <h3>DONE ({{ doneTasks.length }})</h3>
-        <app-task-card *ngFor="let task of doneTasks" [task]="task"></app-task-card>
+        <app-task-card *ngFor="let task of doneTasks" cdkDrag [cdkDragData]="task" [task]="task"></app-task-card>
     </div>
 </div>

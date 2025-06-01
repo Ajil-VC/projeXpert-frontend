@@ -70,8 +70,6 @@ export class SprintComponent implements OnChanges {
           if (foundInBacklog) {
             foundInBacklog.sprintId = res.result.sprintId;
           }
-
-          console.log(res, 'From aasdfa', res, 'HIHI', this.filteredIssuesShallow);
         },
         error: (err) => {
           console.error('Something went wrong while updating moved task.');
@@ -185,6 +183,7 @@ export class SprintComponent implements OnChanges {
             next: (res: { status: boolean, message: string, result: Sprint }) => {
               this.sprint.name = res.result.name;
               this.sprint.status = res.result.status;
+              // this.shared.tasksSubject.next(res.result.tasks);
               this.router.navigate(['/user/board']);
             },
             error: (err) => {

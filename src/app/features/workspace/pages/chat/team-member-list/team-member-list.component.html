@@ -1,0 +1,43 @@
+<div class="sidebar">
+    <div class="chat-header">Chats</div>
+
+    <div class="member-search-container">
+        <input type="text" [(ngModel)]="searchText" placeholder="Search members..." class="member-search-input" />
+
+        <ul class="member-list">
+            <li *ngFor="let member of filteredMembers()" (click)="startConversation(member)">
+                <div class="member-info">
+                    <div class="email">{{ member.email }}</div>
+                </div>
+            </li>
+        </ul>
+
+        <i class="fas fa-search search-icon"></i>
+    </div>
+
+
+
+
+    <ul class="chat-list">
+        <li class="chat-item" [ngClass]="activeChat === chat._id ? 'selected': ''" *ngFor="let chat of chats"
+            (click)="openChat(chat)" id="{{chat._id}}">
+
+            <div class="profileData">
+
+                <div class="assignee-container">
+                    <span>{{getUserEmail(chat.participants)?.charAt(0)?.toUpperCase()}}</span>
+                </div>
+
+                <div class="email-lastmessage">
+                    <div class="name-time">
+                        <div class="name">{{getUserEmail(chat.participants)}}</div>
+                        <span class="time">{{chat.updatedAt | date:'h.mm a'}}</span>
+
+                    </div>
+                    <div class="preview">{{chat.lastMessage.slice(0,20)}}...</div>
+                </div>
+
+            </div>
+        </li>
+    </ul>
+</div>

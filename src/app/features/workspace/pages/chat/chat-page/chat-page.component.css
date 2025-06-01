@@ -1,0 +1,10 @@
+.chat-container {
+    
+    display: flex;
+    height: 90vh;
+
+    overflow: hidden;
+    background-color: #1f1f1f;
+    
+    color: white;
+}

@@ -1,3 +1,4 @@
+import { Sprint } from "./sprint.model";
 import { Team } from "./team.model";
 
 
@@ -11,7 +12,7 @@ export interface Task {
     priority: 'low' | 'medium' | 'high' | 'critical';
     assignedTo: string | Team;
     epicId: string;       // Refers to a parent epic if any
-    sprintId: string;     // Logical grouping for sprints
+    sprintId: string | Sprint;     // Logical grouping for sprints
     parentId: string;     // for subtasks
     projectId: string;
     createdAt: Date;

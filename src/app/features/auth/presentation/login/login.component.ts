@@ -63,7 +63,7 @@ export class LoginComponent {
       error: (err) => {
         this.errorMsg = err.message;
         this.isBtnDisabled = false;
-        console.log("Error in login response ", err);
+        console.error("Error in login response ", err);
       }
     })
 

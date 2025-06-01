@@ -27,20 +27,25 @@
     font-size: 14px;
 }
 
-.tag.billing {
-    background-color: #2962ff;
+.tag{
+    background-color: gray;
     padding: 2px 6px;
     border-radius: 4px;
-
     font-weight: 500;
 }
-
-.tag.accounts {
-    background-color: #00c853;
-    border-radius: 4px;
-    font-size: 12px;
-    padding: 4px 8px;
+.tag.task {
+    background-color: #2962ff;
+    
 }
+
+.tag.story {
+    background-color: #00c853;
+}
+
+.tag.bug {
+    background-color:orangered;
+}
+
 
 .ticket {
     color: #ccc;
@@ -62,6 +67,26 @@
     width: 10px;
     height: 10px;
     background-color: gold;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.flag.orange {
+    color: orangered;
+
+    width: 10px;
+    height: 10px;
+    background-color: orangered;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.flag.green {
+    color: #00c853;
+
+    width: 10px;
+    height: 10px;
+    background-color: #00c853;
     border-radius: 50%;
     display: inline-block;
 }

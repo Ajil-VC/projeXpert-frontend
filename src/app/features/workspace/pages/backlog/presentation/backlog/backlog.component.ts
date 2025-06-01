@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { BacklogHeaderComponent } from "../backlog-header/backlog-header.component";
 import { EpicsComponent } from "../epics/epics.component";
-import { SprintComponent } from "../sprint/sprint.component";
+import { SprintComponent } from '../sprint/sprint.component'; 
 import { CreateBacklogComponent } from "../create-backlog/create-backlog.component";
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { Task } from '../../../../../../core/domain/entities/task.model';
@@ -93,7 +93,7 @@ export class BacklogComponent {
     this.shared.taskSub$.subscribe({
       next: (res) => {
         const tasks = res as Task[];
-        console.log(tasks,'h l k j')
+
         this.epics = tasks.filter(issue => issue.type === 'epic');
         this.backlogs = tasks.filter(issue => issue.sprintId == null && issue.type !== 'epic');
 

@@ -15,14 +15,14 @@ export const forceChangePasswordGuard: CanActivateFn = (route, state) => {
 
   authService.user$.subscribe({
     next: (res) => {
-      console.log(res,'This isres')
+
       if (res && res.forceChangePassword) {
         router.navigate(['user/change-password']);
         return;
       }
     },
     error: (err) => {
-      console.log("Somethingwent wrong", err);
+      console.error("Somethingwent wrong", err);
     }
   })
 

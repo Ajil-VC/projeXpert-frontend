@@ -39,10 +39,7 @@ export class AuthService implements RegisterUseCase {
   }
 
   isAdmin() {
-    console.log('FFFF')
     const role = localStorage.getItem('role');
-    console.log('FFFF')
-    console.log(role);
     return role === 'admin';
   }
 

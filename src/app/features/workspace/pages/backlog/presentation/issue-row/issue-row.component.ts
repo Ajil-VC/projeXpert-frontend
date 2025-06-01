@@ -67,7 +67,6 @@ export class IssueRowComponent {
   }
 
   onStatusChange(status: string) {
-console.log('Heelloo',status, this.issue._id)
     this.backlogSer.updateIssueStatus(this.issue._id, status).subscribe({
       next: (res)=> {
         console.log('E yes');
