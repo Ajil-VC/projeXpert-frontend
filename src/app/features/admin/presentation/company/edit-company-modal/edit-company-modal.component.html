@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Edit Company</h2>
+
+<mat-dialog-content class="edit-company-modal">
+    <form #form="ngForm" class="edit-company-form">
+
+        <!-- Company Name -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Company Name</mat-label>
+            <input matInput [(ngModel)]="data.companyDetails.name" name="name" required />
+        </mat-form-field>
+
+        <!-- Company Email -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Company Email</mat-label>
+            <input matInput type="email" [value]="data.companyDetails.email" disabled />
+        </mat-form-field>
+
+
+
+        <!-- Block Company Toggle -->
+        <mat-slide-toggle [(ngModel)]="data.companyDetails.isBlocked" name="isBlocked">
+            Block Company
+        </mat-slide-toggle>
+
+        <hr />
+
+        <!-- Company Users Management -->
+        <!-- User Search -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Search Users</mat-label>
+            <input matInput placeholder="Search by email or name" [(ngModel)]="userSearchTerm" name="userSearch" />
+        </mat-form-field>
+
+        <h3>Company Users</h3>
+        <div class="members-list">
+            <div class="member-row" *ngFor="let user of data.users; let i = index; trackBy: trackByIndex">
+                <span>{{ user.email }}</span>
+
+                <span>{{user.role}}</span>
+
+                <mat-label class="userIsBLocked">{{user.isBlocked ? 'Blocked' : 'Active'}}</mat-label>
+                <mat-slide-toggle [(ngModel)]="user.isBlocked" name="blocked-{{ i }}" (change)="onUserBlockToggle(user, i)" >
+                </mat-slide-toggle>
+
+                <button mat-icon-button color="warn" (click)="removeUser(i, user._id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button color="warn" (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onSave()">Save</button>
+</mat-dialog-actions>

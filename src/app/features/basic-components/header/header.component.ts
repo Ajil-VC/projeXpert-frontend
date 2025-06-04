@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener, NgZone } from '@angular/core';
-import { AuthService } from '../../../auth/data/auth.service';
-import { User } from '../../../../core/domain/entities/user.model';
-import { Workspace } from '../../../../core/domain/entities/workspace.model';
+import { ChangeDetectorRef, Component, HostListener, Input, NgZone } from '@angular/core';
+import { AuthService } from '../../auth/data/auth.service';
+import { User } from '../../../core/domain/entities/user.model';
+import { Workspace } from '../../../core/domain/entities/workspace.model';
 import { Router } from '@angular/router';
-import { LayoutService } from '../../../../shared/services/layout.service';
-import { Project } from '../../../../core/domain/entities/project.model';
-import { SharedService } from '../../../../shared/services/shared.service';
-import { Task } from '../../../../core/domain/entities/task.model';
-import { BacklogService } from '../../pages/backlog/data/backlog.service';
-import { Sprint } from '../../../../core/domain/entities/sprint.model';
+import { LayoutService } from '../../../shared/services/layout.service';
+import { Project } from '../../../core/domain/entities/project.model';
+import { SharedService } from '../../../shared/services/shared.service';
+import { Task } from '../../../core/domain/entities/task.model';
+import { BacklogService } from '../../workspace/pages/backlog/data/backlog.service';
+import { Sprint } from '../../../core/domain/entities/sprint.model';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateWorkspaceComponent } from '../create-workspace/create-workspace.component';
+import { CreateWorkspaceComponent } from '../../workspace/components/create-workspace/create-workspace.component';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +22,7 @@ import { CreateWorkspaceComponent } from '../create-workspace/create-workspace.c
 
 export class HeaderComponent {
 
+  @Input() systemRole!: string;
 
   showWorkspaceMenu = false;
   showUserMenu = false;
@@ -51,6 +52,11 @@ export class HeaderComponent {
     }
 
   }
+
+  canActivateNavbar() {
+    return this.systemRole === 'company-user';
+  }
+
   ngOnInit() {
 
     this.authService.user$.subscribe({
@@ -182,18 +188,18 @@ export class HeaderComponent {
     });
 
     dialogRef.afterClosed().subscribe({
-      next: (result:{workspaceName: string}) => {
-      if (result.workspaceName !== '') {
-        this.layoutSer.createWorkspace(result.workspaceName).subscribe({
-          next:(res)=> {
-            console.log(res);
-          },
-          error: (err) => {
-            console.error("Error occured while creating workspace.",err);
-          }
-        })
+      next: (result: { workspaceName: string }) => {
+        if (result.workspaceName !== '') {
+          this.layoutSer.createWorkspace(result.workspaceName).subscribe({
+            next: (res) => {
+              console.log(res);
+            },
+            error: (err) => {
+              console.error("Error occured while creating workspace.", err);
+            }
+          })
+        }
       }
-    }
     });
   }
 

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
-import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../../auth/data/auth.service';
-import { SharedService } from '../../../../shared/services/shared.service';
-import { SocketService } from '../../../../shared/services/socket.service';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../auth/data/auth.service';
+import { SharedService } from '../../../shared/services/shared.service';
+import { SocketService } from '../../../shared/services/socket.service';
 
 
 @Component({
@@ -15,9 +15,14 @@ import { SocketService } from '../../../../shared/services/socket.service';
 })
 export class LayoutComponent {
 
-  constructor(private shared: SharedService, private socketService: SocketService) { }
+  systemRole!: string;
+  constructor(private shared: SharedService, private socketService: SocketService, private route: ActivatedRoute) {
+
+    this.systemRole = this.route.snapshot.data['systemRole'];
+  }
 
   ngOnInit() {
+
 
     //Connecting to socket
     this.socketService.connect();

@@ -25,7 +25,21 @@ export class GuardsService {
 
     const workSpace = this.authService.getWorkSpace();
     const workSpaceId = workSpace?._id;
-    
+
     return this.http.get<{ status: boolean, projects: Array<Project> | null }>(`${environment.apiUserUrl}init-projects?workspace_id=${workSpaceId}`);
+  }
+
+  autherizeAdmin() {
+    return this.http.get(`${environment.apiAdminUrl}autherize-admin`);
+  }
+
+
+  authenticateUser() {
+    return this.http.get(`${environment.apiUserUrl}authenticate-user`);
+  }
+
+  //Getting platform-admin related data.
+  getCompanydataForPlatformAdmin() {
+    return this.http.get(`${environment.apiAdminUrl}admin-init`);
   }
 }

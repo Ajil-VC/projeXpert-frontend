@@ -1,0 +1,148 @@
+<!-- company-list.component.html -->
+<div class="company-list-container">
+    <div class="page-header">
+        <div class="header-content">
+            <!-- <div class="path-nav">Companies</div> -->
+            <h1>Companies</h1>
+            <p class="page-subtitle">Manage all your companies from one place</p>
+        </div>
+        <div class="header-actions">
+            <!-- <button class="btn btn-primary" (click)="openCreateCompanyDialog()">
+                <i class="fas fa-plus"></i> Create Company
+            </button> -->
+        </div>
+    </div>
+
+    <div class="filters-bar">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search companies..." class="search-input" (input)="search($event)">
+        </div>
+
+        <div class="view-toggle">
+            <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+                <i class="fas fa-th-large"></i>
+            </button>
+            <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+                <i class="fas fa-list"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="companies-content">
+        <div *ngIf="isLoading" class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading companies...
+        </div>
+
+        <div *ngIf="!isLoading && companyData.length === 0" class="no-results">
+            <div class="no-data-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3>No companies found</h3>
+            <p>Try adjusting your search criteria</p>
+            <button class="btn btn-primary mt-3" (click)="openCreateCompanyDialog()">
+                Create New Company
+            </button>
+        </div>
+
+        <ng-container *ngIf="!isLoading && companyData.length > 0">
+            <!-- Grid View -->
+            <div *ngIf="viewMode === 'grid'" class="companies-grid">
+                <div *ngFor="let company of companyData" class="company-card" (click)="openCompany(company)">
+                    <div class="company-header">
+                        <div class="company-icon" [style.background-color]="'#36b37e'">
+                            {{ company.companyDetails.name.charAt(0).toUpperCase() }}
+                        </div>
+                        <div class="company-actions">
+                            <button class="icon-action" (click)="editCompany($event, company)">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="icon-action danger" (click)="deleteCompany($event, company)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="company-content">
+                        <h3 class="company-name"> {{ company.companyDetails.name }} </h3>
+                    </div>
+
+                    <div class="company-meta-info">
+                        <div class="meta-row">
+                            <div class="meta-label">Created:</div>
+                            <div class="meta-value"> {{ company.companyDetails.createdAt | date:'MMM d, y' }} </div>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-label">Industry:</div>
+                            <div class="meta-value">{{ 'N/A' }}</div>
+                        </div>
+                    </div>
+
+                    <div class="company-footer">
+                        <div class="company-meta-info">
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>{{ company.users.length || 0 }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ company.companyDetails.email || 'N/A' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List View -->
+            <div *ngIf="viewMode === 'list'" class="companies-list">
+                <table class="companies-table">
+                    <thead>
+                        <tr>
+                            <th (click)="setSortField('name')">
+                                Company Name
+                                <i *ngIf="sortField === 'name'" class="fas" [class.fa-sort-up]="sortDirection === 'asc'"
+                                    [class.fa-sort-down]="sortDirection === 'desc'"></i>
+                            </th>
+                            <th (click)="setSortField('createdAt')">
+                                Created
+                                <i *ngIf="sortField === 'createdAt'" class="fas"
+                                    [class.fa-sort-up]="sortDirection === 'asc'"
+                                    [class.fa-sort-down]="sortDirection === 'desc'"></i>
+                            </th>
+                            <th>Industry</th>
+                            <th>Members</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let company of companyData">
+                            <td>
+                                <div class="company-name-cell">
+                                    <div class="company-icon">
+                                        {{ company.companyDetails.name.charAt(0).toUpperCase() }}
+                                    </div>
+                                    {{ company.companyDetails.name }}
+                                </div>
+                            </td>
+                            <td>{{ company.companyDetails.createdAt| date:'mediumDate' }}</td>
+                            <td>{{ 'N/A' }}</td>
+                            <td>{{ company.users.length || 0 }}</td>
+                            <td>{{ company.companyDetails.email || 'N/A' }}</td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="icon-action" (click)="editCompany($event, company)">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="icon-action danger" (click)="deleteCompany($event, company)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+    </div>
+</div>

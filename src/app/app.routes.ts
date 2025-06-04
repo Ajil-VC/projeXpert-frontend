@@ -3,9 +3,9 @@ import { SignupComponent } from './features/auth/presentation/Registration/signu
 import { LandingComponent } from './features/landing/landing.component';
 import { OtpComponent } from './features/auth/presentation/otp/otp.component';
 import { CreateProfileComponent } from './features/auth/presentation/create-company/create-profile.component';
-import { LayoutComponent } from './features/workspace/components/layout/layout.component';
+import { LayoutComponent } from './features/basic-components/layout/layout.component';
 import { DashboardComponent } from './features/workspace/pages/dashboard/presentation/dashboard/dashboard.component';
-import { LoginComponent } from './features/auth/presentation/login/login.component';
+import { LoginComponent } from './features/reusable/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { otpGuard } from './core/guards/otp.guard';
 import { workspaceDataResolver } from './core/guards/workspace-data.resolver';
@@ -20,17 +20,24 @@ import { BacklogComponent } from './features/workspace/pages/backlog/presentatio
 import { KanbanComponent } from './features/workspace/pages/kanban/kanban.component';
 import { CreateWorkspaceComponent } from './features/workspace/components/create-workspace/create-workspace.component';
 import { ChatPageComponent } from './features/workspace/pages/chat/chat-page/chat-page.component';
+import { adminLoginGuard } from './core/guards/admin/admin-login.guard';
+import { AdminDashboardComponent } from './features/admin/presentation/admin-dashboard/admin-dashboard.component';
+import { adminDataResolver } from './core/guards/admin/admin-data.resolver';
+import { verifyAdminGuard } from './core/guards/admin/verify-admin.guard';
+import { CompanyComponent } from './features/admin/presentation/company/company.component';
+import { Forbidden403Component } from './features/reusable/forbidden-403/forbidden-403.component';
 
 export const routes: Routes = [
 
+    { path: 'forbidden', component: Forbidden403Component },
     { path: '', component: LandingComponent, canActivate: [loginGuardGuard] },
     { path: `register`, component: SignupComponent, canActivate: [loginGuardGuard] },
     { path: `verify-otp`, component: OtpComponent, canActivate: [otpGuard, loginGuardGuard] },
     { path: `create-company`, component: CreateProfileComponent, canActivate: [otpGuard, loginGuardGuard] },
-    { path: 'login', component: LoginComponent, canActivate: [loginGuardGuard] },
+    { path: 'login', component: LoginComponent, canActivate: [loginGuardGuard], data: { systemRole: 'company-user' } },
 
     {
-        path: 'user', component: LayoutComponent, resolve: [workspaceDataResolver], canActivate: [authGuard],
+        path: 'user', component: LayoutComponent, data: { systemRole: 'company-user' }, resolve: [workspaceDataResolver], canActivate: [authGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [forceChangePasswordGuard] },
             { path: 'change-password', component: ChangePswrdComponent, canDeactivate: [canLeavePasswordchangeGuard] },
@@ -42,6 +49,17 @@ export const routes: Routes = [
             { path: 'board', component: KanbanComponent },
             { path: 'chat', component: ChatPageComponent }
         ]
+    },
+
+
+    { path: 'admin/login', component: LoginComponent, canActivate: [adminLoginGuard], data: { systemRole: 'platform-admin' } },
+    {
+        path: 'admin', component: LayoutComponent, data: { systemRole: 'platform-admin' }, canActivate: [verifyAdminGuard],
+        children: [
+            { path: 'dashboard', component: AdminDashboardComponent, resolve: { companyData: adminDataResolver } },
+            { path: 'companies', component: CompanyComponent, resolve: { companyData: adminDataResolver } }
+        ]
+
     }
 
 ];

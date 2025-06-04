@@ -1,14 +1,12 @@
-
 <div class="layout">
 
-    <app-header></app-header>
+    <app-header [systemRole]="systemRole"></app-header>
     <div class="main-content">
-        
-        <app-sidebar></app-sidebar>
+
+        <app-sidebar [systemRole]="systemRole"></app-sidebar>
         <main class="content">
             <router-outlet></router-outlet>
         </main>
 
     </div>
 </div>
-  

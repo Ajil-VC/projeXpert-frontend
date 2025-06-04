@@ -59,7 +59,7 @@ export class AuthService implements RegisterUseCase {
     }
 
     const workspaceWithProjects = (workspace.projects as unknown as Project[])
-    .filter(ele => ele._id === currentProjectId);
+      .filter(ele => ele._id === currentProjectId);
     this.shared.curProject.next(workspaceWithProjects[0]);
 
   }
@@ -89,7 +89,7 @@ export class AuthService implements RegisterUseCase {
   }
 
   login(email: string, passWord: string): Observable<any> {
-    return this.http.post<AuthResponse>(`${environment.apiUserUrl}login`, { email, passWord })
+    return this.http.post<AuthResponse>(`${environment.apiUserUrl}login`, { email, passWord }, { withCredentials: true })
       .pipe(
         tap(response => {
 
@@ -102,10 +102,22 @@ export class AuthService implements RegisterUseCase {
       )
   }
 
+  refreshToken(): Observable<any> {
+    return this.http.post(`${environment.apiUserUrl}refresh-token`, null, {
+      withCredentials: true
+    }).pipe(
+      tap((res: any) => {
+        console.log('Refresh token in authservice: ', res);
+        localStorage.setItem('authToken', res.token)
+      })
+    )
+  }
+
   logout() {
+
     localStorage.removeItem('authToken');
-    localStorage.removeItem('role');
     localStorage.removeItem('forceChangePass');
+    localStorage.removeItem('role');
     this.router.navigate(['/login']);
 
     this.currentUser = null;

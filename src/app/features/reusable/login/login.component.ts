@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RegisterUseCase } from '../../domain/auth.domain';
-import { AuthService } from '../../data/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RegisterUseCase } from '../../auth/domain/auth.domain';
+import { AuthService } from '../../auth/data/auth.service';
 import { CommonModule } from '@angular/common';
 
 
@@ -18,16 +18,22 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
 
   loginForm: FormGroup;
+  systemRole!: string;
 
   constructor(
     private fb: FormBuilder,
     private registerUseCaseInterface: RegisterUseCase,
-    private router: Router) {
+    private router: Router,
+    private route: ActivatedRoute) {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     })
+  }
+
+  ngOnInit() {
+    this.systemRole = this.route.snapshot.data['systemRole'];
   }
 
   // This method is used for handling error msgs in the view.
@@ -40,7 +46,6 @@ export class LoginComponent {
 
   onContinue(): void {
     // Handle form submission
-
     this.isBtnDisabled = true;
 
     const { email, password } = this.loginForm.value;
@@ -52,12 +57,19 @@ export class LoginComponent {
       }) => {
         if (res.status) {
 
-          if (!res.forceChangePassword) {
+          if (this.systemRole === 'company-user') {
 
-            this.router.navigate(['user/dashboard']);
-          } else {
-            this.router.navigate(['user/change-password']);
+            if (!res.forceChangePassword) {
+              this.router.navigate(['user/dashboard']);
+            } else {
+              this.router.navigate(['user/change-password']);
+            }
+
+          } else if (this.systemRole === 'platform-admin') {
+            this.router.navigate(['admin/dashboard']);
           }
+        }else{
+          console.log('h h aa mm');
         }
       },
       error: (err) => {

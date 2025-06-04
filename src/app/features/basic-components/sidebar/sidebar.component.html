@@ -4,7 +4,7 @@
 
   <div class="side-top" >
     
-    <a class="current-project">
+    <a class="current-project" *ngIf="!isPlatformAdmin()" >
       
       <span class="menu-label">Project : </span>
       <p> {{currentProject}}</p>

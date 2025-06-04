@@ -1,12 +1,13 @@
 import { Workspace } from "./workspace.model";
 
 export interface User {
-    _id : string;
+    _id: string;
     name: string;
     profileUrl: string;
     email: string;
     plan: string;
     role: string;
+    isBlocked: boolean;
     defaultWorkspace: Workspace;
     workSpaces: Array<Workspace>;
     forceChangePassword?: boolean;

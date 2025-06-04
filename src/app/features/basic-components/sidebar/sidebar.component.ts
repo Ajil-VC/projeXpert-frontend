@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../auth/data/auth.service';
-import { LayoutService } from '../../../../shared/services/layout.service';
-import { Project } from '../../../../core/domain/entities/project.model';
-import { SharedService } from '../../../../shared/services/shared.service';
-import { User } from '../../../../core/domain/entities/user.model';
+import { AuthService } from '../../auth/data/auth.service';
+import { LayoutService } from '../../../shared/services/layout.service';
+import { Project } from '../../../core/domain/entities/project.model';
+import { SharedService } from '../../../shared/services/shared.service';
+import { User } from '../../../core/domain/entities/user.model';
 
 
 interface MenuItem {
@@ -25,37 +25,48 @@ interface MenuItem {
 })
 export class SidebarComponent {
 
+  @Input() systemRole!: string;
   public currentProject: string = '';
+  menuItems: MenuItem[] = [];
 
   constructor(private authSer: AuthService, private shared: SharedService) {
 
   }
 
-  ngOnInit() {
-
-    this.shared.currentPro$.subscribe({
-      next: (res: any) => {
-        this.currentProject = (res as Project).name as string;
-      },
-      error: (err) => {
-        console.log('Error occured while getting current project', err);
-      }
-    });
-
-    this.authSer.user$.subscribe({
-      next: (res:User | null) => {
-        if(res){
-
-          if (res.role !== 'admin') {
-            this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog'));
-          }
-        }
-
-      }
-    })
+  isPlatformAdmin() {
+    return this.systemRole === 'platform-admin';
   }
 
-  menuItems: MenuItem[] = [
+  ngOnInit() {
+
+    this.menuItems = this.isPlatformAdmin() ? this.adminMenuItems : this.userMenuItems;
+
+    if (!this.isPlatformAdmin()) {
+
+      this.shared.currentPro$.subscribe({
+        next: (res: any) => {
+          this.currentProject = (res as Project).name as string;
+        },
+        error: (err) => {
+          console.log('Error occured while getting current project', err);
+        }
+      });
+
+      this.authSer.user$.subscribe({
+        next: (res: User | null) => {
+          if (res) {
+
+            if (res.role !== 'admin') {
+              this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog'));
+            }
+          }
+
+        }
+      });
+    }
+  }
+
+  userMenuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
     { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false },
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false },
@@ -64,6 +75,13 @@ export class SidebarComponent {
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
     { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
+    { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
+  ];
+
+  adminMenuItems: MenuItem[] = [
+    { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/admin/dashboard', active: false },
+    { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false }, 
+    { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
   ];
 

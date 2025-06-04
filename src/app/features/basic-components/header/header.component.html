@@ -4,7 +4,6 @@
 
     <div class="logo">
 
-
       <!--Mobile menu option here-->
       <!-- <div class="mobile-toggle" (click)="toggleMobileMenu()">
         <i class="fas fa-bars"></i>
@@ -14,11 +13,11 @@
       <img src="assets/icons/Projexpert.png" alt="">
     </div>
 
-    <nav class="main-nav">
+    <nav class="main-nav" *ngIf="canActivateNavbar()">
       <ul>
 
         <li class="dropdown">
-          <a (click)="toggleWorkspaceMenu(); $event.stopPropagation() " >
+          <a (click)="toggleWorkspaceMenu(); $event.stopPropagation() ">
             Workspaces <i class="fas fa-chevron-down"></i>
           </a>
           <div class="dropdown-content" *ngIf="showWorkspaceMenu">
@@ -35,13 +34,13 @@
         </li>
 
         <li class="dropdown">
-          <a  (click)="toggleProjectsMenu(); $event.stopPropagation() ">
+          <a (click)="toggleProjectsMenu(); $event.stopPropagation() ">
             Projects <i class="fas fa-chevron-down"></i>
           </a>
           <div class="dropdown-content" *ngIf="showProjectMenu">
             <div class="dropdown-header">Your Projects</div>
-            <a *ngFor="let project of availableProjects" (click)="selectProject(project._id)" >
-              
+            <a *ngFor="let project of availableProjects" (click)="selectProject(project._id)">
+
               {{project?.name}}
             </a>
             <div class="dropdown-divider"></div>
@@ -92,7 +91,7 @@
           <a href="javascript:void(0)">Account Settings</a>
           <a href="javascript:void(0)">Subscription Plan</a>
           <div class="dropdown-divider"></div>
-          <a class="logout" (click)="logout()" >Log Out</a>
+          <a class="logout" (click)="logout()">Log Out</a>
         </div>
       </div>
     </div>
