@@ -1,14 +1,29 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { catchError, map, of } from 'rxjs';
+import { GuardsService } from '../data/guards.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
 
+  const guardService = inject(GuardsService);
   const router = inject(Router);
+
   const token = localStorage.getItem('authToken');
-  if(token){
-    
-    return true;
+  if (!token) {
+    router.navigate(['/login']);
+    return of(false);
   }
 
-  return router.createUrlTree(['/login']);
+  return guardService.authenticateUser().pipe(
+    map((res) => {
+      const result = res as { status: boolean, user: any };
+      return result.status && result.user?.systemRole === 'company-user';
+    }),
+    catchError(() => {
+      // Optional: redirect to forbidden page or login
+      localStorage.removeItem('authToken');
+      router.navigate(['/login']);
+      return of(false);
+    })
+  );
 };

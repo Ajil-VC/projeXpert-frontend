@@ -18,4 +18,8 @@ export class AdminService {
     return this.http.put(`${environment.apiAdminUrl}change-user-status`, { userId, status });
   }
 
+  blockOrUnblockCompany(companyId: string, status: boolean): Observable<any> {
+    return this.http.put(`${environment.apiAdminUrl}change-company-status`, { companyId, status });
+  }
+
 }

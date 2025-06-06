@@ -51,8 +51,20 @@ export class EditCompanyModalComponent {
     // this.dialogRef.close(this.projectData);
   }
 
+  onCompanyToggle(company: Company) {
+
+    this.adminService.blockOrUnblockCompany(company._id, company.isBlocked).subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+        console.error('Error occured while changing company status.', err);
+      }
+    })
+  }
+
   onUserBlockToggle(user: User, i: any) {
-    console.log(user, i)
+
     this.adminService.blockOrUnblockUser(user._id, user.isBlocked).subscribe({
       next: (res) => {
         console.log(res, 'res');

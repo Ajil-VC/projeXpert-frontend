@@ -43,7 +43,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         );
       } else if (error.status === 403) {
         //show up message telling “You don’t have permission to access this page.”
-        // router.navigate(['forbidden']);
+
+        if (error.error && error.error['message'] && (error.error['message'] === 'Company blocked' || error.error['message'] === 'User account is blocked.')) {
+          authService.logout();
+        }
+        router.navigate(['forbidden'], {
+          state: {
+            message: `${error.error['message']}`,
+            code: 'COMPANY_BLOCKED'
+          }
+        });
       }
 
       return throwError(() => error);

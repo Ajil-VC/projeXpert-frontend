@@ -27,8 +27,11 @@ export class LayoutComponent {
     //Connecting to socket
     this.socketService.connect();
 
-    //Fetching Teammembers 
-    this.shared.fetchTeamMembers();
+    if (this.systemRole === 'company-user') {
+
+      //Fetching Teammembers 
+      this.shared.fetchTeamMembers();
+    }
 
   }
 

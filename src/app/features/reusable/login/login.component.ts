@@ -46,9 +46,12 @@ export class LoginComponent {
 
   onContinue(): void {
     // Handle form submission
-    this.isBtnDisabled = true;
 
+    this.isBtnDisabled = true;
+    console.log(this.systemRole);
     const { email, password } = this.loginForm.value;
+
+
     this.registerUseCaseInterface.login(email, password).subscribe({
       next: (res: {
         forceChangePassword: boolean,
@@ -68,8 +71,8 @@ export class LoginComponent {
           } else if (this.systemRole === 'platform-admin') {
             this.router.navigate(['admin/dashboard']);
           }
-        }else{
-          console.log('h h aa mm');
+        } else {
+          console.log('h h aa mm. Look in login component');
         }
       },
       error: (err) => {
@@ -78,6 +81,7 @@ export class LoginComponent {
         console.error("Error in login response ", err);
       }
     })
+
 
   }
 

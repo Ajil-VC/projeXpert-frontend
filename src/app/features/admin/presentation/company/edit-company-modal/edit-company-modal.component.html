@@ -18,8 +18,9 @@
 
 
         <!-- Block Company Toggle -->
-        <mat-slide-toggle [(ngModel)]="data.companyDetails.isBlocked" name="isBlocked">
-            Block Company
+        <mat-slide-toggle [(ngModel)]="data.companyDetails.isBlocked" name="isBlocked"
+            (change)="onCompanyToggle(data.companyDetails)">
+            {{data.companyDetails.isBlocked ? 'Unblock Company' : 'Block Company'}}
         </mat-slide-toggle>
 
         <hr />
@@ -39,7 +40,8 @@
                 <span>{{user.role}}</span>
 
                 <mat-label class="userIsBLocked">{{user.isBlocked ? 'Blocked' : 'Active'}}</mat-label>
-                <mat-slide-toggle [(ngModel)]="user.isBlocked" name="blocked-{{ i }}" (change)="onUserBlockToggle(user, i)" >
+                <mat-slide-toggle [(ngModel)]="user.isBlocked" name="blocked-{{ i }}"
+                    (change)="onUserBlockToggle(user, i)">
                 </mat-slide-toggle>
 
                 <button mat-icon-button color="warn" (click)="removeUser(i, user._id)">
