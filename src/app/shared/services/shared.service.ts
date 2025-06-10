@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Team } from '../../core/domain/entities/team.model';
-import { Task } from '../../core/domain/entities/task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +22,11 @@ export class SharedService {
     return this.http.get(`${environment.apiUserUrl}tasks?projectId=${projectId}`);
   }
 
-  getTasksInActiveSprints():Observable<any>{
-    
+  getTasksInActiveSprints(): Observable<any> {
+
     const projectId = localStorage.getItem('projectId');
     return this.http.get(`${environment.apiUserUrl}tasks/kanban?projectId=${projectId}`);
-  
+
   }
 
 
@@ -43,7 +42,8 @@ export class SharedService {
   getTeamMembers(): Observable<{ status: boolean, message: string, data: Team[] }> {
     const projectId = localStorage.getItem('projectId');
     return this.http.get<{ status: boolean, message: string, data: Team[] }>(`${environment.apiUserUrl}team?projectId=${projectId}`)
-      // .subscribe(data => this.teamMembersSubject.next(data as { status: boolean, message: string, data: Team[] }));
+    // .subscribe(data => this.teamMembersSubject.next(data as { status: boolean, message: string, data: Team[] }));
   }
+
 
 }

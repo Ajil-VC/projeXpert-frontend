@@ -18,3 +18,9 @@ export interface Sprint extends Document {
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+//It will be usec in kanban
+export interface SprintTaskGroup {
+    sprint: Sprint
+    tasks: Task[];
+}

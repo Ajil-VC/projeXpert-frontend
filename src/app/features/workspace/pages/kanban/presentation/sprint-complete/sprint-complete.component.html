@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Complete Sprint</h2>
+
+<mat-dialog-content class="complete-sprint-modal">
+    <form #form="ngForm" class="complete-sprint-form">
+
+        <!-- Select Sprint to Complete -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Select Sprint to Complete</mat-label>
+            <mat-select [(ngModel)]="selectedSprintId" name="sprintToComplete" required>
+                <mat-option *ngFor="let sprint of activeSprints" [value]="sprint.sprint._id">
+                    {{ sprint.sprint.name }} ({{ sprint.sprint.startDate | date }} - {{ sprint.sprint.endDate | date }})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Select Sprint to Move Incomplete Tasks -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Move Incomplete Tasks To</mat-label>
+            <mat-select [(ngModel)]="moveToSprintId" name="moveToSprint" required>
+                <mat-option *ngFor="let sprint of availableSprints" [value]="sprint._id"
+                    [disabled]="sprint._id === selectedSprintId">
+                    {{ sprint.name }} ({{ sprint.startDate | date }} - {{ sprint.endDate | date }})
+                </mat-option>
+                <mat-option [value]="null">Backlog</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Sprint Info Summary -->
+        <div class="sprint-info" *ngIf="selectedSprint">
+            <h3>Sprint Summary</h3>
+            <div class="info-row">
+                <span class="label">Sprint Name:</span>
+                <span class="value">{{ selectedSprint.name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Start Date:</span>
+                <span class="value">{{ selectedSprint.startDate | date }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">End Date:</span>
+                <span class="value">{{ selectedSprint.endDate | date }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Incomplete Tasks:</span>
+                <!-- <span class="value">{{ selectedSprint.incompleteTasksCount }}</span> -->
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="buttons">
+    <button mat-button class="secondary" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onComplete()" [disabled]="form.invalid || isCompleting">
+        {{ isCompleting ? 'Completing...' : 'Complete Sprint' }}
+    </button>
+</mat-dialog-actions>

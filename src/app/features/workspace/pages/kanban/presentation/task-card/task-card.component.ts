@@ -31,7 +31,7 @@ export class TaskCardComponent {
 
     // Convert the time difference from milliseconds to days
     const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    this.daysLeft = daysLeft + 'days left';
+    this.daysLeft = daysLeft < 0 ? 'Time up' : daysLeft + 'days left';
 
   }
 

@@ -6,6 +6,13 @@ import { Task } from '../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../shared/services/shared.service';
 import { CdkDrag, CdkDragDrop, CdkDropList, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { BacklogService } from '../backlog/data/backlog.service';
+import { SearchPipe } from '../../../../core/pipes/search.pipe';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskDetailsComponent } from './presentation/task-details/task-details.component';
+import { AuthService } from '../../../auth/data/auth.service';
+import { User } from '../../../../core/domain/entities/user.model';
+import { SprintCompleteComponent } from './presentation/sprint-complete/sprint-complete.component';
+import { Sprint, SprintTaskGroup } from '../../../../core/domain/entities/sprint.model';
 
 @Component({
   selector: 'app-kanban',
@@ -15,7 +22,8 @@ import { BacklogService } from '../backlog/data/backlog.service';
     TaskCardComponent,
     DragDropModule,
     CdkDropList,
-    CdkDrag
+    CdkDrag,
+    SearchPipe
   ],
   templateUrl: './kanban.component.html',
   styleUrl: './kanban.component.css'
@@ -28,8 +36,14 @@ export class KanbanComponent {
   todoTasks: Task[] = [];
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
+  userRole: string = '';
 
-  constructor(private shared: SharedService, private backlogSer : BacklogService) { }
+  constructor(
+    private shared: SharedService,
+    private backlogSer: BacklogService,
+    public dialog: MatDialog,
+    private authSer: AuthService
+  ) { }
 
 
   onDrop(event: CdkDragDrop<any[]>) {
@@ -49,15 +63,15 @@ export class KanbanComponent {
 
       // Optional: update status on task (e.g., 'todo' -> 'in-progress')
       // droppedTask.status = this.getStatusByContainer(event.container.id);
-      this.backlogSer.updateIssueStatus(droppedTask._id,event.container.id).subscribe({
+      this.backlogSer.updateIssueStatus(droppedTask._id, event.container.id).subscribe({
         next: (res) => {
-          if('status' in res && res.status === true){
+          if ('status' in res && res.status === true) {
 
             droppedTask.status = event.container.id;
           }
         },
-        error : (err) => {
-          console.error('Error occured while updating task status.',err);
+        error: (err) => {
+          console.error('Error occured while updating task status.', err);
         }
       });
       console.log('Moved task:', droppedTask);
@@ -78,9 +92,21 @@ export class KanbanComponent {
 
   ngOnInit() {
 
+
+    this.authSer.user$.subscribe({
+      next: (res: User | null) => {
+        if (res) {
+
+          this.userRole = res.role;
+
+        }
+
+      }
+    });
+
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
-        console.log(res.result, 'Kittund');
+
         this.allTasks = res.result;
         this.seperatingOnStatus();
       },
@@ -115,8 +141,69 @@ export class KanbanComponent {
     return [];
   }
 
+
+  groupTasksBySprint(): SprintTaskGroup[] {
+
+    const sprintMap = new Map<string, SprintTaskGroup>();
+
+    for (let task of this.allTasks) {
+      const sprint = task.sprintId as Sprint;
+      const key = sprint._id;
+
+      if (!sprintMap.has(key as string)) {
+        sprintMap.set(key as string, {
+          sprint: sprint,
+          tasks: []
+        });
+      }
+
+      sprintMap.get(key as string)!.tasks.push(task);
+    }
+
+    return Array.from(sprintMap.values());
+  }
+
+
   completeSprint() {
-    alert('Sprint Completed!');
+    const groupedTasks = this.groupTasksBySprint()
+    const dialogRef = this.dialog.open(SprintCompleteComponent, {
+      width: '500px',
+      data: { groupedTasks }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+
+      }
+    });
+
+  }
+
+
+  taskDetails(event: Event, task: Task): void {
+    event.stopPropagation();
+
+    const dialogRef = this.dialog.open(TaskDetailsComponent, {
+      width: '500px',
+      data: {
+        task: { ...task },
+        userRole: this.userRole
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        const index = this.allTasks.findIndex(task => task._id === result._id);
+        if (index !== -1) {
+          this.allTasks[index] = result;
+          this.seperatingOnStatus();
+        }
+
+      }
+    });
+
   }
 
 }

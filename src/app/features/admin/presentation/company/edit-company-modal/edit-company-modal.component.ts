@@ -11,6 +11,7 @@ import { MatInput } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButton } from '@angular/material/button';
 import { AdminService } from '../../../data/admin.service';
+import { SearchPipe } from '../../../../../core/pipes/search.pipe';
 
 @Component({
   selector: 'app-edit-company-modal',
@@ -20,12 +21,12 @@ import { AdminService } from '../../../data/admin.service';
     MatDialogContent,
     MatFormField,
     MatLabel,
-    MatIcon,
     MatDialogActions,
     MatInput,
     MatSlideToggleModule,
     MatSelectModule,
-    MatButton
+    MatButton,
+    SearchPipe
   ],
   templateUrl: './edit-company-modal.component.html',
   styleUrl: './edit-company-modal.component.css'

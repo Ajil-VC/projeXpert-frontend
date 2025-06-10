@@ -1,0 +1,152 @@
+<h2 mat-dialog-title>Edit Task</h2>
+
+<mat-dialog-content class="edit-task-modal">
+    <form #form="ngForm" class="edit-task-form">
+
+        <!-- Task Title -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Task Title</mat-label>
+            <input matInput [(ngModel)]="task.title" name="title" required />
+        </mat-form-field>
+
+        <!-- Status -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="task.status" name="status">
+                <mat-option value="todo">To Do</mat-option>
+                <mat-option value="in-progress">In Progress</mat-option>
+                <mat-option value="done">Done</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Priority -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Priority</mat-label>
+            <mat-select [(ngModel)]="task.priority" name="priority">
+                <mat-option value="low">Low</mat-option>
+                <mat-option value="medium">Medium</mat-option>
+                <mat-option value="high">High</mat-option>
+                <mat-option value="critical">Critical</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <div class="assignee-section" *ngIf="userRole === 'admin'">
+            <h3>Assign To</h3>
+            <mat-form-field class="full-width">
+                <mat-label>Change Assignee</mat-label>
+                <input matInput type="email" [(ngModel)]="userSearchTerm" name="assigneeEmail" email
+                    #assigneeCtrl="ngModel" />
+                <mat-error *ngIf="assigneeCtrl.invalid && assigneeCtrl.touched">
+                    <!-- <ng-container *ngIf="assigneeCtrl.errors?.['required']">Email is required</ng-container> -->
+                    <ng-container *ngIf="assigneeCtrl.errors?.['email']">Invalid email format</ng-container>
+                    
+                </mat-error>
+                
+                
+            </mat-form-field>
+
+            <div class="members-list" *ngIf="userSearchTerm && userSearchTerm.trim().length > 0">
+                <div class="member-row"
+                    *ngFor="let user of teamMembers | search:userSearchTerm:['email','name']; let i = index;"
+                    (click)="assignUser(user)">
+                    <span>{{ user.email }}</span>
+                    <span>{{user.role}}</span>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="task-details-container">
+
+
+            <!-- Task Type -->
+            <div class="detail-row">
+                <span class="label">Task Type:</span>
+                <span class="value">{{ task.type | titlecase }}</span>
+            </div>
+
+            <!-- Assignee -->
+            <div class="detail-row">
+                <span class="label">Assignee:</span>
+                <span class="value">{{ email}}</span>
+            </div>
+
+            <!-- Created Date -->
+            <div class="detail-row">
+                <span class="label">Created Date:</span>
+                <span class="value">{{ task.createdAt| date: 'mediumDate' }}</span>
+            </div>
+
+            <!-- End Date -->
+            <div class="detail-row">
+                <span class="label">End Date:</span>
+                <span class="value">{{ endDate | date: 'mediumDate' }}</span>
+            </div>
+
+            <!-- Days Left -->
+            <div class="detail-row">
+                <span class="label">Days Left:</span>
+                <span class="value">{{ daysLeft }}</span>
+            </div>
+
+        </div>
+
+
+        <!-- Description -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="4" [(ngModel)]="task.description" name="description"></textarea>
+        </mat-form-field>
+
+        <!-- Subtasks -->
+        <!-- <div class="subtasks-section">
+            <h3>Subtasks</h3>
+            <div class="subtask-row" *ngFor="let subtask of task.subtasks; let i = index">
+                <mat-checkbox [(ngModel)]="subtask.completed" name="subtask-{{i}}">
+                    {{ subtask.title }}
+                </mat-checkbox>
+                <button mat-icon-button color="warn" (click)="removeSubtask(i)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+
+            <div class="new-subtask-row">
+                <mat-form-field class="subtask-input">
+                    <mat-label>New Subtask</mat-label>
+                    <input matInput [(ngModel)]="newSubtaskTitle" name="newSubtaskTitle" />
+                </mat-form-field>
+                <button mat-mini-button color="primary" (click)="addSubtask()">Add</button>
+            </div>
+        </div> -->
+
+        <!-- Assignee -->
+        <!-- <div class="assignee-section">
+            <h3>Assigned To : </h3>
+            <mat-form-field class="full-width">
+                <mat-label>Assignee Email</mat-label>
+                <input matInput type="email" [(ngModel)]="task.assignedTo" name="assigneeEmail" required email
+                    #assigneeCtrl="ngModel" />
+                <mat-error *ngIf="assigneeCtrl.invalid && assigneeCtrl.touched">
+                    <ng-container *ngIf="assigneeCtrl.errors?.['required']">Email is required</ng-container>
+                    <ng-container *ngIf="assigneeCtrl.errors?.['email']">Invalid email format</ng-container>
+                </mat-error>
+            </mat-form-field>
+        </div> -->
+
+
+        <!-- Attachments (Placeholder for now) -->
+        <div class="attachments-section">
+            <h3>Attachments</h3>
+            <p>No Attachments</p>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="buttons">
+    <button mat-button class="secondary" (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onSave()" [disabled]="form?.invalid">Save</button>
+</mat-dialog-actions>

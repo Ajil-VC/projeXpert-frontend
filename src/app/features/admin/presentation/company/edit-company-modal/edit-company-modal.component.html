@@ -34,7 +34,8 @@
 
         <h3>Company Users</h3>
         <div class="members-list">
-            <div class="member-row" *ngFor="let user of data.users; let i = index; trackBy: trackByIndex">
+            <div class="member-row"
+                *ngFor="let user of data.users | search:userSearchTerm:['email','name']; let i = index; trackBy: trackByIndex">
                 <span>{{ user.email }}</span>
 
                 <span>{{user.role}}</span>
@@ -44,9 +45,7 @@
                     (change)="onUserBlockToggle(user, i)">
                 </mat-slide-toggle>
 
-                <button mat-icon-button color="warn" (click)="removeUser(i, user._id)">
-                    <mat-icon>delete</mat-icon>
-                </button>
+
             </div>
         </div>
 
