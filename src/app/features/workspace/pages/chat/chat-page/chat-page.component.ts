@@ -6,6 +6,7 @@ import { Team } from '../../../../../core/domain/entities/team.model';
 import { AuthService } from '../../../../auth/data/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chat-page',
@@ -15,6 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ChatPageComponent {
 
+  private destroy$ = new Subject<void>();
   constructor(private shared: SharedService, private authSer: AuthService) { }
 
   teamMembers!: Team[];
@@ -23,8 +25,9 @@ export class ChatPageComponent {
 
   ngOnInit() {
 
-
-    this.shared.getTeamMembers().subscribe({
+    this.shared.getTeamMembers().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res) => {
         if (res.status) {
 
@@ -36,7 +39,9 @@ export class ChatPageComponent {
       }
     });
 
-    this.authSer.user$.subscribe({
+    this.authSer.user$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res) => {
         this.currentUserObj = { id: res?._id || '' };
       },
@@ -51,5 +56,10 @@ export class ChatPageComponent {
     this.isChatOpened = event;
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }

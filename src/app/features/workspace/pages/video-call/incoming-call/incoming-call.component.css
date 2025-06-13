@@ -1,0 +1,52 @@
+.call-modal {
+    text-align: center;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    font-family: 'Segoe UI', sans-serif;
+    width: 300px;
+    margin: auto;
+}
+
+.call-modal h2 {
+    margin-bottom: 12px;
+    font-size: 22px;
+    color: #333;
+}
+
+.call-modal p {
+    margin-bottom: 24px;
+    font-size: 16px;
+    color: #555;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+button {
+    padding: 5px 20px;
+    border-radius: 50px;
+}
+
+button.accept {
+    background-color: #4caf50;
+    color: white;
+    font-weight: 500;
+}
+
+button.decline {
+    background-color: #f44336;
+    color: white;
+    font-weight: 500;
+}
+
+button.accept:hover {
+    background-color: #43a047;
+}
+
+button.decline:hover {
+    background-color: #e53935;
+}

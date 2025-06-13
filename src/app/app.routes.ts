@@ -26,6 +26,7 @@ import { adminDataResolver } from './core/guards/admin/admin-data.resolver';
 import { verifyAdminGuard } from './core/guards/admin/verify-admin.guard';
 import { CompanyComponent } from './features/admin/presentation/company/company.component';
 import { Forbidden403Component } from './features/reusable/forbidden-403/forbidden-403.component';
+import { VideoCallComponent } from './features/workspace/pages/video-call/video-call.component';
 
 export const routes: Routes = [
 
@@ -47,7 +48,8 @@ export const routes: Routes = [
             { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] },
 
             { path: 'board', component: KanbanComponent },
-            { path: 'chat', component: ChatPageComponent }
+            { path: 'chat', component: ChatPageComponent },
+            { path: 'video-call', component: VideoCallComponent }
         ]
     },
 

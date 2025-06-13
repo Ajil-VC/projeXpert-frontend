@@ -47,6 +47,7 @@ export class KanbanComponent {
 
 
   onDrop(event: CdkDragDrop<any[]>) {
+  
     const droppedTask = event.item.data;
 
     if (event.previousContainer === event.container) {

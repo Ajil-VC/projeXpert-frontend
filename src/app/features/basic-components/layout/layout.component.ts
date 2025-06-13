@@ -5,6 +5,8 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/data/auth.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { SocketService } from '../../../shared/services/socket.service';
+import { MatDialog } from '@angular/material/dialog';
+import { IncomingCallComponent } from '../../workspace/pages/video-call/incoming-call/incoming-call.component';
 
 
 @Component({
@@ -16,24 +18,41 @@ import { SocketService } from '../../../shared/services/socket.service';
 export class LayoutComponent {
 
   systemRole!: string;
-  constructor(private shared: SharedService, private socketService: SocketService, private route: ActivatedRoute) {
+  constructor(
+    private shared: SharedService,
+    private socketService: SocketService,
+    private route: ActivatedRoute,
+    public dialog: MatDialog
+  ) {
 
     this.systemRole = this.route.snapshot.data['systemRole'];
   }
 
   ngOnInit() {
 
-
     //Connecting to socket
     this.socketService.connect();
 
     if (this.systemRole === 'company-user') {
-
       //Fetching Teammembers 
       this.shared.fetchTeamMembers();
     }
 
+
+    this.socketService.onSignal().subscribe((signal) => {
+      if (signal.type === 'offer') {
+        this.dialog.open(IncomingCallComponent, {
+          data: {
+            from: signal.from,
+            signal: signal
+          },
+          disableClose: true
+        });
+      }
+    });
+
   }
+
 
   ngOnDestroy() {
     this.socketService.disconnect();

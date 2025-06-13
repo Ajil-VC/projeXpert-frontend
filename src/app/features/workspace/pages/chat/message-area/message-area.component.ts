@@ -7,6 +7,9 @@ import { Conversation } from '../../../../../core/domain/entities/conversation.m
 import { AuthService } from '../../../../auth/data/auth.service';
 import { User } from '../../../../../core/domain/entities/user.model';
 import { SocketService } from '../../../../../shared/services/socket.service';
+import { Router } from '@angular/router';
+import { Team } from '../../../../../core/domain/entities/team.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-message-area',
@@ -20,10 +23,17 @@ export class MessageAreaComponent {
   messages: Message[] = [];
   messageText: string = '';
   chat!: Conversation;
+  reciever!: Team | undefined;
 
+  private destroy$ = new Subject<void>();
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
-  constructor(private chatSer: ChatService, private authSer: AuthService, private socketService: SocketService) { }
+  constructor(
+    private chatSer: ChatService,
+    private authSer: AuthService,
+    private socketService: SocketService,
+    private router: Router
+  ) { }
 
   ngAfterViewInit() {
     this.scrollToBottom();
@@ -39,17 +49,32 @@ export class MessageAreaComponent {
     } catch (err) { }
   }
 
+  openVideoChat() {
+    this.router.navigate(['user/video-call'], {
+      queryParams: {
+        isCaller: true
+      },
+      state: {
+        signal: this.chat,
+        from: 'caller'
+      }
+    });
+  }
+
 
   ngOnInit() {
 
     //Connected to socket in layout component as it is the root component of all pages.
-    this.socketService.receiveMessage().subscribe((msg: any) => {
-      console.log(msg,'from socket');
+    this.socketService.receiveMessage().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((msg: any) => {
       this.messages.push(msg);
     });
 
     //Getting the current user.
-    this.authSer.user$.subscribe({
+    this.authSer.user$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res: User | null) => {
         if (res) {
 
@@ -62,11 +87,12 @@ export class MessageAreaComponent {
     })
 
     //Getting all the messages in the chat
-    this.chatSer.messages$.subscribe({
+    this.chatSer.messages$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
           this.messages = res;
-          console.log(this.messages)
         } else {
           this.messages = [];
         }
@@ -78,9 +104,12 @@ export class MessageAreaComponent {
     });
 
     //Identifying the chat.
-    this.chatSer.chat$.subscribe({
+    this.chatSer.chat$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res) => {
         this.chat = res as Conversation;
+        this.reciever = this.chat.participants.find(user => this.currentUser!._id !== user._id);
 
       },
       error: (err) => {
@@ -100,9 +129,8 @@ export class MessageAreaComponent {
       throw new Error('Chat or participants not available.');
     }
 
-    const reciever = this.chat.participants.find(user => this.currentUser!._id !== user._id);
-    if (!reciever?._id) throw new Error('Reciever Id not available.');
-    this.chatSer.sendMessage(this.chat._id, reciever._id, this.messageText).subscribe({
+    if (!this.reciever?._id) throw new Error('Reciever Id not available.');
+    this.chatSer.sendMessage(this.chat._id, this.reciever._id, this.messageText).subscribe({
       next: (res) => {
         this.messages.push(res.result);
         this.messageText = '';
@@ -111,6 +139,12 @@ export class MessageAreaComponent {
         console.error('Error occured while sending message.', err);
       }
     })
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

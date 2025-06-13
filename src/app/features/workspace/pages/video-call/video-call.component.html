@@ -1,0 +1,18 @@
+<div class="video-call-container mat-elevation-z4">
+    <div class="video-wrapper">
+        <video #remoteVideo autoplay playsinline></video>
+        <video #localVideo autoplay muted playsinline class="local-video"></video>
+    </div>
+
+    <div class="controls">
+        <button mat-icon-button color="primary" (click)="toggleMic()">
+            <mat-icon>{{ micOn ? 'mic' : 'mic_off' }}</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="toggleCamera()">
+            <mat-icon>{{ camOn ? 'videocam' : 'videocam_off' }}</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="endCall()">
+            <mat-icon>call_end</mat-icon>
+        </button>
+    </div>
+</div>

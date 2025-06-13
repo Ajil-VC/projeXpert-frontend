@@ -203,6 +203,7 @@ export class CreateBacklogComponent implements OnChanges {
         //Here IM sending the created sprint to the backlog service
         this.backlogSer.addSprintSubject.next(res.result);
         console.log('Sprint created successfully', res);
+        console.log(this.backlogs,'backlogs:')
       },
       error: (err) => {
         console.error('Error while creating sprint', err);

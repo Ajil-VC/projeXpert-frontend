@@ -37,10 +37,10 @@ export class SocketService {
 
   }
 
+  //For text messages
   sendMessage(message: any) {
     this.socket.emit('send-message', message);
   }
-
   receiveMessage(): Observable<any> {
     return new Observable(observer => {
       this.socket.on('receive-message', (data) => {
@@ -48,6 +48,19 @@ export class SocketService {
       });
     });
   }
+
+  //For Video calls
+  sendSignal(signal: any) {
+    this.socket.emit('video-signal', signal);
+  }
+  onSignal(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('video-signal', (data) => {
+        observer.next(data);
+      });
+    });
+  }
+
 
   disconnect() {
     if (this.socket) {

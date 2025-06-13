@@ -30,7 +30,7 @@ export class BacklogService {
   public sprintSubject = new Subject<Sprint[]>();
   public sprint$ = this.sprintSubject.asObservable();
 
-  getSprints(projectId: any = null): Observable<{ status: boolean, result: Sprint[] }> {
+  getSprints(projectId: string | null = null): Observable<{ status: boolean, result: Sprint[] }> {
     if (!projectId) {
       projectId = localStorage.getItem('projectId');
     }
