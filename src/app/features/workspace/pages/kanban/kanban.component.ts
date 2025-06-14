@@ -47,7 +47,7 @@ export class KanbanComponent {
 
 
   onDrop(event: CdkDragDrop<any[]>) {
-  
+
     const droppedTask = event.item.data;
 
     if (event.previousContainer === event.container) {
@@ -146,7 +146,6 @@ export class KanbanComponent {
   groupTasksBySprint(): SprintTaskGroup[] {
 
     const sprintMap = new Map<string, SprintTaskGroup>();
-
     for (let task of this.allTasks) {
       const sprint = task.sprintId as Sprint;
       const key = sprint._id;
@@ -175,7 +174,9 @@ export class KanbanComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-
+        const completedTaskIds = new Set(result.completedTasks.map((task: Task) => task._id));
+        this.allTasks = this.allTasks.filter(task => !completedTaskIds.has(task._id));
+        this.seperatingOnStatus();
       }
     });
 

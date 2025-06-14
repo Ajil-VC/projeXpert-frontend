@@ -18,7 +18,14 @@ export class KanbanService {
 
   getAvailableSprints(): Observable<any> {
     const projectId = localStorage.getItem('projectId');
-    return this.http.get(`${environment.apiUserUrl}get-all-sprints/${projectId}`);
+    return this.http.get(`${environment.apiUserUrl}get-sprints/${projectId}`);
+  }
+
+
+  completeSprint(completingSprintId: string, movingSprintId: string | null): Observable<any> {
+
+    const projectId = localStorage.getItem('projectId');
+    return this.http.put(`${environment.apiUserUrl}complete-sprint`, { completingSprintId, movingSprintId, projectId });
   }
 
 }
