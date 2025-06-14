@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class SocketService {
 
-  private socket!: Socket;
+  public socket!: Socket;
   private readonly URL = environment.ultraBaseURL;
   constructor() { }
 

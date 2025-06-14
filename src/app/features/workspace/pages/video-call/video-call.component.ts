@@ -71,6 +71,21 @@ export class VideoCallComponent implements AfterViewInit {
 
     }
 
+
+    const signal = history.state.signal;
+    if (signal && signal.type === 'offer') {
+      this.incomingSignal = signal;
+      this.pendingSignal = signal;
+      this.remoteUser = {
+        _id: signal.caller.id,
+        name: signal.caller.name,
+        email: signal.caller.email,
+        profilePicUrl: '',
+        role: signal.caller.role,
+      }
+      // Don't call handleOffer() immediately. Wait until all setup (stream + peer connection) is done.
+    }
+
   }
 
 
@@ -89,38 +104,9 @@ export class VideoCallComponent implements AfterViewInit {
       this.isCaller = params['isCaller'] === 'true';
     })
 
-
-    this.socketService.onSignal().subscribe(async (signal) => {
-      console.log(signal,'Signal data before if')
-      if (signal.type === 'offer') {
-
-        //This part is only for call accepting.
-        //But Currently not making usage of incomingSignal.
-        this.incomingSignal = signal;
-        this.pendingSignal = signal
-
-        console.log(signal.type, 'signaltype\n', this.isCaller,'iscaller\n',this.localMediaReady,'local mediaready\n',this.peerConnectionReady,'peerconready')
-
-        if (!this.isCaller && this.localMediaReady && this.peerConnectionReady) {
-          this.handleOffer(signal);
-        }
-
-      } else if (signal.type === 'answer') {
-        await this.peerConnection.setRemoteDescription(new RTCSessionDescription(signal.answer));
-
-      } else if (signal.type === 'candidate') {
-        const candidate = new RTCIceCandidate(signal.candidate);
-
-        if (this.peerConnection?.remoteDescription) {
-          await this.peerConnection.addIceCandidate(new RTCIceCandidate(signal.candidate));
-        } else {
-          // Optionally buffer candidates
-          console.warn('Remote description not set. Candidate skipped or should be queued.');
-          this.bufferedCandidates.push(candidate);
-        }
-      }
+    this.socketService.socket.on('connect', () => {
+      this.setupSocketListeners();
     });
-
 
     this.authSer.user$.subscribe({
       next: (res: User | null) => {
@@ -142,12 +128,35 @@ export class VideoCallComponent implements AfterViewInit {
 
   }
 
+  setupSocketListeners() {
+    console.log('Inside setupSocket Listeners.');
+    this.socketService.onSignal().subscribe(async (signal) => {
+      console.log('Inside onSignal subscription.')
+
+      if (signal.type === 'answer') {
+        await this.peerConnection.setRemoteDescription(new RTCSessionDescription(signal.answer));
+
+      } else if (signal.type === 'candidate') {
+        const candidate = new RTCIceCandidate(signal.candidate);
+
+        if (this.peerConnection?.remoteDescription) {
+          await this.peerConnection.addIceCandidate(new RTCIceCandidate(signal.candidate));
+        } else {
+          // Optionally buffer candidates
+          console.warn('Remote description not set. Candidate skipped or should be queued.');
+          this.bufferedCandidates.push(candidate);
+        }
+      }
+    });
+
+  }
+
   async ngAfterViewInit() {
 
     await this.setupMedia();
     this.localMediaReady = true;
-
-    if (!this.isCaller && this.pendingSignal && this.peerConnectionReady) {
+    console.log(this.pendingSignal, 'pending signal')
+    if (!this.isCaller && this.pendingSignal && this.pendingSignal.type === 'offer' && this.peerConnectionReady) {
       this.handleOffer(this.pendingSignal);
     }
 
@@ -169,8 +178,7 @@ export class VideoCallComponent implements AfterViewInit {
   }
 
   async handleOffer(signal: any) {
-    console.log('Inside handle offer.')
-console.log(signal,'Handle offer working here.');
+
     // Step 1: Set remote description
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(signal.offer));
     this.remoteDescriptionSet = true;
@@ -213,7 +221,7 @@ console.log(signal,'Handle offer working here.');
     //Remote video
     this.peerConnection.ontrack = (event) => {
       const [stream] = event.streams;
-      console.log('Setting remote stream:', stream);
+      console.log('Setting remote stream:');
       if (stream) {
         this.remoteVideoRef.nativeElement.srcObject = stream;
       } else {

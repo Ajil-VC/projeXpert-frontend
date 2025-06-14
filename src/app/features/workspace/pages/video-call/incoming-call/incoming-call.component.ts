@@ -21,11 +21,11 @@ export class IncomingCallComponent {
   }
 
   accept() {
-
+    
     this.dialogRef.close();
     this.router.navigate(['/user/video-call'], {
       queryParams: {
-        from: this.data.to,
+        from: this.data.signal.to,
         to: this.data.from,
         isCaller: false
       },

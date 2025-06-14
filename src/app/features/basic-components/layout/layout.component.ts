@@ -41,6 +41,7 @@ export class LayoutComponent {
 
     this.socketService.onSignal().subscribe((signal) => {
       if (signal.type === 'offer') {
+
         this.dialog.open(IncomingCallComponent, {
           data: {
             from: signal.from,
