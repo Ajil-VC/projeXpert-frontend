@@ -17,8 +17,10 @@
         <div class="assignee-circle green"></div>
       </div>
       <span class="count">0</span>
-      <button class="start-sprint-button" *ngIf="sprint.status === 'not-started'" (click)="startSprint()" >Start sprint</button>
-      <button class="start-sprint-button" *ngIf="sprint.status === 'active'" (click)="completeSprint()" >Complete sprint</button>
+      <button class="start-sprint-button" *ngIf="sprint.status === 'not-started'" (click)="startSprint()">Start
+        sprint</button>
+      <button class="start-sprint-button" *ngIf="sprint.status === 'active'" (click)="completeSprint()">Complete
+        sprint</button>
       <button class="more-options-button">
         <i class="fa fa-ellipsis-h"></i>
       </button>
@@ -34,7 +36,7 @@
     </div>
 
     <app-issue-row *ngFor="let task of filteredIssuesShallow" [issue]="task" cdkDrag [cdkDragData]="task"
-      (idFromIssueRow)="handleDropdown($event)" (assign)="handleIssued($event)"
+      (idFromIssueRow)="handleDropdown($event)" (assign)="handleIssued($event)" 
       (seletedIssueResponse)="handleSelectedIssue($event)" [openIdFromBacklog]="currentDivId"></app-issue-row>
 
     <app-create-issue-button [from]="issueCreationButton"></app-create-issue-button>

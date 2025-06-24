@@ -5,7 +5,7 @@
     </label>
 
     <!-- Issue Type Badge -->
-    <div class="issue-type" [ngClass]="getTypeClass()">
+    <div class="issue-type" [ngClass]="getTypeClass()" (click)="taskDetails($event, issue)">
         {{ issue.type }}
     </div>
 

@@ -11,6 +11,8 @@ export class SharedService {
 
   constructor(private http: HttpClient) { }
 
+  activeChatUserId: string = '';
+
   public curProject = new Subject();
   public currentPro$ = this.curProject.asObservable();
 

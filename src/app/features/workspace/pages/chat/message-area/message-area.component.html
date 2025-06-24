@@ -6,7 +6,7 @@
         </div>
         <div class="icons">
 
-            <span class="video-call-icon" title="Start Video Call" (click)="openVideoChat()" >
+            <span class="video-call-icon" title="Start Video Call" (click)="openVideoChat()">
                 <i class="fas fa-video"></i>
             </span>
 
@@ -26,7 +26,16 @@
     'left': message.senderId !== currentUser?._id
   }">
 
-            <p>{{message.message}}</p>
+            <div class="message-p">
+                <i class="fas fa-video" *ngIf="message?.type === 'call'"></i>
+                <div>
+                    <p>{{message.message}}</p>
+                    <span *ngIf="message?.type === 'call'">
+                        {{message.callStatus === 'missed' && message.senderId === currentUser?._id ? 'No Answer' :
+                        message.callStatus}}</span>
+                </div>
+            </div>
+
             <span>{{message.createdAt | date:'h.mm a'}}</span>
         </div>
         <!-- <div class="typing">typing...</div> -->

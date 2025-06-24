@@ -38,9 +38,13 @@ export class VideoCallComponent implements AfterViewInit {
   peerConnection!: RTCPeerConnection;
   isCaller: boolean = false;
 
+  private listenersSetup = false;
+
   chatDetails!: Conversation;
   currentUser!: User | null;
   remoteUser!: Team | undefined;
+
+  msgId!: string;
 
   incomingSignal!: {
     from: string;
@@ -76,6 +80,9 @@ export class VideoCallComponent implements AfterViewInit {
     if (signal && signal.type === 'offer') {
       this.incomingSignal = signal;
       this.pendingSignal = signal;
+
+      this.msgId = signal.msgId;
+
       this.remoteUser = {
         _id: signal.caller.id,
         name: signal.caller.name,
@@ -83,7 +90,7 @@ export class VideoCallComponent implements AfterViewInit {
         profilePicUrl: '',
         role: signal.caller.role,
       }
-      // Don't call handleOffer() immediately. Wait until all setup (stream + peer connection) is done.
+
     }
 
   }
@@ -104,7 +111,14 @@ export class VideoCallComponent implements AfterViewInit {
       this.isCaller = params['isCaller'] === 'true';
     })
 
+
+    // If socket is already connected
+    if (this.socketService.socket.connected) {
+      this.setupSocketListeners();
+    }
+
     this.socketService.socket.on('connect', () => {
+
       this.setupSocketListeners();
     });
 
@@ -129,23 +143,52 @@ export class VideoCallComponent implements AfterViewInit {
   }
 
   setupSocketListeners() {
-    console.log('Inside setupSocket Listeners.');
+
+    if (this.listenersSetup) return;
+    this.listenersSetup = true;
+
+
     this.socketService.onSignal().subscribe(async (signal) => {
-      console.log('Inside onSignal subscription.')
+
+      if (!this.peerConnection || this.peerConnection.signalingState === 'closed') {
+        console.warn('Ignoring signal: peer connection is closed or undefined.');
+        return;
+      }
+
 
       if (signal.type === 'answer') {
+
         await this.peerConnection.setRemoteDescription(new RTCSessionDescription(signal.answer));
+        this.remoteDescriptionSet = true;
+        this.msgId = signal.msgId;
+
+        for (const candidate of this.bufferedCandidates) {
+          try {
+            await this.peerConnection.addIceCandidate(candidate);
+          } catch (err) {
+            console.warn('Error adding buffered candidate:', err);
+          }
+        }
+
+        this.bufferedCandidates = [];
 
       } else if (signal.type === 'candidate') {
         const candidate = new RTCIceCandidate(signal.candidate);
 
         if (this.peerConnection?.remoteDescription) {
-          await this.peerConnection.addIceCandidate(new RTCIceCandidate(signal.candidate));
+          try {
+            await this.peerConnection.addIceCandidate(candidate);
+          } catch (err) {
+            console.error('Failed to add ICE candidate:', err);
+          }
         } else {
           // Optionally buffer candidates
           console.warn('Remote description not set. Candidate skipped or should be queued.');
           this.bufferedCandidates.push(candidate);
         }
+      } else if (signal.type === 'call-ended') {
+        console.log('call ended by remote user.');
+        this.handleRemoteCallEnd();
       }
     });
 
@@ -155,8 +198,9 @@ export class VideoCallComponent implements AfterViewInit {
 
     await this.setupMedia();
     this.localMediaReady = true;
-    console.log(this.pendingSignal, 'pending signal')
+
     if (!this.isCaller && this.pendingSignal && this.pendingSignal.type === 'offer' && this.peerConnectionReady) {
+
       this.handleOffer(this.pendingSignal);
     }
 
@@ -189,12 +233,20 @@ export class VideoCallComponent implements AfterViewInit {
     // Step 3: Set local description (your answer)
     await this.peerConnection.setLocalDescription(answer);
 
+
+
+
+    const projectId = localStorage.getItem('projectId');
     // Step 4: Send answer back to caller
     this.socketService.sendSignal({
       type: 'answer',
       answer: answer,
       from: this.currentUser?._id,
-      to: this.remoteUser?._id
+      to: this.remoteUser?._id,
+
+      projectId: projectId,
+      convoId: signal.convoId,
+      messageId: signal.msgId
     });
 
 
@@ -221,7 +273,7 @@ export class VideoCallComponent implements AfterViewInit {
     //Remote video
     this.peerConnection.ontrack = (event) => {
       const [stream] = event.streams;
-      console.log('Setting remote stream:');
+
       if (stream) {
         this.remoteVideoRef.nativeElement.srcObject = stream;
       } else {
@@ -262,11 +314,17 @@ export class VideoCallComponent implements AfterViewInit {
     }
     const offer = await this.peerConnection.createOffer();
     await this.peerConnection.setLocalDescription(offer);
+
+    const projectId = localStorage.getItem('projectId');
+    const messageId = null;
     this.socketService.sendSignal({
       type: 'offer',
       offer: offer,
       from: this.currentUser?._id,
-      to: this.remoteUser?._id
+      to: this.remoteUser?._id,
+      projectId: projectId,
+      convoId: this.chatDetails._id,
+      messageId
     });
 
     this.hasOfferSent = true;
@@ -292,13 +350,51 @@ export class VideoCallComponent implements AfterViewInit {
 
   }
 
-  endCall() {
-    // Handle end call logic
+
+
+
+  handleRemoteCallEnd() {
+
     if (this.localStream) {
       this.localStream.getTracks().forEach(track => track.stop());
     }
 
+    if (this.peerConnection) {
+      this.peerConnection.close();
+    }
+
+    alert('The call was ended by the other person.');
     this.router.navigate(['user/chat']);
   }
+
+  endCall() {
+
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => track.stop());
+    }
+
+    this.socketService.sendSignal({
+      type: 'call-ended',
+      from: this.currentUser?._id,
+      to: this.remoteUser?._id,
+      messageId: this.msgId
+    })
+
+    this.router.navigate(['user/chat']);
+  }
+
+
+
+
+  ngOnDestroy() {
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => track.stop());
+    }
+
+    if (this.peerConnection) {
+      this.peerConnection.close();
+    }
+  }
+
 
 }

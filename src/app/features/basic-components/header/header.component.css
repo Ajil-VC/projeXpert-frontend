@@ -14,7 +14,92 @@
 
 }
 
-.mobile-toggle{
+
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+
+.unread{
+    background-color: #ddd;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 350px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    margin-top: 8px;
+    z-index: 1000;
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.notification-dropdown li {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-dropdown li:hover {
+    background-color: #f5f5f5;
+}
+
+.notification {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: red;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 999px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+}
+
+
+.mark-all-read {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.mark-all-read:hover {
+    background-color: #f5f5f5;
+}
+
+.mark-all-read i {
+    margin-right: 8px;
+    font-size: 1rem;
+    color: #28a745;
+}
+
+
+.mobile-toggle {
     cursor: pointer;
 }
 
@@ -158,14 +243,18 @@
     background: none;
     border: none;
     color: #ffffff;
-    font-size: 18px;
-    padding: 8px;
+
     margin-left: 5px;
     cursor: pointer;
+
+    position: relative;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
 }
 
 .header-icons .icon-button:hover {
-    color: #36b37e;
+    color: var(--secondary-color);
 }
 
 .header-icons .user-menu {

@@ -10,7 +10,7 @@ import { SharedService } from './shared.service';
 })
 export class LayoutService {
 
-  constructor(private http : HttpClient, private authSer : AuthService) { }
+  constructor(private http: HttpClient, private authSer: AuthService) { }
 
   public prSubject = new Subject()
   public pro$ = this.prSubject.asObservable();
@@ -23,7 +23,7 @@ export class LayoutService {
     return localStorage.getItem('projectId');
   }
 
-  getProject(projectId : string):Observable<any>{
+  getProject(projectId: string): Observable<any> {
 
     const workSpaceId = this.authSer.getWorkSpace()?._id || '';
     return this.http.get(`${environment.apiUserUrl}get-project?project_id=${projectId}&workspace_id=${workSpaceId}`);
@@ -34,4 +34,12 @@ export class LayoutService {
     return this.http.post(`${environment.apiUserUrl}create-workspace`, { workspaceName });
   }
 
+
+  getNotifications() {
+    return this.http.get(`${environment.apiUserUrl}get-notifications`);
+  }
+
+  makeNotificationsAsRead(notificaionId: string | null = null, removeAll: boolean = false) {
+    return this.http.patch(`${environment.apiUserUrl}update-notificaions`, { notificaionId, removeAll });
+  }
 }

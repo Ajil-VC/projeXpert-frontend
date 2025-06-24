@@ -118,6 +118,7 @@ export class AuthService implements RegisterUseCase {
     localStorage.removeItem('authToken');
     localStorage.removeItem('forceChangePass');
     localStorage.removeItem('role');
+    localStorage.removeItem('projectId');
     this.router.navigate(['/login']);
 
     this.currentUser = null;

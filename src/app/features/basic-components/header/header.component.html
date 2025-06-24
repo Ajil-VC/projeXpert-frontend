@@ -68,9 +68,33 @@
     </div>
 
     <div class="header-icons">
-      <button class="icon-button">
-        <i class="far fa-bell"></i>
-      </button>
+
+
+      <div class="notification-wrapper" #wrapper>
+        <button class="icon-button" (click)="toggleDropdown()">
+          <i class="far fa-bell"></i>
+          <span class="notification" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+        </button>
+
+        <div class="notification-dropdown" *ngIf="isDropdownOpen">
+
+          <div *ngIf="notificationCount > 0" class="mark-all-read" (click)="markAllAsRead()">
+            <p>
+              <i class="fas fa-check-double"></i> Mark all as read
+            </p>
+          </div>
+
+          <ul>
+            <li *ngIf="notificationCount == 0">No new notifications</li>
+            <li [ngClass]="note.read == false ? 'unread' : ''" *ngFor="let note of notifications">{{ note.message }}
+            </li>
+            <li *ngIf="notifications.length > 10" (click)="markAllAsRead(true)">Remove all notifications</li>
+          </ul>
+        </div>
+      </div>
+
+
+
       <button class="icon-button">
         <i class="far fa-question-circle"></i>
       </button>

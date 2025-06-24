@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/data/auth.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { SocketService } from '../../../shared/services/socket.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IncomingCallComponent } from '../../workspace/pages/video-call/incoming-call/incoming-call.component';
 
 
@@ -28,6 +28,8 @@ export class LayoutComponent {
     this.systemRole = this.route.snapshot.data['systemRole'];
   }
 
+  dialogRef?: MatDialogRef<IncomingCallComponent>;
+
   ngOnInit() {
 
     //Connecting to socket
@@ -42,13 +44,20 @@ export class LayoutComponent {
     this.socketService.onSignal().subscribe((signal) => {
       if (signal.type === 'offer') {
 
-        this.dialog.open(IncomingCallComponent, {
+        this.dialogRef = this.dialog.open(IncomingCallComponent, {
           data: {
             from: signal.from,
             signal: signal
           },
           disableClose: true
         });
+      } else if (signal.type === 'call-ended') {
+
+        if (this.dialogRef) {
+          this.dialogRef.close();
+          this.dialogRef = undefined;
+        }
+
       }
     });
 

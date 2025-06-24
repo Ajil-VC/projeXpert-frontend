@@ -2,20 +2,17 @@
     <div class="chat-header">Chats</div>
 
     <div class="member-search-container">
-        <input type="text" [(ngModel)]="searchText" placeholder="Search members..." class="member-search-input" />
-
-        <ul class="member-list">
-            <li *ngFor="let member of filteredMembers()" (click)="startConversation(member)">
-                <div class="member-info">
-                    <div class="email">{{ member.email }}</div>
-                </div>
-            </li>
-        </ul>
-
+        <input type="text" [(ngModel)]="searchText" placeholder="Type @ to see team members..." class="member-search-input" />
         <i class="fas fa-search search-icon"></i>
+
     </div>
-
-
+    <ul class="member-list">
+        <li *ngFor="let member of filteredMembers()" (click)="startConversation(member)">
+            <div class="member-info">
+                <div class="email">{{ member.email }}</div>
+            </div>
+        </li>
+    </ul>
 
 
     <ul class="chat-list">
@@ -34,7 +31,13 @@
                         <span class="time">{{chat.updatedAt | date:'h.mm a'}}</span>
 
                     </div>
-                    <div class="preview">{{chat.lastMessage.slice(0,20)}}...</div>
+
+                    <div class="preview" *ngIf="chat.lastActivityType === 'call'">
+                        {{(chat?.callerId === currentUser?._id && chat.callStatus === 'missed') ? 'No answer' :
+                        chat.callStatus}} Video call
+                    </div>
+                    <div class="preview" *ngIf="chat.lastActivityType === 'msg'">{{chat.lastMessage.slice(0,20)}}...
+                    </div>
                 </div>
 
             </div>

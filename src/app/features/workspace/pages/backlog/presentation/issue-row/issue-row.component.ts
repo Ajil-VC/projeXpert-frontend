@@ -5,6 +5,8 @@ import { Task } from '../../../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { Team } from '../../../../../../core/domain/entities/team.model';
 import { BacklogService } from '../../data/backlog.service';
+import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-issue-row',
@@ -25,7 +27,7 @@ export class IssueRowComponent {
   @Output() idFromIssueRow = new EventEmitter<string>();
   @Output() seletedIssueResponse = new EventEmitter<string>();
 
-  constructor(private shared: SharedService, private eleRef: ElementRef, private backlogSer: BacklogService) { }
+  constructor(private shared: SharedService, private eleRef: ElementRef, private backlogSer: BacklogService, private dialog: MatDialog) { }
 
   isClicked: boolean = false;
 
@@ -68,11 +70,11 @@ export class IssueRowComponent {
 
   onStatusChange(status: string) {
     this.backlogSer.updateIssueStatus(this.issue._id, status).subscribe({
-      next: (res)=> {
+      next: (res) => {
         console.log('E yes');
       },
-      error : (err) => {
-        console.error("Error occured while tryging to change task status.",err);
+      error: (err) => {
+        console.error("Error occured while tryging to change task status.", err);
       }
     })
   }
@@ -107,8 +109,8 @@ export class IssueRowComponent {
   }
 
   assignIssueTo(member: Team | '') {
-
     const memberId = member === '' ? '' : member._id;
+    console.log('Member iDs : ', memberId, 'issue Id : ', this.issue._id);
     this.backlogSer.assignIssue(this.issue._id, memberId).subscribe({
       next: (res: { status: boolean, message: string, data: Task }) => {
 
@@ -133,6 +135,29 @@ export class IssueRowComponent {
       return '!';
     }
     return issue.assignedTo.email.charAt(0).toUpperCase();
+  }
+
+
+
+  taskDetails(event: Event, task: Task): void {
+    event.stopPropagation();
+
+    const dialogRef = this.dialog.open(TaskDetailsComponent, {
+      width: '500px',
+      data: {
+        task: { ...task },
+        userRole: 'admin'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.issue = result;
+
+      }
+    });
+
   }
 
 }

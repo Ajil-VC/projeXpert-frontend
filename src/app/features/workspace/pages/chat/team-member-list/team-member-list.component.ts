@@ -7,6 +7,9 @@ import { Conversation } from '../../../../../core/domain/entities/conversation.m
 import { Message } from '../../../../../core/domain/entities/message.model';
 import { AuthService } from '../../../../auth/data/auth.service';
 import { User } from '../../../../../core/domain/entities/user.model';
+import { Subject, takeUntil } from 'rxjs';
+import { SocketService } from '../../../../../shared/services/socket.service';
+import { SharedService } from '../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-team-member-list',
@@ -25,9 +28,24 @@ export class TeamMemberListComponent {
   chats: Conversation[] = [];
   activeChat: any;
 
-  constructor(private chatService: ChatService, private authSer: AuthService) { }
+  private destroy$ = new Subject<void>();
+
+  constructor(private sharedSer: SharedService, private chatService: ChatService, private authSer: AuthService, private socketService: SocketService) { }
 
   ngOnInit() {
+
+    this.socketService.receiveMessage().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((msg: any) => {
+
+      this.chats = this.chats.map(member => {
+        if (member._id === msg.conversationId) {
+          return { ...member, lastMessage: msg.message, lastActivityType: 'msg' }
+        }
+
+        return member;
+      })
+    });
 
     //Getting the current user
     this.authSer.user$.subscribe({
@@ -85,6 +103,7 @@ export class TeamMemberListComponent {
             this.availableChatIds.add(res.result._id);
             this.chats.push(res.result);
 
+            this.sharedSer.activeChatUserId = res.result._id;
             //Open the particular chat.
           } else {
             //THe message shwoing for the particular chat
@@ -107,6 +126,9 @@ export class TeamMemberListComponent {
         this.activeChat = chat._id;
         this.chatService.messagesSubject.next(res.result);
         this.chatService.chatSubject.next(chat);
+        this.sharedSer.activeChatUserId = chat.participants.find(ele => {
+          return ele._id !== this.currentUser._id
+        })?._id || '';
         this.isChatOpen.emit(true);
       },
       error: (err) => {
@@ -114,6 +136,13 @@ export class TeamMemberListComponent {
       }
     });
 
+  }
+
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

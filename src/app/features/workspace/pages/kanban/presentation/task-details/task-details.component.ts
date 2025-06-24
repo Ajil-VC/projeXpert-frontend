@@ -60,6 +60,10 @@ export class TaskDetailsComponent {
   customEmailError: boolean = false;
   assigningUserId: string = '';
 
+
+  imagePreviews: string[] = [];
+  droppedFiles: File[] = [];
+
   ngOnInit() {
 
     if (this.task && typeof this.task.assignedTo !== 'string') {
@@ -136,5 +140,42 @@ export class TaskDetailsComponent {
     this.userSearchTerm = user.email;
     this.assigningUser = user.email;
     this.assigningUserId = user._id;
+  }
+
+
+
+
+  onDrop(event: DragEvent) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.dataTransfer?.files) {
+      const files = Array.from(event.dataTransfer.files);
+
+      for (const file of files) {
+        if (file.type.startsWith('image/')) {
+          this.droppedFiles.push(file);
+          this.previewImage(file);
+        }
+      }
+    }
+
+  }
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  previewImage(file: File) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imagePreviews.push(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(index: number) {
+    this.imagePreviews.splice(index, 1);
+    this.droppedFiles.splice(index, 1);
   }
 }

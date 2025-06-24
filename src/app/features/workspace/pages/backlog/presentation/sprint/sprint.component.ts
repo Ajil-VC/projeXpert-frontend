@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SprintDialogComponent } from '../sprint-dialog/sprint-dialog.component';
 import { Router } from '@angular/router';
 import { SharedService } from '../../../../../../shared/services/shared.service';
+import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
 
 @Component({
   selector: 'app-sprint',
@@ -37,10 +38,10 @@ export class SprintComponent implements OnChanges {
   issueCreationButton: string = this.sprint?._id as string || '';
   isIssueInSprint: boolean = false;
 
-  constructor(private backlogSer: BacklogService, 
-    private dialog: MatDialog, 
+  constructor(private backlogSer: BacklogService,
+    private dialog: MatDialog,
     private router: Router,
-    private shared : SharedService) { }
+    private shared: SharedService) { }
 
 
   onDrop(event: CdkDragDrop<Task[]>) {
@@ -221,7 +222,6 @@ export class SprintComponent implements OnChanges {
 
     setTimeout(() => {
       this.currentDivId = clickedId;
-      console.log('Clicked ID:', this.currentDivId);
     }, 0);
   };
 
@@ -236,5 +236,6 @@ export class SprintComponent implements OnChanges {
     });
 
   };
+
 
 }

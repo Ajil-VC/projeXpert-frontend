@@ -145,6 +145,66 @@ button[mat-button].secondary:hover {
 
 
 
+
+.dropzone {
+    width: 100%;
+    height: 150px;
+    border: 2px dashed #aaa;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #666;
+    background: #18181B;
+    margin-bottom: 1rem;
+    transition: background 0.2s;
+}
+
+.dropzone:hover {
+    background: #101013;
+}
+
+
+
+.thumbnail-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.thumbnail {
+    position: relative;
+    display: inline-block;
+}
+
+.thumbnail img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    line-height: 18px;
+    text-align: center;
+    padding: 0;
+}
+
+
+
+
 @media (max-width: 600px) {
 
     .detail-row {

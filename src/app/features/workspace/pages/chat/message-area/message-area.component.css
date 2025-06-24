@@ -10,6 +10,31 @@
 
 }
 
+.message-p {
+
+    display: flex;
+    /* justify-content: flex-start ; */
+    align-items: flex-start;
+
+}
+
+.message-p div{
+
+    gap: 0;
+}
+
+.message-p i{
+    margin-right: 10px;
+    width: 32px;
+    height: 32px;
+    align-self: center;
+    justify-self: center;
+    /* border-radius: 50%; */
+    background-color: #ccc;
+    color: #1e1e1e;
+    padding: 8px;
+}
+
 .chat-header {
     display: flex;
     justify-content: space-between;

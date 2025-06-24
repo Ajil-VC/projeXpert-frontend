@@ -10,6 +10,7 @@ import { SocketService } from '../../../../../shared/services/socket.service';
 import { Router } from '@angular/router';
 import { Team } from '../../../../../core/domain/entities/team.model';
 import { Subject, takeUntil } from 'rxjs';
+import { SharedService } from '../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-message-area',
@@ -32,7 +33,8 @@ export class MessageAreaComponent {
     private chatSer: ChatService,
     private authSer: AuthService,
     private socketService: SocketService,
-    private router: Router
+    private router: Router,
+    private sharedSer: SharedService
   ) { }
 
   ngAfterViewInit() {
@@ -68,7 +70,10 @@ export class MessageAreaComponent {
     this.socketService.receiveMessage().pipe(
       takeUntil(this.destroy$)
     ).subscribe((msg: any) => {
-      this.messages.push(msg);
+      if (this.sharedSer.activeChatUserId === msg.senderId) {
+
+        this.messages.push(msg);
+      }
     });
 
     //Getting the current user.
@@ -133,6 +138,7 @@ export class MessageAreaComponent {
     this.chatSer.sendMessage(this.chat._id, this.reciever._id, this.messageText).subscribe({
       next: (res) => {
         this.messages.push(res.result);
+
         this.messageText = '';
       },
       error: (err) => {
@@ -145,6 +151,7 @@ export class MessageAreaComponent {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.sharedSer.activeChatUserId = '';
   }
 
 }

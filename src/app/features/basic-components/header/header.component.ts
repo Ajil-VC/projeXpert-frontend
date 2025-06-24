@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener, Input, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, ViewChild } from '@angular/core';
 import { AuthService } from '../../auth/data/auth.service';
 import { User } from '../../../core/domain/entities/user.model';
 import { Workspace } from '../../../core/domain/entities/workspace.model';
@@ -12,6 +12,8 @@ import { BacklogService } from '../../workspace/pages/backlog/data/backlog.servi
 import { Sprint } from '../../../core/domain/entities/sprint.model';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateWorkspaceComponent } from '../../workspace/components/create-workspace/create-workspace.component';
+import { SocketService } from '../../../shared/services/socket.service';
+import { Notification } from '../../../core/domain/entities/notification.model';
 
 @Component({
   selector: 'app-header',
@@ -24,11 +26,18 @@ export class HeaderComponent {
 
   @Input() systemRole!: string;
 
+  @ViewChild('wrapper') wrapperRef!: ElementRef;
+
+
   showWorkspaceMenu = false;
   showUserMenu = false;
   showProjectMenu = false;
   isMobileMenuOpen = false;
   availableProjects: any;
+
+  isDropdownOpen = false;
+
+  notifications: Array<Notification> = [];
 
   currentUser!: any;
   currentWorkspace!: Workspace | null;
@@ -43,6 +52,7 @@ export class HeaderComponent {
     private backlogSer: BacklogService,
     private ngZone: NgZone,
     private dialog: MatDialog,
+    private socketSer: SocketService
 
   ) {
 
@@ -53,11 +63,28 @@ export class HeaderComponent {
 
   }
 
+  get notificationCount(): number {
+
+    return this.notifications.filter(note => note.read == false).length;
+  }
+
   canActivateNavbar() {
     return this.systemRole === 'company-user';
   }
 
   ngOnInit() {
+
+    this.layoutSer.getNotifications().subscribe({
+      next: (res) => {
+
+        const result = res as { status: boolean, result: Array<Notification> };
+        this.notifications = result.result;
+
+      },
+      error: (err) => {
+        console.error('Error occured while getting notifications.', err);
+      }
+    })
 
     this.authService.user$.subscribe({
       next: (res) => {
@@ -92,6 +119,37 @@ export class HeaderComponent {
       }
     });
 
+
+    this.socketSer.notification().subscribe({
+
+      next: (res) => {
+        this.notifications.unshift(res);
+      },
+      error: (err) => {
+        console.error('Error occured while getting notification', err);
+      }
+    })
+
+  }
+
+
+  markAllAsRead(removall = false) {
+
+    this.layoutSer.makeNotificationsAsRead(null, removall).subscribe({
+      next: (res) => {
+        const data = res as { status: boolean };
+        if (data.status && removall) {
+          this.notifications = [];
+        } else {
+          this.notifications.forEach(note => {
+            note.read = true;
+          })
+        }
+      },
+      error: (err) => {
+        console.error('Error occured while marking notifications as read.', err);
+      }
+    })
   }
 
 
@@ -105,6 +163,11 @@ export class HeaderComponent {
       this.showWorkspaceMenu = false; // Close workspace menu if user menu opened
       this.showProjectMenu = false;
     }
+  }
+
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   toggleWorkspaceMenu() {
@@ -135,6 +198,7 @@ export class HeaderComponent {
       this.showWorkspaceMenu = false;
       this.showUserMenu = false;
       this.showProjectMenu = false;
+      this.isDropdownOpen = false;
     }
 
   }

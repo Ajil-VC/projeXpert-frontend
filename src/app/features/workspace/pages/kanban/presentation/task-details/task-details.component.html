@@ -40,10 +40,10 @@
                 <mat-error *ngIf="assigneeCtrl.invalid && assigneeCtrl.touched">
                     <!-- <ng-container *ngIf="assigneeCtrl.errors?.['required']">Email is required</ng-container> -->
                     <ng-container *ngIf="assigneeCtrl.errors?.['email']">Invalid email format</ng-container>
-                    
+
                 </mat-error>
-                
-                
+
+
             </mat-form-field>
 
             <div class="members-list" *ngIf="userSearchTerm && userSearchTerm.trim().length > 0">
@@ -139,8 +139,18 @@
 
         <!-- Attachments (Placeholder for now) -->
         <div class="attachments-section">
-            <h3>Attachments</h3>
-            <p>No Attachments</p>
+
+            <div class="dropzone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+                <p>Drop images here or drag them in</p>
+            </div>
+
+            <div class="thumbnail-container">
+                <div class="thumbnail" *ngFor="let img of imagePreviews; let i = index">
+                    <img [src]="img" alt="preview" />
+                    <button class="remove-btn" (click)="removeImage(i)">×</button>
+                </div>
+            </div>
+
         </div>
 
     </form>

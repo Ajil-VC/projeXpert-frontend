@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { SharedService } from './shared.service';
+import { Notification } from '../../core/domain/entities/notification.model';
+import { LayoutService } from './layout.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,7 @@ export class SocketService {
 
   public socket!: Socket;
   private readonly URL = environment.ultraBaseURL;
-  constructor() { }
+  constructor(private sharedSer: SharedService, private layoutSer: LayoutService) { }
 
   connect() {
 
@@ -47,6 +50,21 @@ export class SocketService {
         observer.next(data);
       });
     });
+  }
+  notification(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('notification', (data: Notification) => {
+
+        if (this.sharedSer.activeChatUserId === data.senderId && data.type === 'message') {
+
+          this.layoutSer.makeNotificationsAsRead(data._id).subscribe();
+
+        } else {
+
+          observer.next(data);
+        }
+      })
+    })
   }
 
   //For Video calls
