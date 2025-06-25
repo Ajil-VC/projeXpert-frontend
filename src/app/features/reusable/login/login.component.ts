@@ -71,9 +71,7 @@ export class LoginComponent {
           } else if (this.systemRole === 'platform-admin') {
             this.router.navigate(['admin/dashboard']);
           }
-        } else {
-          console.log('h h aa mm. Look in login component');
-        }
+        } 
       },
       error: (err) => {
         this.errorMsg = err.message;

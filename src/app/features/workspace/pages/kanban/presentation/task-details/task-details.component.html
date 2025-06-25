@@ -153,6 +153,15 @@
 
         </div>
 
+        <div class="attachment-thumbnails">
+            <ng-container *ngIf="task?.attachments?.length">
+                <div *ngFor="let image of task.attachments" class="thumbnail-wrapper">
+                    <img [src]="image.url" [alt]="image.public_id" class="thumbnail" />
+                    <button (click)="removeAttachment(image.public_id)">Remove</button>
+                </div>
+            </ng-container>
+        </div>
+
     </form>
 </mat-dialog-content>
 

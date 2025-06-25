@@ -2,6 +2,11 @@ import { Sprint } from "./sprint.model";
 import { Team } from "./team.model";
 
 
+export interface Attachment {
+    public_id: string;
+    url: string;
+}
+
 export interface Task {
 
     _id: string;
@@ -17,5 +22,5 @@ export interface Task {
     projectId: string;
     createdAt: Date;
     updatedAt: Date;
-
+    attachments?: Attachment[];
 }

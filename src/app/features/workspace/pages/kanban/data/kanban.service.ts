@@ -11,9 +11,9 @@ export class KanbanService {
 
   constructor(private http: HttpClient) { }
 
-  updateTaskDetails(taskData: Task, assigneeId: string): Observable<any> {
+  updateTaskDetails(formData: FormData): Observable<any> {
 
-    return this.http.put(`${environment.apiUserUrl}update-task-details`, { taskData, assigneeId });
+    return this.http.put(`${environment.apiUserUrl}update-task-details`, formData);
   }
 
   getAvailableSprints(): Observable<any> {
@@ -26,6 +26,11 @@ export class KanbanService {
 
     const projectId = localStorage.getItem('projectId');
     return this.http.put(`${environment.apiUserUrl}complete-sprint`, { completingSprintId, movingSprintId, projectId });
+  }
+
+
+  deleteAttachmentFromCloudinary(publicId: string, taskId: string): Observable<any> {
+    return this.http.delete(`${environment.apiUserUrl}delete-attachment?publicId=${publicId}&taskId=${taskId}`);
   }
 
 }

@@ -107,11 +107,13 @@ export class TaskDetailsComponent {
   }
 
   onSave() {
+
+    const formData = new FormData();
+
     if (!this.form || this.form.invalid) {
-      console.log('Hello there')
       return;
     } else if (this.assigningUser !== this.userSearchTerm) {
-      console.error('Need to select member from the team.');
+      console.warn('Need to select member from the team.');
       this.customEmailError = true;
       return;
     }
@@ -122,7 +124,15 @@ export class TaskDetailsComponent {
     }
     this.customEmailError = false;
 
-    this.kanbanSer.updateTaskDetails(this.task, this.assigningUserId).subscribe({
+    formData.append('assigningUserId', this.assigningUserId);
+    formData.append('task', JSON.stringify(this.task));
+
+    this.droppedFiles.forEach(file => {
+      formData.append('attachments', file);
+    });
+
+
+    this.kanbanSer.updateTaskDetails(formData).subscribe({
       next: (res) => {
         this.data.task = res.result;
         this.dialogRef.close(this.data.task);
@@ -178,4 +188,24 @@ export class TaskDetailsComponent {
     this.imagePreviews.splice(index, 1);
     this.droppedFiles.splice(index, 1);
   }
+
+
+  removeAttachment(publicId: string) {
+
+    const confirmed = confirm('Are you sure you want to delete this attachment?');
+    if (!confirmed) return;
+
+    this.kanbanSer.deleteAttachmentFromCloudinary(publicId, this.task._id).subscribe({
+      next: (res) => {
+        const data = res as { status: boolean, message: string, result: Task };
+        if (data.status) {
+          this.task = data.result;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to delete attachment:', err);
+      }
+    });
+  }
+
 }
