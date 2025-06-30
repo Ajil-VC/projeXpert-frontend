@@ -19,7 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class IssueRowComponent {
 
-
+  @Input() daysLeft!: string;
   @Input() issue!: Task;
   @Output() assign = new EventEmitter<any>();
 
@@ -146,7 +146,8 @@ export class IssueRowComponent {
       width: '500px',
       data: {
         task: { ...task },
-        userRole: 'admin'
+        userRole: 'admin',
+        daysLeft: this.daysLeft
       }
     });
 

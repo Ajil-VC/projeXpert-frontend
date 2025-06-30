@@ -74,7 +74,7 @@ export class HeaderComponent {
 
   ngOnInit() {
 
-    this.layoutSer.getNotifications().subscribe({
+    this.layoutSer.getNotifications(this.systemRole).subscribe({
       next: (res) => {
 
         const result = res as { status: boolean, result: Array<Notification> };

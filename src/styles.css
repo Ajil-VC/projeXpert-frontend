@@ -42,8 +42,16 @@ body {
     font-weight: lighter;
     font-size: small;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 
 
@@ -51,14 +59,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .custom-backdrop {
     background-color: #001630 !important;
     z-index: 1000 !important;
-  }
-  
-  /* Style the modal panel itself */
-  .custom-password-modal {
+}
+
+/* Style the modal panel itself */
+.custom-password-modal {
     border-radius: 8px;
     padding: 20px;
     /* background-color: #fff; */
     max-width: 400px;
     width: 100%;
-  }
-  
+}
+
+
+.toast,
+.toast-success,
+.toast-error,
+.toast-warning,
+.toast-info {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 6px;
+}

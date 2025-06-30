@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { Task } from '../../../../../../core/domain/entities/task.model';
@@ -24,8 +24,12 @@ export class SprintComponent implements OnChanges {
 
   @Input() sprint!: Sprint;
   @Input() allSprintIds: string[] = [];
+  @Output() itemDropped = new EventEmitter<Task>();
+
   issues: Task[] = [];
   connectedDropListIds: string[] = [];
+
+  daysLeft: string = '';
 
   currentDivId: string = '';
   selectedIssue: Set<string> = new Set();
@@ -41,7 +45,11 @@ export class SprintComponent implements OnChanges {
   constructor(private backlogSer: BacklogService,
     private dialog: MatDialog,
     private router: Router,
-    private shared: SharedService) { }
+    private shared: SharedService) {
+
+
+
+  }
 
 
   onDrop(event: CdkDragDrop<Task[]>) {
@@ -49,6 +57,7 @@ export class SprintComponent implements OnChanges {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.filteredIssuesShallow, event.previousIndex, event.currentIndex);
     } else {
+
       transferArrayItem(
         event.previousContainer.data,
         this.filteredIssuesShallow,
@@ -56,6 +65,13 @@ export class SprintComponent implements OnChanges {
         event.currentIndex
       );
       // Optionally emit event to parent to update task.sprintId = this.sprintId
+
+      //Here im updating the backlog array in parent to let the backlog component know about it.
+      if (event.previousContainer.id === "backlog-drop-list") {
+
+        this.itemDropped.emit(event.item.data)
+
+      }
 
       const prevContainerId = event.previousContainer.id;
       const movedTaskId = event.item.data?._id;
@@ -87,7 +103,33 @@ export class SprintComponent implements OnChanges {
       .map(sprintId => `sprint-${sprintId}`);
   }
 
+
+  getDaysLeftForTheSprint() {
+
+    if (!this.sprint?.endDate) {
+      this.daysLeft = 'Not Started';
+      return;
+    }
+
+    const endDate = new Date(this.sprint.endDate);
+    const today = new Date();
+
+    // Optionally normalize the current date and end date to ignore the time of day:
+    // This is useful if you want to compute full days between dates rather than accounting for hours/minutes.
+    today.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    // Calculate the time difference in milliseconds
+    const diffTime = endDate.getTime() - today.getTime();
+
+    // Convert the time difference from milliseconds to days
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    this.daysLeft = daysLeft < 0 ? 'Time up' : daysLeft + 'days left';
+
+  }
   ngOnInit() {
+
+    this.getDaysLeftForTheSprint();
 
     this.backlogSer.selectedEpics$.subscribe({
       next: (res: Set<string>) => {

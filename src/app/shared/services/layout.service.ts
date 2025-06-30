@@ -35,8 +35,14 @@ export class LayoutService {
   }
 
 
-  getNotifications() {
-    return this.http.get(`${environment.apiUserUrl}get-notifications`);
+  getNotifications(systemRole: string) {
+
+    if (systemRole === 'company-user') {
+      return this.http.get(`${environment.apiUserUrl}get-notifications`);
+
+    } else {
+      return this.http.get(`${environment.apiAdminUrl}get-notifications`);
+    }
   }
 
   makeNotificationsAsRead(notificaionId: string | null = null, removeAll: boolean = false) {

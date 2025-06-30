@@ -1,5 +1,16 @@
 <div class="task-card">
-  <div class="task-title">{{ task.title }}</div>
+
+
+  <div class="detail-row">
+    <span class="label">Task Name:</span>
+    <span class="value">{{ task.title }}</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Sprint Name:</span>
+    <span class="value">{{sprintName}}</span>
+  </div>
+
+
   <div class="task-details">
     <span class="tag" [class.task]="task.type === 'task'" [class.bug]="task.type === 'bug'"
       [class.story]="task.type === 'story'">{{ task.type }}</span>

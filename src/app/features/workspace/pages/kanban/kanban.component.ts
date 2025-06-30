@@ -13,6 +13,7 @@ import { AuthService } from '../../../auth/data/auth.service';
 import { User } from '../../../../core/domain/entities/user.model';
 import { SprintCompleteComponent } from './presentation/sprint-complete/sprint-complete.component';
 import { Sprint, SprintTaskGroup } from '../../../../core/domain/entities/sprint.model';
+import { NotificationService } from '../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-kanban',
@@ -42,7 +43,8 @@ export class KanbanComponent {
     private shared: SharedService,
     private backlogSer: BacklogService,
     public dialog: MatDialog,
-    private authSer: AuthService
+    private authSer: AuthService,
+    private toast: NotificationService
   ) { }
 
 
@@ -72,11 +74,9 @@ export class KanbanComponent {
           }
         },
         error: (err) => {
-          console.error('Error occured while updating task status.', err);
+          this.toast.showError('Failed to update the task status');
         }
       });
-      console.log('Moved task:', droppedTask);
-      console.log(event.container.id, 'This is current');
     }
   }
 
@@ -112,7 +112,7 @@ export class KanbanComponent {
         this.seperatingOnStatus();
       },
       error: (err) => {
-        console.error('Error occured while getting tasks', err);
+        this.toast.showError('Failed to get tasks in active sprint.');
       }
     });
 
@@ -166,6 +166,7 @@ export class KanbanComponent {
 
   completeSprint() {
     const groupedTasks = this.groupTasksBySprint()
+    console.log(groupedTasks, 'grouped tasks');
     const dialogRef = this.dialog.open(SprintCompleteComponent, {
       width: '500px',
       data: { groupedTasks }
@@ -173,7 +174,22 @@ export class KanbanComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        for (let task of result.result) {
+          const ind = this.allTasks.findIndex((item: Task) => item._id == task._id);
+          if (ind !== -1) {
+            if (!task.sprintId || (task.sprintId && task.sprintId.status !== 'active')) {
 
+              this.allTasks.splice(ind, 1);
+
+            } else {
+
+              this.allTasks[ind] = task
+
+            }
+
+          }
+        }
+        this.toast.showSuccess('Sprint completed successfully')
         const completedTaskIds = new Set(result.completedTasks.map((task: Task) => task._id));
         this.allTasks = this.allTasks.filter(task => !completedTaskIds.has(task._id));
         this.seperatingOnStatus();
@@ -200,6 +216,7 @@ export class KanbanComponent {
         const index = this.allTasks.findIndex(task => task._id === result._id);
         if (index !== -1) {
           this.allTasks[index] = result;
+          this.toast.showSuccess(`Successfully updated the task ${result.title}`);
           this.seperatingOnStatus();
         }
 

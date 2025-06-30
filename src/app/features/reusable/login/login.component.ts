@@ -58,6 +58,7 @@ export class LoginComponent {
         status: boolean,
         token: string
       }) => {
+        console.log(res,'From login');
         if (res.status) {
 
           if (this.systemRole === 'company-user') {
@@ -76,7 +77,6 @@ export class LoginComponent {
       error: (err) => {
         this.errorMsg = err.message;
         this.isBtnDisabled = false;
-        console.error("Error in login response ", err);
       }
     })
 

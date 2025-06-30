@@ -35,7 +35,7 @@
       <p>Plan a sprint by dragging work items into it.</p>
     </div>
 
-    <app-issue-row *ngFor="let task of filteredIssuesShallow" [issue]="task" cdkDrag [cdkDragData]="task"
+    <app-issue-row *ngFor="let task of filteredIssuesShallow" [issue]="task" [daysLeft]="daysLeft" cdkDrag [cdkDragData]="task"
       (idFromIssueRow)="handleDropdown($event)" (assign)="handleIssued($event)" 
       (seletedIssueResponse)="handleSelectedIssue($event)" [openIdFromBacklog]="currentDivId"></app-issue-row>
 

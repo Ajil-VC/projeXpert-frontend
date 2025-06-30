@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Task } from '../../../../../../core/domain/entities/task.model';
+import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 
 @Component({
   selector: 'app-task-card',
@@ -27,12 +28,17 @@ export class TaskCardComponent {
     endDate.setHours(0, 0, 0, 0);
 
     // Calculate the time difference in milliseconds
-    const diffTime  = endDate.getTime() - today.getTime();
+    const diffTime = endDate.getTime() - today.getTime();
 
     // Convert the time difference from milliseconds to days
     const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     this.daysLeft = daysLeft < 0 ? 'Time up' : daysLeft + 'days left';
 
+  }
+
+  get sprintName(): string | null {
+    const sprint = this.task?.sprintId as Sprint;
+    return sprint?.name as string ?? null;
   }
 
   ngOnInit() {

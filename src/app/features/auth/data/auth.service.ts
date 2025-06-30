@@ -52,15 +52,18 @@ export class AuthService implements RegisterUseCase {
     this.currentWorkspace = workspace;
 
     const currentProjectId = localStorage.getItem('projectId');
+
     if (!currentProjectId) {
       const curProj = workspace.projects[0] as unknown as Project;
+
       localStorage.setItem('projectId', curProj._id as string);
       this.shared.curProject.next(curProj);
     }
 
-    const workspaceWithProjects = (workspace.projects as unknown as Project[])
-      .filter(ele => ele._id === currentProjectId);
-    this.shared.curProject.next(workspaceWithProjects[0]);
+    // const workspaceWithProjects = (workspace.projects as unknown as Project[])
+    //   .filter(ele => ele._id === currentProjectId); 
+    // this.shared.curProject.next(workspaceWithProjects[0]);
+    //It commented to check the problem with updation of current project in sidebar.
 
   }
   //** For Initial loading **//

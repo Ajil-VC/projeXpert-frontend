@@ -6,7 +6,7 @@ import { LayoutService } from '../../../shared/services/layout.service';
 import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
 import { User } from '../../../core/domain/entities/user.model';
-
+import { NotificationService } from '../../../core/data/notification.service';
 
 interface MenuItem {
   id: string,
@@ -29,7 +29,7 @@ export class SidebarComponent {
   public currentProject: string = '';
   menuItems: MenuItem[] = [];
 
-  constructor(private authSer: AuthService, private shared: SharedService) {
+  constructor(private authSer: AuthService, private shared: SharedService, private toast: NotificationService) {
 
   }
 
@@ -45,10 +45,15 @@ export class SidebarComponent {
 
       this.shared.currentPro$.subscribe({
         next: (res: any) => {
-          this.currentProject = (res as Project).name as string;
+          console.log(res,'From sidebas')
+          if (res) {
+
+            this.currentProject = (res as Project).name as string;
+          }
+          return;
         },
         error: (err) => {
-          console.log('Error occured while getting current project', err);
+          this.toast.showError('Failed to load current project. Please try again by refreshing')
         }
       });
 
@@ -80,7 +85,7 @@ export class SidebarComponent {
 
   adminMenuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/admin/dashboard', active: false },
-    { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false }, 
+    { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false },
     { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
   ];
@@ -94,6 +99,7 @@ export class SidebarComponent {
 
 
   setActiveItem(item: MenuItem) {
+
     this.menuItems.forEach(menuItem => {
       menuItem.active = menuItem.id === item.id;
     });

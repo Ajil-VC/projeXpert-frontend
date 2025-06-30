@@ -12,6 +12,7 @@ import { User } from '../../../../../../core/domain/entities/user.model';
 import { Team } from '../../../../../../core/domain/entities/team.model';
 import { SearchPipe } from '../../../../../../core/pipes/search.pipe';
 import { KanbanService } from '../../data/kanban.service';
+import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 
 @Component({
   selector: 'app-task-details',
@@ -40,10 +41,11 @@ export class TaskDetailsComponent {
   task!: Task;
   userRole!: string;
   teamMembers: Team[] = [];
+  isSaved: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { task: Task, userRole: string },
+    @Inject(MAT_DIALOG_DATA) public data: { task: Task, userRole: string, daysLeft: string },
     private shared: SharedService,
     private kanbanSer: KanbanService
   ) {
@@ -66,26 +68,7 @@ export class TaskDetailsComponent {
 
   ngOnInit() {
 
-    if (this.task && typeof this.task.assignedTo !== 'string') {
-      this.email = this.task.assignedTo?.email || 'Not Assigned';
-    }
-    this.endDate = (this.task?.sprintId !== null && typeof this.task?.sprintId !== 'string') ? this.task?.sprintId.endDate : '';
-
-    const endDate = new Date(this.endDate);
-    const today = new Date();
-
-    // Optionally normalize the current date and end date to ignore the time of day:
-    // This is useful if you want to compute full days between dates rather than accounting for hours/minutes.
-    today.setHours(0, 0, 0, 0);
-    endDate.setHours(0, 0, 0, 0);
-
-    // Calculate the time difference in milliseconds
-    const diffTime = endDate.getTime() - today.getTime();
-
-    // Convert the time difference from milliseconds to days
-    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    this.daysLeft = daysLeft < 0 ? 'Time up' : daysLeft + 'days left';
-
+    this.setDaysLeft();
 
     if (this.userRole === 'admin') {
       this.shared.getTeamMembers().subscribe({
@@ -100,6 +83,37 @@ export class TaskDetailsComponent {
 
   }
 
+  get sprintName(): string | null {
+    const sprint = this.task?.sprintId as Sprint;
+    return sprint?.name as string ?? null;
+  }
+
+  setDaysLeft() {
+    if (this.task && typeof this.task.assignedTo !== 'string') {
+      this.email = this.task.assignedTo?.email || 'Not Assigned';
+    }
+    this.endDate = (this.task?.sprintId !== null && typeof this.task?.sprintId !== 'string') ? this.task?.sprintId.endDate : '';
+    if (!this.endDate) {
+      this.daysLeft = this.data.daysLeft || 'Not Started';
+      return;
+    }
+    const endDate = new Date(this.endDate);
+    const today = new Date();
+
+    // Optionally normalize the current date and end date to ignore the time of day:
+    // This is useful if you want to compute full days between dates rather than accounting for hours/minutes.
+    today.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    // Calculate the time difference in milliseconds
+    const diffTime = endDate.getTime() - today.getTime();
+
+    // Convert the time difference from milliseconds to days
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    this.daysLeft = daysLeft < 0 ? 'Time up' : daysLeft + 'days left';
+  }
+
+
   onCancel() {
 
     this.dialogRef.close();
@@ -108,6 +122,8 @@ export class TaskDetailsComponent {
 
   onSave() {
 
+    if (this.isSaved) return;
+    this.isSaved = true;
     const formData = new FormData();
 
     if (!this.form || this.form.invalid) {

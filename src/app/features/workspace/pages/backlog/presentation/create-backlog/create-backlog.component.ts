@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
 import { CommonModule } from '@angular/common';
 import { IssueRowComponent } from "../issue-row/issue-row.component";
@@ -8,6 +8,7 @@ import { Team } from '../../../../../../core/domain/entities/team.model';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 
 import { DragDropModule, CdkDragDrop, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
+import { NotificationService } from '../../../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-create-backlog',
@@ -25,6 +26,7 @@ export class CreateBacklogComponent implements OnChanges {
   @Input() backlogs!: Task[];
   @Input() connectedSprintIds: string[] = [];
   @Input() allSprintIds: string[] = [];
+  @Output() sprintCreated = new EventEmitter<Sprint>();
 
   filteredBacklogs: Task[] = [];
   issues = [];
@@ -36,7 +38,7 @@ export class CreateBacklogComponent implements OnChanges {
   issueCreationButton: string = 'backlog';
   isBacklog: boolean = false;
 
-  constructor(private backlogSer: BacklogService) { }
+  constructor(private backlogSer: BacklogService, private toast: NotificationService) { }
 
 
   onDrop(event: CdkDragDrop<Task[]>) {
@@ -45,16 +47,18 @@ export class CreateBacklogComponent implements OnChanges {
       moveItemInArray(this.filteredBacklogs, event.previousIndex, event.currentIndex);
     } else {
 
-      transferArrayItem(    
+      transferArrayItem(
         event.previousContainer.data,
-        this.filteredBacklogs,
+        this.backlogs,
         event.previousIndex,
         event.currentIndex
       );
 
+      this.filteredIssues();
+
       const prevContainerId = event.previousContainer.id;
       const movedTaskId = event.item.data?._id;
-      
+
       this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
         next: (res: { status: boolean, message: string, result: Task }) => {
 
@@ -68,10 +72,11 @@ export class CreateBacklogComponent implements OnChanges {
           }
         },
         error: (err) => {
-          console.error('Something went wrong while updating moved task.');
+          this.toast.showError('Something went wrong while moving tasks.');
         }
       })
     }
+
   }
 
 
@@ -82,13 +87,11 @@ export class CreateBacklogComponent implements OnChanges {
     this.backlogSer.addIssue$.subscribe({
       next: (res: Task) => {
         if (!res.sprintId) {
+  console.log(this.backlogs,'Why???')
           this.backlogs.push(res);
           this.filteredIssues();
         }
 
-      },
-      error: (err) => {
-        console.error('Error occured while adding issue', err);
       }
     });
 
@@ -96,9 +99,6 @@ export class CreateBacklogComponent implements OnChanges {
       next: (res: Set<string>) => {
         this.selectedEpics = Array.from(res);
         this.filteredIssues();
-      },
-      error: (err) => {
-        console.error('Error occured while getting selected epics', err);
       }
     })
   }
@@ -148,6 +148,7 @@ export class CreateBacklogComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+
     if (changes['allSprintIds']) {
       this.connectedSprintIds = this.allSprintIds.map(id => `sprint-${id}`);
     }
@@ -157,6 +158,7 @@ export class CreateBacklogComponent implements OnChanges {
     } else {
       this.isBacklog = false;
     }
+
   }
 
   toggleBacklogCollapse(): void {
@@ -178,7 +180,6 @@ export class CreateBacklogComponent implements OnChanges {
 
     setTimeout(() => {
       this.currentDivId = clickedId;
-      console.log('Clicked ID:', this.currentDivId);
     }, 0);
   }
 
@@ -195,18 +196,31 @@ export class CreateBacklogComponent implements OnChanges {
   };
 
   createSprint() {
-
     const issueIds = Array.from(this.selectedIssue);
+    if (issueIds.length === 0) {
+      this.toast.showError('Select issues', 'Heads Up');
+      return;
+    };
     this.backlogSer.createSprint(issueIds).subscribe({
       next: (res: { status: boolean, result: Sprint }) => {
 
         //Here IM sending the created sprint to the backlog service
-        this.backlogSer.addSprintSubject.next(res.result);
-        console.log('Sprint created successfully', res);
-        console.log(this.backlogs,'backlogs:')
+        // this.backlogSer.addSprintSubject.next(res.result);
+        this.sprintCreated.emit(res.result);
+
+        const tasksToRemove = new Set((res.result.tasks as Task[]).map((task: Task) => task._id));
+        this.backlogs = this.backlogs.filter(task => !tasksToRemove.has(task._id));
+
+        // this.allSprintIds.push(res.result._id as string);
+
+        this.connectedSprintIds.push(`sprint-${(res.result._id as string)}`)
+
+        this.selectedIssue.clear();
+        this.filteredIssues()
+
       },
       error: (err) => {
-        console.error('Error while creating sprint', err);
+        this.toast.showError('Something went wrong while creating sprint')
       }
     })
   };
