@@ -53,7 +53,6 @@ export class HeaderComponent {
     private ngZone: NgZone,
     private dialog: MatDialog,
     private socketSer: SocketService
-
   ) {
 
     const isAdmin = this.authService.isAdmin();
@@ -120,30 +119,35 @@ export class HeaderComponent {
     });
 
 
-    this.socketSer.notification().subscribe({
+    // this.socketSer.notification().subscribe({
 
-      next: (res) => {
-        this.notifications.unshift(res);
-      },
-      error: (err) => {
-        console.error('Error occured while getting notification', err);
-      }
-    })
+    //   next: (res) => {
+    //     this.notifications.unshift(res);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error occured while getting notification', err);
+    //   }
+    // })
 
   }
 
 
-  markAllAsRead(removall = false) {
+  readNotification(notification: Notification | null = null, removall = false) {
 
-    this.layoutSer.makeNotificationsAsRead(null, removall).subscribe({
+    this.layoutSer.makeNotificationsAsRead(notification?._id, removall).subscribe({
       next: (res) => {
         const data = res as { status: boolean };
-        if (data.status && removall) {
+        if (data.status && removall && !notification) {
           this.notifications = [];
-        } else {
+        } else if (!notification && !removall) {
           this.notifications.forEach(note => {
             note.read = true;
           })
+        } else if (notification) {
+
+          const ind = this.notifications.findIndex(note => note._id === notification._id);
+          this.notifications[ind].read = true;
+          this.router.navigate([notification?.link]);
         }
       },
       error: (err) => {
@@ -218,29 +222,32 @@ export class HeaderComponent {
 
         this.layoutSer.setProjectId(res.result._id as string);
         this.shared.curProject.next(res.result);
-        this.shared.tasksSubject.next(res.tasks);
+        this.shared.fetchTeamMembers();
       },
       error: (err) => {
         console.log("Error while getting project data", err);
       }
     });
 
-    this.backlogSer.getSprints(projectId).subscribe({
-      next: (res: { status: boolean, result: Sprint[] }) => {
-        if (!res.status) {
-          console.error('Error occured while getting sprints');
-          return;
+
+    if (this.authService.isAdmin()) {
+      this.backlogSer.getSprints(projectId).subscribe({
+        next: (res: { status: boolean, result: Sprint[] }) => {
+          if (!res.status) {
+            console.error('Error occured while getting sprints');
+            return;
+          }
+
+          this.ngZone.run(() => {
+            this.backlogSer.sprintSubject.next(res.result);
+          });
+
+        },
+        error: (err) => {
+          console.error('Error occured while getting sprints', err);
         }
-
-        this.ngZone.run(() => {
-          this.backlogSer.sprintSubject.next(res.result);
-        });
-
-      },
-      error: (err) => {
-        console.error('Error occured while getting sprints', err);
-      }
-    });
+      });
+    }
 
 
   }

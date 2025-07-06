@@ -4,17 +4,23 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
 import { Task } from '../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../core/domain/entities/sprint.model';
+import { LayoutService } from '../../../../../shared/services/layout.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BacklogService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private layoutSer: LayoutService) { }
 
-  createEpic(epicName: string, projectId: string): Observable<any> {
+  createOrUpdateEpic(title: string, description: string, startDate: string, endDate: string, epic: Task | null): Observable<any> {
 
-    return this.http.post(`${environment.apiUserUrl}create-epic`, { epicName, projectId });
+    if (!epic) {
+      const projectId = this.layoutSer.getProjectId();
+      return this.http.post(`${environment.apiUserUrl}create-epic`, { title, description, startDate, endDate, projectId });
+    } else {
+      return this.http.put(`${environment.apiUserUrl}update-epic`, { title, description, startDate, endDate, epicId: epic._id });
+    }
   }
 
 

@@ -9,6 +9,7 @@ import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 
 import { DragDropModule, CdkDragDrop, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotificationService } from '../../../../../../core/data/notification.service';
+import { SharedService } from '../../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-create-backlog',
@@ -31,15 +32,14 @@ export class CreateBacklogComponent implements OnChanges {
   filteredBacklogs: Task[] = [];
   issues = [];
   issueCount = 0;
-  selectedEpics: Array<string> = [];
+  selectedEpics: Set<string> = new Set();
   currentDivId: string = '';
   selectedIssue: Set<string> = new Set();
 
   issueCreationButton: string = 'backlog';
   isBacklog: boolean = false;
 
-  constructor(private backlogSer: BacklogService, private toast: NotificationService) { }
-
+  constructor(private backlogSer: BacklogService, private toast: NotificationService, private shared: SharedService) { }
 
   onDrop(event: CdkDragDrop<Task[]>) {
 
@@ -47,28 +47,32 @@ export class CreateBacklogComponent implements OnChanges {
       moveItemInArray(this.filteredBacklogs, event.previousIndex, event.currentIndex);
     } else {
 
-      transferArrayItem(
-        event.previousContainer.data,
-        this.backlogs,
-        event.previousIndex,
-        event.currentIndex
-      );
-
-      this.filteredIssues();
-
       const prevContainerId = event.previousContainer.id;
       const movedTaskId = event.item.data?._id;
 
       this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
         next: (res: { status: boolean, message: string, result: Task }) => {
 
-          const foundTask = this.filteredBacklogs.find(task => task._id === res.result._id);
-          if (foundTask) {
-            foundTask.sprintId = res.result.sprintId;
-          }
-          const foundInBacklog = this.backlogs.find(task => task._id === res.result._id);
-          if (foundInBacklog) {
-            foundInBacklog.sprintId = res.result.sprintId;
+          if (res.status) {
+            transferArrayItem(
+              event.previousContainer.data,
+              this.backlogs,
+              event.previousIndex,
+              event.currentIndex
+            );
+
+            const foundTask = this.filteredBacklogs.find(task => task._id === res.result._id);
+            if (foundTask) {
+              foundTask.sprintId = res.result.sprintId;
+            }
+            const foundInBacklog = this.backlogs.find(task => task._id === res.result._id);
+            if (foundInBacklog) {
+              foundInBacklog.sprintId = res.result.sprintId;
+            }
+
+            this.filteredIssues();
+
+            this.shared.tasksSubject.next(event.item.data);
           }
         },
         error: (err) => {
@@ -87,7 +91,6 @@ export class CreateBacklogComponent implements OnChanges {
     this.backlogSer.addIssue$.subscribe({
       next: (res: Task) => {
         if (!res.sprintId) {
-  console.log(this.backlogs,'Why???')
           this.backlogs.push(res);
           this.filteredIssues();
         }
@@ -97,7 +100,7 @@ export class CreateBacklogComponent implements OnChanges {
 
     this.backlogSer.selectedEpics$.subscribe({
       next: (res: Set<string>) => {
-        this.selectedEpics = Array.from(res);
+        this.selectedEpics = res;
         this.filteredIssues();
       }
     })
@@ -107,18 +110,25 @@ export class CreateBacklogComponent implements OnChanges {
 
     this.issueCount = 0;
     if (!this.backlogs || this.backlogs.length === 0) {
+      this.filteredBacklogs = [];
       this.isBacklog = true;
       return;
     };
 
-    if (this.selectedEpics.length === 0) {
-      this.filteredBacklogs = this.backlogs.filter(issue => {
-        if (!issue.epicId) {
-          issue.assignedTo = issue.assignedTo as Team;
-          this.issueCount++;
-          return true;
-        }
-        return false
+    if (this.selectedEpics.size === 0) {
+      // this.filteredBacklogs = this.backlogs.filter(issue => {
+      //   if (!issue.epicId) {
+      //     issue.assignedTo = issue.assignedTo as Team;
+      //     this.issueCount++;
+      //     return true;
+      //   }
+      //   return false
+      // });
+
+      this.filteredBacklogs = this.backlogs.map(issue => {
+        issue.assignedTo = issue.assignedTo as Team;
+        this.issueCount++;
+        return issue;
       });
 
       if (this.filteredBacklogs.length === 0) {
@@ -129,12 +139,10 @@ export class CreateBacklogComponent implements OnChanges {
       return;
     }
 
-    this.filteredBacklogs = this.backlogs.filter(issue => {
-      for (let epic of this.selectedEpics) {
-        if (epic === issue.epicId) {
-          this.issueCount++;
-          return true;
-        }
+    this.filteredBacklogs = this.backlogs.filter((issue: Task) => {
+
+      if (this.selectedEpics.has((issue.epicId as Task)?._id)) {
+        return true;
       }
       return false;
     });
@@ -153,7 +161,8 @@ export class CreateBacklogComponent implements OnChanges {
       this.connectedSprintIds = this.allSprintIds.map(id => `sprint-${id}`);
     }
 
-    if (changes['backlogs'] && this.backlogs?.length > 0) {
+    if (changes['backlogs']) {
+
       this.filteredIssues();
     } else {
       this.isBacklog = false;
@@ -185,6 +194,7 @@ export class CreateBacklogComponent implements OnChanges {
 
 
   handleIssued(event: Task) {
+
     this.backlogs.find((issue) => {
       if (issue._id === event._id) {
         issue.assignedTo = event.assignedTo;

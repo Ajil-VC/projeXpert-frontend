@@ -9,11 +9,14 @@ import { Task } from '../../../../../../core/domain/entities/task.model';
 import { BacklogService } from '../../data/backlog.service';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { LoaderService } from '../../../../../../core/data/loader.service';
+import { distinctUntilChanged, forkJoin, Subject, takeUntil } from 'rxjs';
+import { NotificationService } from '../../../../../../core/data/notification.service';
+import { LoaderComponent } from '../../../../../../core/presentation/loader/loader.component';
 
 
 @Component({
   selector: 'app-backlog',
-  imports: [CommonModule, BacklogHeaderComponent, EpicsComponent, SprintComponent, CreateBacklogComponent],
+  imports: [CommonModule, BacklogHeaderComponent, EpicsComponent, SprintComponent, CreateBacklogComponent, LoaderComponent],
   templateUrl: './backlog.component.html',
   styleUrl: './backlog.component.css'
 })
@@ -26,8 +29,17 @@ export class BacklogComponent {
   backlogs!: Task[];
   sprints: Sprint[] = [];
   sprintIds: string[] = [];
+  isLoading = false;
 
-  constructor(private shared: SharedService, private backlogSer: BacklogService, private cdRef: ChangeDetectorRef, private loader: LoaderService) {
+
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private shared: SharedService,
+    private backlogSer: BacklogService,
+    private cdRef: ChangeDetectorRef,
+    private loader: LoaderService,
+    private toast: NotificationService) {
 
   }
 
@@ -43,6 +55,36 @@ export class BacklogComponent {
 
   }
 
+  refreshBacklogView() {
+    this.isLoading = true;
+
+    forkJoin({
+      tasksRes: this.shared.getTasksInProject(),
+      sprintsRes: this.backlogSer.getSprints()
+    }).subscribe({
+      next: ({ tasksRes, sprintsRes }) => {
+        if (tasksRes.status) {
+          const result = tasksRes.result;
+          this.epics = result.filter((issue: Task) => issue.type === 'epic');
+          this.backlogs = [...(result.filter((issue: Task) => issue.sprintId == null && issue.type !== 'epic') || [])];
+
+        }
+
+        if (sprintsRes.status) {
+
+          this.sprints = sprintsRes.result;
+          this.sprintIds = this.sprints.map(sprint => sprint._id as string);
+        }
+
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.toast.showError('Failed to refresh backlog data');
+      }
+    });
+
+  }
 
   ngOnInit() {
 
@@ -73,59 +115,23 @@ export class BacklogComponent {
       }
     });
 
-    this.shared.currentPro$.subscribe({
+    this.shared.currentPro$.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe({
       next: (res) => {
         if (!res) {
           this.isProjectSelected = false;
         } else {
+          this.refreshBacklogView();
           this.isProjectSelected = true;
         }
       }
     })
 
-
-    //tasks on init
-    this.shared.getTasksInProject().subscribe({
-      next: (res: { status: boolean, result: Task[] }) => {
-
-        this.epics = res.result.filter(issue => issue.type === 'epic');
-        this.backlogs = res.result.filter(issue => (issue.sprintId == null && issue.type !== 'epic'));
-
-      }
-    })
-
-    //Getting tasks on project change from header
-    this.shared.taskSub$.subscribe({
-      next: (res) => {
-        const tasks = res as Task[];
-
-        this.epics = tasks.filter(issue => issue.type === 'epic');
-        this.backlogs = tasks.filter(issue => issue.sprintId == null && issue.type !== 'epic');
-
-      }
-    });
+    this.refreshBacklogView();
 
 
-    //Here im initiating sprints to load the backlog page
-    this.backlogSer.getSprints().subscribe({
-      next: (res: { status: boolean, result: Sprint[] }) => {
-        
-        if (!res.status) {
-          return;
-        }
-        this.sprints = res.result;
-        this.sprintIds = this.sprints.map(sprint => sprint._id as string);
-      }
-    });
-    //Here Im retrieving the sprint array on project change
-    this.backlogSer.sprint$.subscribe({
-      next: (res: Sprint[]) => {
-        console.log(res, 'Sprint init')
-        this.sprints = res;
-        this.sprintIds = this.sprints.map(sprint => sprint._id as string);
-        this.cdRef.detectChanges();
-      }
-    });
     //Here Im adding sprint into the backlog on adding sprint 
     // this.backlogSer.addSprint$.subscribe({
     //   next: (res: Sprint) => {
@@ -144,6 +150,12 @@ export class BacklogComponent {
     this.sprints = [...this.sprints, sprint];;
     this.sprintIds = [...this.sprintIds, sprint._id as string];
     this.cdRef.detectChanges();
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

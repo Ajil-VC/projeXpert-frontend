@@ -45,16 +45,16 @@ export class TransformButtonComponent implements AfterViewChecked {
 
     if (this.inputValue.trim()) {
       this.epicName = this.inputValue;
-      const projectId = this.layoutSer.getProjectId();
-      this.backlogSer.createEpic(this.epicName, projectId || '').subscribe({
-        next: (res: { status: boolean, result: Task }) => {
+      // const projectId = this.layoutSer.getProjectId();
+      // this.backlogSer.createEpic(this.epicName, projectId || '').subscribe({
+      //   next: (res: { status: boolean, result: Task }) => {
           
-          this.response.emit(res.result);
-        },
-        error: (err) => {
-          console.log(err, 'adfrerr');
-        }
-      })
+      //     this.response.emit(res.result);
+      //   },
+      //   error: (err) => {
+      //     console.log(err, 'adfrerr');
+      //   }
+      // })
       this.inputValue = '';
     }
     this.isEditing = false;

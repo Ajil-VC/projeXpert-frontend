@@ -78,7 +78,7 @@
 
         <div class="notification-dropdown" *ngIf="isDropdownOpen">
 
-          <div *ngIf="notificationCount > 0" class="mark-all-read" (click)="markAllAsRead()">
+          <div *ngIf="notificationCount > 0" class="mark-all-read" (click)="readNotification()">
             <p>
               <i class="fas fa-check-double"></i> Mark all as read
             </p>
@@ -86,9 +86,11 @@
 
           <ul>
             <li *ngIf="notificationCount == 0">No new notifications</li>
-            <li [ngClass]="note.read == false ? 'unread' : ''" *ngFor="let note of notifications">{{ note.message }}
+            <li [ngClass]="note.read == false ? 'unread' : ''" *ngFor="let note of notifications"
+              (click)="readNotification(note,false)">
+              {{ note.message }}
             </li>
-            <li *ngIf="notifications.length > 10" (click)="markAllAsRead(true)">Remove all notifications</li>
+            <li *ngIf="notifications.length > 10" (click)="readNotification(null,true)">Remove all notifications</li>
           </ul>
         </div>
       </div>

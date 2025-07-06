@@ -36,7 +36,7 @@ export class LayoutService {
 
 
   getNotifications(systemRole: string) {
-
+    
     if (systemRole === 'company-user') {
       return this.http.get(`${environment.apiUserUrl}get-notifications`);
 

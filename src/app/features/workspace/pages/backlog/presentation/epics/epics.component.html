@@ -18,8 +18,8 @@
                 <div class="epic-item-namepart">
                     <span class="expand-icon" (click)="toggleEpicDetails(epic)"
                         [ngClass]="isEpicExpanded(epic._id) ? 'fa-chevron-right ' : 'fa-chevron-down'"></span>
-                    <input class="epic-color" type="checkbox" (change)="updateCheckStatus(epic._id, $event)" >
-                    <span class="epic-title" (click)="toggleEpicDetails(epic)" >{{ epic.title }}</span>
+                    <input class="epic-color" type="checkbox" (change)="updateCheckStatus(epic._id, $event)">
+                    <span class="epic-title" (click)="toggleEpicDetails(epic)">{{ epic.title }}</span>
 
                 </div>
 
@@ -31,21 +31,20 @@
                 <div class="date-info">
                     <div class="date-row">
                         <span class="date-label">Start Date</span>
-                        <span class="date-value">None</span>
+                        <span class="date-value">{{(epic?.startDate | date: 'mediumDate') || null }}</span>
                     </div>
                     <div class="date-row">
                         <span class="date-label">End Date</span>
-                        <span class="date-value">None</span>
+                        <span class="date-value">{{(epic?.endDate | date: 'mediumDate') || null }} </span>
                     </div>
                 </div>
-                <button class="view-details-button">View all details</button>
+                <button class="view-details-button" (click)="createOrUpdateEpic(epic)">View all details</button>
             </div>
-
 
         </div>
     </div>
 
-    <button class="create-epic-button">
-        <app-transform-button (response)="addEpicToList($event)"></app-transform-button>
+    <button class="create-epic-button" (click)="createOrUpdateEpic()">
+        Create Epic
     </button>
 </div>

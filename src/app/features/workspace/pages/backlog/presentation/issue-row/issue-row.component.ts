@@ -7,6 +7,7 @@ import { Team } from '../../../../../../core/domain/entities/team.model';
 import { BacklogService } from '../../data/backlog.service';
 import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NotificationService } from '../../../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -27,7 +28,7 @@ export class IssueRowComponent {
   @Output() idFromIssueRow = new EventEmitter<string>();
   @Output() seletedIssueResponse = new EventEmitter<string>();
 
-  constructor(private shared: SharedService, private eleRef: ElementRef, private backlogSer: BacklogService, private dialog: MatDialog) { }
+  constructor(private shared: SharedService, private eleRef: ElementRef, private backlogSer: BacklogService, private dialog: MatDialog, private toast: NotificationService) { }
 
   isClicked: boolean = false;
 
@@ -46,12 +47,17 @@ export class IssueRowComponent {
         }
       },
       error: (err) => {
-        console.error("Error fetching team members", err);
+        this.toast.showError("Failed to fetch team members");
       }
     });
   }
   getTypeClass(): string {
     return `type-${this.issue.type.toLowerCase()}`;
+  }
+
+  get epicName(): string | null {
+    
+    return this.issue.epicId ? (this.issue.epicId as Task).title : null;
   }
 
   getStatusClass(): string {
@@ -71,7 +77,6 @@ export class IssueRowComponent {
   onStatusChange(status: string) {
     this.backlogSer.updateIssueStatus(this.issue._id, status).subscribe({
       next: (res) => {
-        console.log('E yes');
       },
       error: (err) => {
         console.error("Error occured while tryging to change task status.", err);

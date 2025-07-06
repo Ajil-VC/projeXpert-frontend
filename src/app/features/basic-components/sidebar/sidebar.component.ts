@@ -45,7 +45,6 @@ export class SidebarComponent {
 
       this.shared.currentPro$.subscribe({
         next: (res: any) => {
-          console.log(res,'From sidebas')
           if (res) {
 
             this.currentProject = (res as Project).name as string;

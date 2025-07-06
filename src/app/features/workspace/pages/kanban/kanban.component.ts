@@ -91,19 +91,7 @@ export class KanbanComponent {
   }
 
 
-  ngOnInit() {
-
-
-    this.authSer.user$.subscribe({
-      next: (res: User | null) => {
-        if (res) {
-
-          this.userRole = res.role;
-
-        }
-
-      }
-    });
+  refreshKanbanView() {
 
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
@@ -115,6 +103,27 @@ export class KanbanComponent {
         this.toast.showError('Failed to get tasks in active sprint.');
       }
     });
+
+  }
+
+
+  ngOnInit() {
+    this.authSer.user$.subscribe({
+      next: (res: User | null) => {
+        if (res) {
+          this.userRole = res.role;
+        }
+      }
+    });
+
+    this.refreshKanbanView();
+
+    this.shared.currentPro$.subscribe((project) => {
+
+      if (project) {
+        this.refreshKanbanView();
+      }
+    })
 
   }
 
@@ -173,7 +182,8 @@ export class KanbanComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result.status) {
+        
         for (let task of result.result) {
           const ind = this.allTasks.findIndex((item: Task) => item._id == task._id);
           if (ind !== -1) {

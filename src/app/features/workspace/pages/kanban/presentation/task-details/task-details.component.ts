@@ -13,6 +13,7 @@ import { Team } from '../../../../../../core/domain/entities/team.model';
 import { SearchPipe } from '../../../../../../core/pipes/search.pipe';
 import { KanbanService } from '../../data/kanban.service';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
+import { CommentSectionComponent } from "../../../../components/comment-section/comment-section.component";
 
 @Component({
   selector: 'app-task-details',
@@ -29,7 +30,8 @@ import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
     MatSelectModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    SearchPipe
+    SearchPipe,
+    CommentSectionComponent
   ],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.css'
@@ -62,6 +64,7 @@ export class TaskDetailsComponent {
   customEmailError: boolean = false;
   assigningUserId: string = '';
 
+  showComments: boolean = false;
 
   imagePreviews: string[] = [];
   droppedFiles: File[] = [];
@@ -222,6 +225,11 @@ export class TaskDetailsComponent {
         console.error('Failed to delete attachment:', err);
       }
     });
+  }
+
+
+  toggleComments() {
+    this.showComments = !this.showComments;
   }
 
 }

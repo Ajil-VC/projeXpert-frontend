@@ -1,0 +1,17 @@
+<div class="comment-section">
+
+    <div class="add-comment">
+        <textarea [(ngModel)]="newComment" placeholder="Write a comment..."></textarea>
+        <button (click)="addComment()" [disabled]="!newComment.trim()">Post</button>
+    </div>
+
+
+    <div class="comment" *ngFor="let comment of comments">
+        <div class="header">
+            <strong>{{ getEmail(comment.userId) }}</strong>
+            <span class="timestamp">{{ comment.createdAt | date:'short' }}</span>
+        </div>
+        <p class="content">{{ comment.content }}</p>
+    </div>
+
+</div>

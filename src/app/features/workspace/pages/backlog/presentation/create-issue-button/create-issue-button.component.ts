@@ -4,6 +4,7 @@ import { LayoutService } from '../../../../../../shared/services/layout.service'
 import { FormsModule } from '@angular/forms';
 import { BacklogService } from '../../data/backlog.service';
 import { Task } from '../../../../../../core/domain/entities/task.model';
+import { NotificationService } from '../../../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-create-issue-button',
@@ -34,7 +35,7 @@ export class CreateIssueButtonComponent {
   issueType: string = 'task';
   selectedEpic: string = '';
 
-  constructor(private layoutSer: LayoutService, private backlogSer: BacklogService) { }
+  constructor(private layoutSer: LayoutService, private backlogSer: BacklogService, private toast: NotificationService) { }
 
   ngOnInit() {
     this.backlogSer.selectedEpics$.subscribe({
@@ -70,7 +71,14 @@ export class CreateIssueButtonComponent {
 
   createIssue() {
 
+    const story: boolean = this.issueType === 'story';
+
     if (this.inputValue.trim()) {
+
+      if (story && !this.selectedEpic) {
+        this.toast.showError('Story must go under an epic', 'Select Epic')
+        return
+      }
 
       const projectId = this.layoutSer.getProjectId();
 

@@ -58,7 +58,7 @@ export class LoginComponent {
         status: boolean,
         token: string
       }) => {
-        console.log(res,'From login');
+
         if (res.status) {
 
           if (this.systemRole === 'company-user') {

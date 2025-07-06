@@ -159,8 +159,8 @@
 
         </div>
 
-        <div class="attachment-thumbnails">
-            <ng-container *ngIf="task?.attachments?.length">
+        <div class="attachment-thumbnails" *ngIf="task?.attachments?.length">
+            <ng-container>
                 <div *ngFor="let image of task.attachments" class="thumbnail-wrapper">
                     <img [src]="image.url" [alt]="image.public_id" class="thumbnail" />
                     <button (click)="removeAttachment(image.public_id)">Remove</button>
@@ -169,6 +169,15 @@
         </div>
 
     </form>
+
+
+    <button (click)="toggleComments()" class="comment-button">
+        {{ showComments ? 'Hide' : 'Show' }} Comments
+    </button>
+    <div *ngIf="showComments">
+        <app-comment-section [task]="task"></app-comment-section>
+    </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" class="buttons">

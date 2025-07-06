@@ -17,6 +17,10 @@ export class SocketService {
 
   connect() {
 
+    if (this.socket && this.socket.connected) {
+      return;
+    }
+
     const token = localStorage.getItem('authToken');
 
     this.socket = io(this.URL, {

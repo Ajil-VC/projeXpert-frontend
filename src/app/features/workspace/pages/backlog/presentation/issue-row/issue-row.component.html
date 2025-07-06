@@ -14,35 +14,44 @@
         {{ issue.title }}
     </div>
 
+
     <!-- Spacer -->
     <div class="flex-spacer"></div>
+
+    <!-- Epic details -->
+    <div class="epic-detail" *ngIf="epicName !==null">
+        {{epicName}}
+    </div>
+
+    <!-- Spacer -->
+    <!-- <div class="flex-spacer"></div> -->
 
     <!-- Status Dropdown -->
     <div class="status-container">
         <select [(ngModel)]="issue.status" class="status-select " [ngClass]="getStatusClass()"
-        (change)="onStatusChange(issue.status)">
+            (change)="onStatusChange(issue.status)">
             <option class="{{defaultStatus}}" value="todo">To Do</option>
             <option class="{{defaultStatus}}" value="in-progress">In Progress</option>
             <option class="{{defaultStatus}}" value="done">Done</option>
         </select>
     </div>
 
-    <div class="assignee-container" [ngClass]="getAssigneeLabel(issue) ==='!' ?'danger' : ''" >
+    <div class="assignee-container" [ngClass]="getAssigneeLabel(issue) ==='!' ?'danger' : ''">
         <span>{{getAssigneeLabel(issue)}}</span>
     </div>
 
     <!-- Assign Button -->
 
-    <div class="assignee-wrapper" >
+    <div class="assignee-wrapper">
 
         <button class="assign-button" (click)="toggleAssigneeDropdown()">
             <span class="plus-icon">+</span>
         </button>
-    
-    
+
+
         <div *ngIf="isDropdownOpen" class="assignee-dropdown">
             <input type="text" [(ngModel)]="searchText" placeholder="Search team member..." class="search-input" />
-    
+
             <ul class="member-list">
                 <li (click)="assignIssueTo('')">UnAssign</li>
                 <li *ngFor="let member of filteredMembers()" (click)="assignIssueTo(member)">

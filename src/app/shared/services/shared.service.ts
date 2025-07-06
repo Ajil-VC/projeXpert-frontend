@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Team } from '../../core/domain/entities/team.model';
+import { Project } from '../../core/domain/entities/project.model';
+import { Task } from '../../core/domain/entities/task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,10 @@ export class SharedService {
 
   activeChatUserId: string = '';
 
-  public curProject = new Subject();
+  public curProject = new BehaviorSubject<Project | null>(null);
   public currentPro$ = this.curProject.asObservable();
 
-  public tasksSubject = new Subject();
+  public tasksSubject = new Subject<Task>();
   public taskSub$ = this.tasksSubject.asObservable();
 
   getTasksInProject(): Observable<any> {

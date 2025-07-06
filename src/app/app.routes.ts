@@ -38,7 +38,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [loginGuardGuard], data: { systemRole: 'company-user' } },
 
     {
-        path: 'user', component: LayoutComponent, data: { systemRole: 'company-user' }, resolve: [workspaceDataResolver], canActivate: [authGuard],
+        path: 'user', component: LayoutComponent, data: { systemRole: 'company-user' }, resolve: { initialized: workspaceDataResolver }, canActivate: [authGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [forceChangePasswordGuard] },
             { path: 'change-password', component: ChangePswrdComponent, canDeactivate: [canLeavePasswordchangeGuard] },

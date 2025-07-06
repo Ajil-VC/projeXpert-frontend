@@ -7,10 +7,11 @@ import { Project } from '../../../../../../core/domain/entities/project.model';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProjectModalComponent } from '../modal/edit-project-modal/edit-project-modal.component';
 import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
+import { PaginationComponent } from '../../../../../reusable/pagination/pagination.component';
 
 @Component({
   selector: 'app-projectinfo',
-  imports: [CommonModule],
+  imports: [CommonModule, PaginationComponent],
   templateUrl: './projectinfo.component.html',
   styleUrl: './projectinfo.component.css'
 })
@@ -51,6 +52,7 @@ export class ProjectinfoComponent {
         };
 
         this.projects = res;
+        console.log(this.projects)
         this.applyFilters();
       },
       error: (err) => {

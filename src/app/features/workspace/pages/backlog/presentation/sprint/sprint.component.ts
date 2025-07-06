@@ -34,7 +34,7 @@ export class SprintComponent implements OnChanges {
   currentDivId: string = '';
   selectedIssue: Set<string> = new Set();
   filteredIssuesShallow: Task[] = [];
-  selectedEpics: Array<string> = [];
+  selectedEpics: Set<string> = new Set();
 
   issueCount = 0;
 
@@ -47,8 +47,6 @@ export class SprintComponent implements OnChanges {
     private router: Router,
     private shared: SharedService) {
 
-
-
   }
 
 
@@ -58,40 +56,50 @@ export class SprintComponent implements OnChanges {
       moveItemInArray(this.filteredIssuesShallow, event.previousIndex, event.currentIndex);
     } else {
 
-      transferArrayItem(
-        event.previousContainer.data,
-        this.filteredIssuesShallow,
-        event.previousIndex,
-        event.currentIndex
-      );
-      // Optionally emit event to parent to update task.sprintId = this.sprintId
-
-      //Here im updating the backlog array in parent to let the backlog component know about it.
-      if (event.previousContainer.id === "backlog-drop-list") {
-
-        this.itemDropped.emit(event.item.data)
-
-      }
-
       const prevContainerId = event.previousContainer.id;
       const movedTaskId = event.item.data?._id;
 
       this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
         next: (res: { status: boolean, message: string, result: Task }) => {
 
-          const foundTask = this.filteredIssuesShallow.find(task => task._id === res.result._id);
-          if (foundTask) {
-            foundTask.sprintId = res.result.sprintId;
-          }
-          const foundInBacklog = this.issues.find(task => task._id === res.result._id);
-          if (foundInBacklog) {
-            foundInBacklog.sprintId = res.result.sprintId;
+          if (res.status) {
+            transferArrayItem(
+              event.previousContainer.data,
+              this.issues,
+              event.previousIndex,
+              event.currentIndex
+            );
+
+
+            this.shared.tasksSubject.next(event.item.data);
+
+            //Here im updating the backlog array in parent to let the backlog component know about it.
+            if (prevContainerId === "backlog-drop-list") {
+
+              this.itemDropped.emit(event.item.data)
+
+            }
+
+            const foundTask = this.filteredIssuesShallow.find(task => task._id === res.result._id);
+            if (foundTask) {
+              foundTask.sprintId = res.result.sprintId;
+              this.filteredIssuesShallow = [...this.filteredIssuesShallow];
+
+            }
+            const foundInBacklog = this.issues.find(task => task._id === res.result._id);
+            if (foundInBacklog) {
+              foundInBacklog.sprintId = res.result.sprintId;
+
+            }
+console.log(this.issues)
+            this.filteredIssues();
           }
         },
         error: (err) => {
           console.error('Something went wrong while updating moved task.');
         }
       })
+
     }
   }
 
@@ -133,7 +141,7 @@ export class SprintComponent implements OnChanges {
 
     this.backlogSer.selectedEpics$.subscribe({
       next: (res: Set<string>) => {
-        this.selectedEpics = Array.from(res);
+        this.selectedEpics = res;
 
         this.filteredIssues();
       },
@@ -141,6 +149,16 @@ export class SprintComponent implements OnChanges {
         console.error('Error occured while getting selected epics', err);
       }
     });
+
+    this.shared.taskSub$.subscribe({
+      next: (res: Task) => {
+        if (res.sprintId === this.sprint._id) {
+
+          const ind = this.issues.findIndex(ep => ep._id === res._id);
+          this.issues.splice(ind, 1);
+        }
+      }
+    })
 
   }
 
@@ -166,15 +184,16 @@ export class SprintComponent implements OnChanges {
       return;
     }
 
-    if (this.selectedEpics.length === 0) {
-      this.filteredIssuesShallow = this.issues.filter(issue => {
-        if (issue.sprintId && !issue.epicId) {
-          issue.assignedTo = issue.assignedTo as Team;
-          this.issueCount++;
-          return true;
-        }
-        return false
+    if (this.selectedEpics.size === 0) {
+
+      const filtered = this.issues.filter(issue => !!issue.sprintId);
+      filtered.forEach(issue => {
+        // issue.assignedTo = issue.assignedTo as Team;
+        this.issueCount++;
       });
+
+      this.filteredIssuesShallow = filtered;
+
       if (this.filteredIssuesShallow.length === 0) {
         this.isIssueInSprint = true;
       }
@@ -184,15 +203,18 @@ export class SprintComponent implements OnChanges {
       return;
     }
 
+
     this.filteredIssuesShallow = this.issues.filter(issue => {
-      for (let epic of this.selectedEpics) {
-        if (epic === issue.epicId) {
-          this.issueCount++;
-          return true;
-        }
+
+      if (issue?.epicId && this.selectedEpics.has((issue.epicId as Task)._id)) {
+        this.issueCount++;
+        return true;
       }
+
       return false;
     });
+
+
     if (this.filteredIssuesShallow.length === 0) {
       this.isIssueInSprint = true;
     }

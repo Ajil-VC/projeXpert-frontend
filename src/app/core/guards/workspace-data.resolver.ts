@@ -16,6 +16,7 @@ export const workspaceDataResolver: ResolveFn<boolean> = (route, state) => {
       const currentWorkSpace = res.user.defaultWorkspace;
       authService.setCurrentUser(res.user);
       authService.setCurrentWorkSpace(currentWorkSpace);
+
     }),
     map(() => true),
     catchError((err) => {

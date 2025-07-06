@@ -1,0 +1,18 @@
+
+<nav class="pagination-container">
+  <ul class="pagination">
+    <li [class.disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+      <span>&laquo;</span>
+    </li>
+
+    <li *ngFor="let page of visiblePages"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)">
+      <span>{{ page }}</span>
+    </li>
+
+    <li [class.disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+      <span>&raquo;</span>
+    </li>
+  </ul>
+</nav>
