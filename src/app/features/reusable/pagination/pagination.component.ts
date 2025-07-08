@@ -1,37 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pagination',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.css'
 })
 export class PaginationComponent {
 
-  currentPage = 1;
-  totalPages = 10; // Set this based on backend response
+  @Input() currentPage: number = 1;
+  @Input() totalPages!: number;
+  @Output() pageChanged = new EventEmitter<number>();
   visiblePages: number[] = [];
 
-  ngOnInit() {
+  ngOnChanges() {
     this.updateVisiblePages();
   }
 
   goToPage(page: number) {
     if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.updateVisiblePages();
-    this.fetchProjects(page);
+    this.pageChanged.emit(page);
   }
 
   updateVisiblePages() {
-    const visiblePages = [];
-    const maxVisible = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
-    let end = Math.min(this.totalPages, start + maxVisible - 1);
+    const visiblePages: number[] = [];
+    const maxVisible = 3;
 
-    if (end - start < maxVisible - 1) {
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = start + maxVisible - 1;
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
       start = Math.max(1, end - maxVisible + 1);
     }
 
@@ -40,12 +41,6 @@ export class PaginationComponent {
     }
 
     this.visiblePages = visiblePages;
-  }
-
-  fetchProjects(page: number) {
-    // Replace this with your service call
-    console.log(`Fetching projects for page ${page}`);
-    // this.projectService.getProjects(page).subscribe(...)
   }
 
 }

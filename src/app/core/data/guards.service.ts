@@ -21,13 +21,13 @@ export class GuardsService {
   }
 
 
-  getProjectData() {
+  // getProjectData() {
 
-    const workSpace = this.authService.getWorkSpace();
-    const workSpaceId = workSpace?._id;
+  //   const workSpace = this.authService.getWorkSpace();
+  //   const workSpaceId = workSpace?._id;
 
-    return this.http.get<{ status: boolean, projects: Array<Project> | null }>(`${environment.apiUserUrl}init-projects?workspace_id=${workSpaceId}`);
-  }
+  //   return this.http.get<{ status: boolean, projects: Array<Project> | null }>(`${environment.apiUserUrl}init-projects?workspace_id=${workSpaceId}`);
+  // }
 
   autherizeAdmin() {
     return this.http.get(`${environment.apiAdminUrl}autherize-admin`);

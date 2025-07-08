@@ -64,7 +64,7 @@
 
       <!-- Grid View -->
       <div *ngIf="viewMode === 'grid'" class="projects-grid">
-        <div *ngFor="let project of filteredProjects" class="project-card" (click)="openProject(project)">
+        <div *ngFor="let project of filteredProjects" class="project-card" (click)="editProject($event, project)">
 
 
 
@@ -192,7 +192,8 @@
       </div>
 
 
-      <app-pagination></app-pagination>
+      <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+        (pageChanged)="onPageChange($event)">></app-pagination>
 
 
     </ng-container>

@@ -25,8 +25,8 @@ export class ProjectinfoComponent {
   isLoading = false;
   viewMode: 'grid' | 'list' = 'grid';
 
-
-
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   statusFilters = {
     active: true,
@@ -43,25 +43,36 @@ export class ProjectinfoComponent {
 
   ngOnInit(): void {
 
-    this.projectService.project$.subscribe({
+    this.getProjectData(1, this.statusFilters);
+  }
 
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.getProjectData(page, this.statusFilters);
+  }
+
+  getProjectData(page: number = 1, filter: {
+    active: boolean,
+    archived: boolean,
+    completed: boolean
+  }) {
+    this.projectService.getProjectData(page, filter).subscribe({
       next: (res) => {
-        if (!res) {
+
+        if (!res.status || !res.projects) {
           this.projects = [];
           return;
         };
-
-        this.projects = res;
-        console.log(this.projects)
+        this.projects = res.projects;
+        this.totalPages = res.totalPages;
         this.applyFilters();
+
       },
       error: (err) => {
-        console.error('Error while getting projects', err);
+        console.error('Error fetching projects', err);
       }
-
-    })
+    });
   }
-
 
   applyFilters(): void {
 
@@ -70,6 +81,9 @@ export class ProjectinfoComponent {
       if (this.statusFilters.active && project.status === 'active') return true;
       if (this.statusFilters.archived && project.status === 'archived') return true;
       if (this.statusFilters.completed && project.status === 'completed') return true;
+      if(!this.statusFilters.active && !this.statusFilters.archived && !this.statusFilters.completed){
+        return true;
+      }
       return false;
     });
 
@@ -106,6 +120,13 @@ export class ProjectinfoComponent {
 
   toggleStatusFilter(status: 'active' | 'archived' | 'completed'): void {
     this.statusFilters[status] = !this.statusFilters[status];
+    
+    const trueCount = Object.values(this.statusFilters).filter(v => v === true).length;
+    if(trueCount == 1){
+      this.currentPage = 1;
+    }
+    
+    this.onPageChange(this.currentPage);
     this.applyFilters();
   }
 
@@ -140,7 +161,7 @@ export class ProjectinfoComponent {
   }
 
   openProject(project: Project): void {
-    this.router.navigate(['/projects', project]);
+    // this.router.navigate(['/projects', project]);
   }
 
   editProject(event: Event, project: Project): void {
@@ -148,7 +169,7 @@ export class ProjectinfoComponent {
 
     const dialogRef = this.dialog.open(EditProjectModalComponent, {
       width: '500px',
-      data: { ...project }  // Send current project details here
+      data: { ...project }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -157,7 +178,12 @@ export class ProjectinfoComponent {
         this.projectService.updateProject(result).subscribe({
           next: (res) => {
             if (!res.status) throw new Error('Projects couldnt retrieve after updation');
-            this.projects = res.data;
+
+            const ind = this.projects.findIndex(p => p._id === res.data._id);
+            const updated = [...this.projects];
+            updated[ind] = res.data;
+            this.projects = updated;
+
             this.applyFilters();
           },
           error: (err) => {

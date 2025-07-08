@@ -33,7 +33,7 @@ export class LayoutComponent {
   ngOnInit() {
 
     //Connecting to socket
-    // this.socketService.connect();
+    this.socketService.connect();
 
     if (this.systemRole === 'company-user') {
       //Fetching Teammembers 
@@ -41,31 +41,31 @@ export class LayoutComponent {
     }
 
 
-    // this.socketService.onSignal().subscribe((signal) => {
-    //   if (signal.type === 'offer') {
+    this.socketService.onSignal().subscribe((signal) => {
+      if (signal.type === 'offer') {
 
-    //     this.dialogRef = this.dialog.open(IncomingCallComponent, {
-    //       data: {
-    //         from: signal.from,
-    //         signal: signal
-    //       },
-    //       disableClose: true
-    //     });
-    //   } else if (signal.type === 'call-ended') {
+        this.dialogRef = this.dialog.open(IncomingCallComponent, {
+          data: {
+            from: signal.from,
+            signal: signal
+          },
+          disableClose: true
+        });
+      } else if (signal.type === 'call-ended') {
 
-    //     if (this.dialogRef) {
-    //       this.dialogRef.close();
-    //       this.dialogRef = undefined;
-    //     }
+        if (this.dialogRef) {
+          this.dialogRef.close();
+          this.dialogRef = undefined;
+        }
 
-    //   }
-    // });
+      }
+    });
 
   }
 
 
   ngOnDestroy() {
-    // this.socketService.disconnect();
+    this.socketService.disconnect();
   }
 
 }

@@ -11,7 +11,6 @@ import { otpGuard } from './core/guards/otp.guard';
 import { workspaceDataResolver } from './core/guards/workspace-data.resolver';
 import { ProjectComponent } from './features/workspace/pages/projects/presentation/project/project.component';
 import { ProjectinfoComponent } from './features/workspace/pages/projects/presentation/projectinfo/projectinfo.component';
-import { ProjectsData } from './core/guards/projects-data.resolver';
 import { loginGuardGuard } from './core/guards/login-guard.guard';
 import { ChangePswrdComponent } from './features/workspace/components/change-pswrd/change-pswrd.component';
 import { forceChangePasswordGuard } from './core/guards/force-change-password.guard';
@@ -45,7 +44,7 @@ export const routes: Routes = [
             { path: 'backlog', component: BacklogComponent },
             { path: 'create-workspace', component: CreateWorkspaceComponent },
             { path: 'create-project', component: ProjectComponent },
-            { path: 'project-info', component: ProjectinfoComponent, resolve: [ProjectsData] },
+            { path: 'project-info', component: ProjectinfoComponent},
 
             { path: 'board', component: KanbanComponent },
             { path: 'chat', component: ChatPageComponent },

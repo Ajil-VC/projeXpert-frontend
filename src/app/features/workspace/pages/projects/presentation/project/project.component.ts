@@ -7,6 +7,7 @@ import { Company } from '../../../../../../core/domain/entities/company.model';
 import { Router } from '@angular/router';
 import { LayoutService } from '../../../../../../shared/services/layout.service';
 import { Project } from '../../../../../../core/domain/entities/project.model';
+import { NotificationService } from '../../../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-project',
@@ -29,7 +30,8 @@ export class ProjectComponent {
     private fb: FormBuilder,
     private projectsInterface: ProjectsUseCase,
     private router: Router,
-    private layoutSer: LayoutService
+    private layoutSer: LayoutService,
+    private toast: NotificationService
   ) {
 
     this.projectForm = this.fb.group({
@@ -69,8 +71,12 @@ export class ProjectComponent {
 
   onSubmit() {
 
-    this.isButtonDisabled = true;
     const { projectName, workspace, priority } = this.projectForm.value;
+    if (!priority) {
+      this.toast.showError('Please select the priority');
+      return;
+    }
+    this.isButtonDisabled = true;
     this.projectsInterface.createProject(projectName, workspace, priority).subscribe({
 
       next: (res: { status: boolean, createdProject: Project }) => {

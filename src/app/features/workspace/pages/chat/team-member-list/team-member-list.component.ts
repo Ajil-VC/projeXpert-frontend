@@ -61,6 +61,22 @@ export class TeamMemberListComponent {
       }
     });
 
+    this.refreshChatView();
+
+    this.sharedSer.currentPro$.subscribe((project) => {
+
+      if (project) {
+        this.refreshChatView();
+      }
+    })
+
+
+  }
+
+
+
+  refreshChatView() {
+
     this.chatService.getAvailableConversations().subscribe({
       next: (res: { status: boolean, message: string, result: Conversation[] }) => {
 
@@ -76,7 +92,6 @@ export class TeamMemberListComponent {
       }
     })
   }
-
 
   getUserEmail(users: Array<Team>) {
 

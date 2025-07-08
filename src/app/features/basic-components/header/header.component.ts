@@ -72,6 +72,8 @@ export class HeaderComponent {
   }
 
   ngOnInit() {
+    //Connecting to socket
+    this.socketSer.connect();
 
     this.layoutSer.getNotifications(this.systemRole).subscribe({
       next: (res) => {
@@ -119,15 +121,15 @@ export class HeaderComponent {
     });
 
 
-    // this.socketSer.notification().subscribe({
+    this.socketSer.notification().subscribe({
 
-    //   next: (res) => {
-    //     this.notifications.unshift(res);
-    //   },
-    //   error: (err) => {
-    //     console.error('Error occured while getting notification', err);
-    //   }
-    // })
+      next: (res) => {
+        this.notifications.unshift(res);
+      },
+      error: (err) => {
+        console.error('Error occured while getting notification', err);
+      }
+    })
 
   }
 
