@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditProjectModalComponent } from '../modal/edit-project-modal/edit-project-modal.component';
 import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
 import { PaginationComponent } from '../../../../../reusable/pagination/pagination.component';
+import { SharedService } from '../../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-projectinfo',
@@ -37,13 +38,19 @@ export class ProjectinfoComponent {
   constructor(
     private projectService: ProjectDataService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private shared: SharedService
 
   ) { }
 
   ngOnInit(): void {
 
     this.getProjectData(1, this.statusFilters);
+    this.shared.currentPro$.subscribe((project) => {
+
+      this.getProjectData(1, this.statusFilters);
+
+    })
   }
 
   onPageChange(page: number) {
@@ -81,7 +88,7 @@ export class ProjectinfoComponent {
       if (this.statusFilters.active && project.status === 'active') return true;
       if (this.statusFilters.archived && project.status === 'archived') return true;
       if (this.statusFilters.completed && project.status === 'completed') return true;
-      if(!this.statusFilters.active && !this.statusFilters.archived && !this.statusFilters.completed){
+      if (!this.statusFilters.active && !this.statusFilters.archived && !this.statusFilters.completed) {
         return true;
       }
       return false;
@@ -120,12 +127,12 @@ export class ProjectinfoComponent {
 
   toggleStatusFilter(status: 'active' | 'archived' | 'completed'): void {
     this.statusFilters[status] = !this.statusFilters[status];
-    
+
     const trueCount = Object.values(this.statusFilters).filter(v => v === true).length;
-    if(trueCount == 1){
+    if (trueCount == 1) {
       this.currentPage = 1;
     }
-    
+
     this.onPageChange(this.currentPage);
     this.applyFilters();
   }
@@ -216,6 +223,7 @@ export class ProjectinfoComponent {
           next: () => {
             this.projects = this.projects.filter(p => p._id !== project._id);
             this.applyFilters();
+            this.projectService.removeProject(project);
           },
           error: (err) => {
             console.error('Error deleting project', err);

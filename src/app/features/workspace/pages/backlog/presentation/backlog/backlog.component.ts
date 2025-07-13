@@ -120,12 +120,13 @@ export class BacklogComponent {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (res) => {
+
         if (!res) {
           this.isProjectSelected = false;
         } else {
-          this.refreshBacklogView();
           this.isProjectSelected = true;
         }
+        this.refreshBacklogView();
       }
     })
 

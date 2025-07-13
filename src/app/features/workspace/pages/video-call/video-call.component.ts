@@ -75,24 +75,6 @@ export class VideoCallComponent implements AfterViewInit {
 
     }
 
-
-    const signal = history.state.signal;
-    if (signal && signal.type === 'offer') {
-      this.incomingSignal = signal;
-      this.pendingSignal = signal;
-
-      this.msgId = signal.msgId;
-
-      this.remoteUser = {
-        _id: signal.caller.id,
-        name: signal.caller.name,
-        email: signal.caller.email,
-        profilePicUrl: '',
-        role: signal.caller.role,
-      }
-
-    }
-
   }
 
 
@@ -111,6 +93,26 @@ export class VideoCallComponent implements AfterViewInit {
       this.isCaller = params['isCaller'] === 'true';
     })
 
+    if (!this.isCaller) {
+
+      const signal = this.socketService.getLastOfferSignal();
+      if (signal) {
+
+        this.incomingSignal = signal;
+        this.pendingSignal = signal;
+
+        this.msgId = signal.msgId;
+
+        this.remoteUser = {
+          _id: signal.caller.id,
+          name: signal.caller.name,
+          email: signal.caller.email,
+          profilePicUrl: '',
+          role: signal.caller.role,
+        }
+      }
+
+    }
 
     // If socket is already connected
     if (this.socketService.socket.connected) {
@@ -155,8 +157,13 @@ export class VideoCallComponent implements AfterViewInit {
         return;
       }
 
+      if (signal.type === 'offer') {
 
-      if (signal.type === 'answer') {
+        if (this.peerConnection && this.localMediaReady) {
+          this.handleOffer(signal);
+        }
+
+      } else if (signal.type === 'answer') {
 
         await this.peerConnection.setRemoteDescription(new RTCSessionDescription(signal.answer));
         this.remoteDescriptionSet = true;
@@ -187,7 +194,6 @@ export class VideoCallComponent implements AfterViewInit {
           this.bufferedCandidates.push(candidate);
         }
       } else if (signal.type === 'call-ended') {
-        console.log('call ended by remote user.');
         this.handleRemoteCallEnd();
       }
     });
@@ -234,17 +240,12 @@ export class VideoCallComponent implements AfterViewInit {
     await this.peerConnection.setLocalDescription(answer);
 
 
-
-
-    const projectId = localStorage.getItem('projectId');
     // Step 4: Send answer back to caller
     this.socketService.sendSignal({
       type: 'answer',
       answer: answer,
       from: this.currentUser?._id,
       to: this.remoteUser?._id,
-
-      projectId: projectId,
       convoId: signal.convoId,
       messageId: signal.msgId
     });
@@ -308,21 +309,20 @@ export class VideoCallComponent implements AfterViewInit {
 
 
   async startCall() {
-
     if (this.hasOfferSent) {
       return;
     }
+    console.log(this.hasOfferSent, '?????')
     const offer = await this.peerConnection.createOffer();
+    console.log('offer:', offer)
     await this.peerConnection.setLocalDescription(offer);
 
-    const projectId = localStorage.getItem('projectId');
     const messageId = null;
     this.socketService.sendSignal({
       type: 'offer',
       offer: offer,
       from: this.currentUser?._id,
       to: this.remoteUser?._id,
-      projectId: projectId,
       convoId: this.chatDetails._id,
       messageId
     });

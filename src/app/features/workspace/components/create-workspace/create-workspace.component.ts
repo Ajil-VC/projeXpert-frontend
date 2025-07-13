@@ -13,8 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-create-workspace',
   imports: [
-    CommonModule, 
-    FormsModule, 
+    CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatDialogContent,
     MatFormField,
@@ -50,7 +50,7 @@ export class CreateWorkspaceComponent {
   }
 
   onCancel(): void {
-    this.dialogRef.close(null);
+    this.dialogRef.close('');
   }
 
 

@@ -12,6 +12,9 @@ import { User } from '../../../../../../../core/domain/entities/user.model';
 import { projectView } from '../../../domain/projectView.interface';
 import { EditProjectUseCase } from '../../../domain/projectEditing.domain';
 import { EditProjectService } from '../../../data/edit-project.service';
+import { LoaderComponent } from '../../../../../../../core/presentation/loader/loader.component';
+import { NotificationService } from '../../../../../../../core/data/notification.service';
+import { SharedService } from '../../../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-edit-project-modal',
@@ -26,7 +29,9 @@ import { EditProjectService } from '../../../data/edit-project.service';
     MatSelectModule,
     MatIconModule,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
+    LoaderComponent
   ],
 
   providers: [
@@ -43,29 +48,41 @@ export class EditProjectModalComponent {
 
   newMemberEmail = '';
   projectData!: projectView;
+  isLoading: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<EditProjectModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Project,
-    private editProjectSer: EditProjectUseCase
+    private editProjectSer: EditProjectUseCase,
+    private toast: NotificationService,
+    private shared: SharedService
   ) {
 
     this.setupProjectDataForView();
 
   }
 
-  setupProjectDataForView(data = this.data) {
+  ngOnInit() {
+    this.shared.currentPro$.subscribe((project) => {
+
+      this.setupProjectDataForView(project);
+
+    })
+  }
+
+  setupProjectDataForView(data: Project | null = this.data) {
 
     const initData = {
-      _id: data._id as string,
-      name: data.name as string,
-      status: data.status,
-      priority: data.priority,
+      _id: data?._id as string || '',
+      name: data?.name as string || '',
+      status: data?.status || '',
+      priority: data?.priority || '',
       members: [] as { _id: string, email: string; role: 'user' | 'admin' }[]
     };
-    const d = data.members as unknown;
-    const mems = d as Array<User>;
-    
+    const d = data?.members as unknown;
+    const mems = d as Array<User> || [];
+
+
     initData.members = mems.map(ele => {
       return {
         _id: ele._id,
@@ -98,6 +115,7 @@ export class EditProjectModalComponent {
     const confirmAdd = window.confirm('Please ensure the email');
 
     if (this.newMemberEmail && confirmAdd) {
+      this.isLoading = true;
 
       this.editProjectSer.addMember(
         this.newMemberEmail,
@@ -106,12 +124,18 @@ export class EditProjectModalComponent {
       ).subscribe({
         next: (res: { status: boolean, message: string, updatedProjectData: Project }) => {
 
-          if (!res.status) throw new Error('Response wasnt ok');
+          if (!res.status) {
+            this.toast.showError('User couldnt add to the project.');
+            return;
+          }
 
           this.setupProjectDataForView(res.updatedProjectData);
+          this.isLoading = false;
+          this.toast.showSuccess('User added to the project.');
         },
         error: (err) => {
-          console.log(err, "From add members");
+          this.isLoading = false;
+          this.toast.showError('User couldnt add to the project.');
         }
       })
       this.newMemberEmail = '';

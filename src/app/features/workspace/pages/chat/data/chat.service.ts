@@ -17,13 +17,12 @@ export class ChatService {
   chat$ = this.chatSubject.asObservable();
 
   startConversation(userId: string): Observable<any> {
-    const projectId = localStorage.getItem('projectId');
-    return this.http.post(`${environment.apiUserUrl}start-conversation`, { userId, projectId });
+    return this.http.post(`${environment.apiUserUrl}start-conversation`, { userId });
   }
 
   getAvailableConversations(): Observable<any> {
-    const projectId = localStorage.getItem('projectId');
-    return this.http.get(`${environment.apiUserUrl}get-chats/${projectId}`);
+    
+    return this.http.get(`${environment.apiUserUrl}get-chats`);
   }
 
   retrieveMessages(convoId: string): Observable<any> {
@@ -32,8 +31,7 @@ export class ChatService {
   }
 
   sendMessage(convoId: string, recieverId: string, message: string): Observable<any> {
-    const projecId = localStorage.getItem('projectId');
-    return this.http.post(`${environment.apiUserUrl}send-message`, { projecId, convoId, recieverId, message });
+    return this.http.post(`${environment.apiUserUrl}send-message`, { convoId, recieverId, message });
   }
 
 

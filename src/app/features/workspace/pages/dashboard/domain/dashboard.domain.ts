@@ -6,12 +6,7 @@ export interface SummaryCard {
     color: string;
   }
   
-  export interface EpicItem {
-    id: string;
-    title: string;
-    status: string;
-    progress: number;
-  }
+
   
   export interface ActivityItem {
     id: string;

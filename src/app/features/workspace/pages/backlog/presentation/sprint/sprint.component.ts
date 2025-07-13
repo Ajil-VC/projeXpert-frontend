@@ -91,7 +91,7 @@ export class SprintComponent implements OnChanges {
               foundInBacklog.sprintId = res.result.sprintId;
 
             }
-console.log(this.issues)
+            
             this.filteredIssues();
           }
         },

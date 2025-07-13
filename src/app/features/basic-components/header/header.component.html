@@ -22,11 +22,12 @@
           </a>
           <div class="dropdown-content" *ngIf="showWorkspaceMenu">
             <div class="dropdown-header">Workspaces</div>
-            <a *ngFor="let workspace of currentUser?.workSpaces">
-              <!--(click)="selectWorkspace(workspace) Need to give this in the above tag"-->
+            <a *ngFor="let workspace of workspaces" (click)="selectWorkspace(workspace)">
+
               {{workspace?.name}}
             </a>
-            <div class="dropdown-divider"></div>
+            <div class=" dropdown-divider">
+            </div>
             <a (click)="createNewWorkspace()" *ngIf="canCreateWorkspace" class="create-new">
               <i class="fas fa-plus-circle"></i> Create Workspace
             </a>
@@ -39,7 +40,7 @@
           </a>
           <div class="dropdown-content" *ngIf="showProjectMenu">
             <div class="dropdown-header">Your Projects</div>
-            <a *ngFor="let project of availableProjects" (click)="selectProject(project._id)">
+            <a *ngFor="let project of availableProjects" (click)="selectProject(project?._id)">
 
               {{project?.name}}
             </a>

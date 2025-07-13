@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SharedService } from './shared.service';
 import { Notification } from '../../core/domain/entities/notification.model';
 import { LayoutService } from './layout.service';
@@ -13,7 +13,25 @@ export class SocketService {
 
   public socket!: Socket;
   private readonly URL = environment.ultraBaseURL;
-  constructor(private sharedSer: SharedService, private layoutSer: LayoutService) { }
+  private videoSignalSubject = new Subject<any>();
+  private lastOfferSignal: any = null;
+
+  constructor(private sharedSer: SharedService, private layoutSer: LayoutService) {
+
+  }
+
+  handleSignal(signal: any) {
+    if (signal.type == 'offer') {
+      this.lastOfferSignal = signal;
+    }
+
+    this.videoSignalSubject.next(signal);
+  }
+
+  getLastOfferSignal() {
+    return this.lastOfferSignal;
+  }
+
 
   connect() {
 
@@ -30,13 +48,10 @@ export class SocketService {
       }
     });
 
-    //Im autherizing user while connecting to socket. So dont need to register again.
-    // this.socket.on('connect', () => {
-    //   console.log('Socket connected:', this.socket.id);
-    //   if (token) {
-    //     this.socket.emit('register', token);
-    //   }
-    // });
+
+    this.socket.on('video-signal', (data) => {
+      this.handleSignal(data);
+    });
 
     this.socket.on('connect_error', (err) => {
       console.error('Socket connection error:', err);
@@ -76,11 +91,7 @@ export class SocketService {
     this.socket.emit('video-signal', signal);
   }
   onSignal(): Observable<any> {
-    return new Observable(observer => {
-      this.socket.on('video-signal', (data) => {
-        observer.next(data);
-      });
-    });
+    return this.videoSignalSubject.asObservable();
   }
 
 

@@ -7,6 +7,7 @@ import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
 import { User } from '../../../core/domain/entities/user.model';
 import { NotificationService } from '../../../core/data/notification.service';
+import { ProjectDataService } from '../../../shared/services/project-data.service';
 
 interface MenuItem {
   id: string,
@@ -26,10 +27,16 @@ interface MenuItem {
 export class SidebarComponent {
 
   @Input() systemRole!: string;
-  public currentProject: string = '';
+  public currentProjectName: string = '';
+  private currentProject!: Project;
   menuItems: MenuItem[] = [];
 
-  constructor(private authSer: AuthService, private shared: SharedService, private toast: NotificationService) {
+  constructor(
+    private authSer: AuthService,
+    private shared: SharedService,
+    private toast: NotificationService,
+    private projSer: ProjectDataService
+  ) {
 
   }
 
@@ -45,10 +52,12 @@ export class SidebarComponent {
 
       this.shared.currentPro$.subscribe({
         next: (res: any) => {
-          if (res) {
-
-            this.currentProject = (res as Project).name as string;
+          if (!res) {
+            this.currentProjectName = '_________';
+            return;
           }
+          this.currentProject = res as Project;
+          this.currentProjectName = (res as Project).name as string;
           return;
         },
         error: (err) => {
@@ -56,12 +65,21 @@ export class SidebarComponent {
         }
       });
 
+      this.projSer.delProject$.subscribe({
+        next: (res) => {
+          if (res._id === this.currentProject._id) {
+
+            this.currentProjectName = '_________';
+          }
+        }
+      })
+
       this.authSer.user$.subscribe({
         next: (res: User | null) => {
           if (res) {
 
             if (res.role !== 'admin') {
-              this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog'));
+              this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog' && item.id !== 'subscription'));
             }
           }
 
@@ -74,19 +92,21 @@ export class SidebarComponent {
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
     { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false },
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false },
-    { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
+    // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
-    { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
-    { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
+    // { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
+    // { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
-    { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
+    { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false },
+    { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/user/settings', active: false }
   ];
 
   adminMenuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/admin/dashboard', active: false },
     { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false },
     { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
-    { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false }
+    { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/settings', active: false },
+    { id: 'subscription', icon: 'fa-coins', label: 'Subscription', route: '/subscription', active: false }
   ];
 
   isCollapsed = false;

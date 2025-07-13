@@ -2,12 +2,12 @@
 <aside class="sidebar" [ngClass]="{'collapsed': isCollapsed, 'mobile-open': isMobileMenuOpen}">
 
 
-  <div class="side-top" >
-    
-    <a class="current-project" *ngIf="!isPlatformAdmin()" >
-      
+  <div class="side-top">
+
+    <a class="current-project" *ngIf="!isPlatformAdmin()">
+
       <span class="menu-label">Project : </span>
-      <p> {{currentProject}}</p>
+      <p> {{currentProjectName || 'Select a project'}}</p>
     </a>
     <div class="sidebar-toggle" (click)="toggleSidebar()">
       <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>
@@ -19,9 +19,8 @@
 
     <ul class="nav-menu">
 
-      <li class="sideList" *ngFor="let item of menuItems"
-        (click)="setActiveItem(item)">
-        <a [routerLink]="item.route" [ngClass]="{'active': item.active}" >
+      <li class="sideList" *ngFor="let item of menuItems" (click)="setActiveItem(item)">
+        <a [routerLink]="item.route" [ngClass]="{'active': item.active}">
           <i class="fas {{item.icon}}"></i>
           <span class="menu-label">{{item.label}}</span>
         </a>

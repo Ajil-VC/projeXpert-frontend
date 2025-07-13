@@ -34,9 +34,13 @@ export class LayoutService {
     return this.http.post(`${environment.apiUserUrl}create-workspace`, { workspaceName });
   }
 
+  selectWorkspace(workspaceId: string): Observable<any> {
+    return this.http.get(`${environment.apiUserUrl}get-workspace?workspace_id=${workspaceId}`);
+  }
+
 
   getNotifications(systemRole: string) {
-    
+
     if (systemRole === 'company-user') {
       return this.http.get(`${environment.apiUserUrl}get-notifications`);
 

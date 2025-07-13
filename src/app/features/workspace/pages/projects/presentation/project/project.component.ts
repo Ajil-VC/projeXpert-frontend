@@ -81,12 +81,19 @@ export class ProjectComponent {
 
       next: (res: { status: boolean, createdProject: Project }) => {
 
+        if (!res.status) {
+          this.toast.showError('Project couldnt create due to some reasons');
+          return;
+        }
+
         this.router.navigate(['user/project-info']);
         this.layoutSer.prSubject.next(res.createdProject);
+        this.toast.showSuccess('Project created successfully.');
+        return;
 
       },
       error: (err) => {
-        console.error(err);
+        this.toast.showError('Couldnt create the project due to some error');
       }
 
     });

@@ -14,6 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateWorkspaceComponent } from '../../workspace/components/create-workspace/create-workspace.component';
 import { SocketService } from '../../../shared/services/socket.service';
 import { Notification } from '../../../core/domain/entities/notification.model';
+import { NotificationService } from '../../../core/data/notification.service';
+import { ProjectDataService } from '../../../shared/services/project-data.service';
 
 @Component({
   selector: 'app-header',
@@ -33,13 +35,14 @@ export class HeaderComponent {
   showUserMenu = false;
   showProjectMenu = false;
   isMobileMenuOpen = false;
-  availableProjects: any;
+  availableProjects: Project[] = [];
 
   isDropdownOpen = false;
 
   notifications: Array<Notification> = [];
 
   currentUser!: any;
+  workspaces: Workspace[] = [];
   currentWorkspace!: Workspace | null;
 
   canCreateWorkspace: boolean = false;
@@ -52,7 +55,9 @@ export class HeaderComponent {
     private backlogSer: BacklogService,
     private ngZone: NgZone,
     private dialog: MatDialog,
-    private socketSer: SocketService
+    private socketSer: SocketService,
+    private toast: NotificationService,
+    private projectSer: ProjectDataService
   ) {
 
     const isAdmin = this.authService.isAdmin();
@@ -90,8 +95,10 @@ export class HeaderComponent {
     this.authService.user$.subscribe({
       next: (res) => {
 
-        this.currentUser = res
-        this.availableProjects = res?.defaultWorkspace.projects;
+        this.currentUser = res;
+        this.workspaces = this.currentUser.workSpaces || [];
+        const projects = res?.defaultWorkspace.projects as unknown as Project[];
+        this.availableProjects = projects || [];
 
       },
       error: (err) => {
@@ -120,6 +127,12 @@ export class HeaderComponent {
       }
     });
 
+    this.projectSer.delProject$.subscribe({
+      next: (res) => {
+        const index = this.availableProjects.findIndex(proj => proj._id === res._id);
+        this.availableProjects.splice(index, 1);
+      }
+    })
 
     this.socketSer.notification().subscribe({
 
@@ -210,18 +223,31 @@ export class HeaderComponent {
   }
 
   selectWorkspace(workspace: Workspace) {
-    // this.currentUser.currentWorkspace = workspace.name;
+
     this.showWorkspaceMenu = false;
-    // Logic to switch workspace would go here
+
+    this.layoutSer.selectWorkspace(workspace._id as string).subscribe({
+      next: (res) => {
+
+        this.availableProjects = res.result?.projects as Project[] | [];
+        this.shared.setProject(res.result?.projects[0]?._id);
+        this.authService.setCurrentWorkSpace(res.result);
+
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt change the workspace.');
+      }
+    })
+
   }
 
-  selectProject(projectId: string) {
+  selectProject(projectId: String | undefined) {
 
+    if (!projectId) return;
     this.showProjectMenu = false;
 
-    this.layoutSer.getProject(projectId).subscribe({
+    this.layoutSer.getProject(projectId as string).subscribe({
       next: (res: { status: boolean, result: Project, tasks: Task[] }) => {
-
         this.layoutSer.setProjectId(res.result._id as string);
         this.shared.curProject.next(res.result);
         this.shared.fetchTeamMembers();
@@ -233,7 +259,7 @@ export class HeaderComponent {
 
 
     if (this.authService.isAdmin()) {
-      this.backlogSer.getSprints(projectId).subscribe({
+      this.backlogSer.getSprints(projectId as string).subscribe({
         next: (res: { status: boolean, result: Sprint[] }) => {
           if (!res.status) {
             console.error('Error occured while getting sprints');
@@ -262,13 +288,19 @@ export class HeaderComponent {
 
     dialogRef.afterClosed().subscribe({
       next: (result: { workspaceName: string }) => {
-        if (result.workspaceName !== '') {
+        if (result.workspaceName) {
           this.layoutSer.createWorkspace(result.workspaceName).subscribe({
             next: (res) => {
-              console.log(res);
+              console.log(res)
+              if (!res.status) {
+                this.toast.showInfo(res.message);
+                return;
+              }
+              this.workspaces.push(res.result);
+              this.toast.showSuccess(res.message);
             },
             error: (err) => {
-              console.error("Error occured while creating workspace.", err);
+              this.toast.showError("Error occured while creating workspace.");
             }
           })
         }

@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivityItem, EpicItem, ScheduleItem, SummaryCard } from '../../domain/dashboard.domain';
+import { ActivityItem, ScheduleItem, SummaryCard } from '../../domain/dashboard.domain';
 import { AuthService } from '../../../../../auth/data/auth.service';
+import { DashboardService } from '../../data/dashboard.service';
+import { NotificationService } from '../../../../../../core/data/notification.service';
+import { SharedService } from '../../../../../../shared/services/shared.service';
+import { Subject, takeUntil } from 'rxjs';
+import { Task } from '../../../../../../core/domain/entities/task.model';
 
 
 @Component({
@@ -15,49 +20,44 @@ export class DashboardComponent {
 
   summaryCards: SummaryCard[] = [
     {
-      count: 8,
-      label: 'completed',
-      sublabel: 'tasks over 7 days',
+      count: 0,
+      label: 'Completed',
+      sublabel: 'total completed tasks',
       icon: 'fa-check-circle',
       color: 'green'
     },
     {
-      count: 10,
-      label: 'updated',
-      sublabel: 'tasks over 7 days',
+      count: 0,
+      label: 'Open Tasks',
+      sublabel: 'tasks in progress',
       icon: 'fa-pencil-alt',
       color: 'blue'
     },
     {
-      count: 1,
-      label: 'due soon',
+      count: 0,
+      label: 'Due Soon',
       sublabel: 'in the next 7 days',
       icon: 'fa-calendar-check',
       color: 'orange'
     },
     {
       count: 0,
-      label: 'overdue',
+      label: 'Overdue',
       sublabel: 'by the last 7 days',
       icon: 'fa-exclamation-circle',
       color: 'red'
-    }
-  ];
-
-  epicItems: EpicItem[] = [
-    {
-      id: 'SCRUM-13',
-      title: 'Wishlist Management',
-      status: 'In progress',
-      progress: 70
     },
     {
-      id: 'SCRUM-11',
-      title: 'Product Management',
-      status: 'In progress',
-      progress: 85
+      count: 0,
+      label: 'Unsheduled',
+      sublabel: 'Tasks to be planned',
+      icon: 'fa-exclamation-circle',
+      color: 'red'
     }
+
   ];
+
+  epicItems: Task[] = [];
 
   activityItems: ActivityItem[] = [
     {
@@ -119,7 +119,60 @@ export class DashboardComponent {
     }
   ];
 
-  constructor(private authService: AuthService) { }
+  constructor(private shared: SharedService, private authService: AuthService, private dashboardSer: DashboardService, private toast: NotificationService) { }
+
+  private destroy$ = new Subject<void>();
+
+  ngOnInit() {
+
+    this.shared.currentPro$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((project) => {
+        if (!project) {
+          this.refreshDashboardView(null);
+          return;
+        }
+        this.getData();
+      })
+
+    this.getData();
+
+  }
+
+
+  refreshDashboardView(res: any) {
+
+    for (let card of this.summaryCards) {
+      if (card.label === 'Completed') {
+        card.count = res?.result?.completed?.length || 0;
+      } else if (card.label === 'Open Tasks') {
+        card.count = res?.result?.openTasks?.length || 0;
+      } else if (card.label === 'Due Soon') {
+        card.count = res?.result?.dueSoon?.length || 0;
+      } else if (card.label === 'Overdue') {
+        card.count = res?.result?.overdue?.length || 0;
+      } else if (card.label === 'Unsheduled') {
+        card.count = res?.result?.unscheduled?.length || 0;
+      }
+    }
+
+    this.epicItems = res?.result?.epics || [];
+  }
+
+  getData() {
+
+    this.dashboardSer.getProjectStats().subscribe({
+      next: (res) => {
+
+        this.refreshDashboardView(res);
+
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt initialize dashboard.');
+      }
+    })
+
+  }
 
 
   viewEpics() {
@@ -132,6 +185,12 @@ export class DashboardComponent {
 
   viewAllSchedule() {
     // Logic to view all scheduled items
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

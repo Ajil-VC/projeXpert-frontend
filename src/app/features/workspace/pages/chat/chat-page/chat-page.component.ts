@@ -6,7 +6,8 @@ import { Team } from '../../../../../core/domain/entities/team.model';
 import { AuthService } from '../../../../auth/data/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, switchMap, takeUntil } from 'rxjs';
+import { NotificationService } from '../../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -17,7 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ChatPageComponent {
 
   private destroy$ = new Subject<void>();
-  constructor(private shared: SharedService, private authSer: AuthService) { }
+  constructor(private shared: SharedService, private authSer: AuthService, private toast: NotificationService) { }
 
   teamMembers!: Team[];
   currentUserObj: { id: string } = { id: '' };
@@ -25,20 +26,8 @@ export class ChatPageComponent {
 
   ngOnInit() {
 
-    this.shared.getTeamMembers().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (res) => {
-        if (res.status) {
 
-          this.teamMembers = res.data;
-        }
-      },
-      error: (err) => {
-        console.error('Error occured while trying to get team members.');
-      }
-    });
-
+    // Get current user once
     this.authSer.user$.pipe(
       takeUntil(this.destroy$)
     ).subscribe({
@@ -46,11 +35,47 @@ export class ChatPageComponent {
         this.currentUserObj = { id: res?._id || '' };
       },
       error: (err) => {
-        console.error('Error occured while getting current user', err);
+        console.error('Error occurred while getting current user', err);
       }
-    })
+    });
+
+    // Initial load
+    this.loadTeamMembers();
+
+    // Listen for project changes and reload team members
+    this.shared.currentPro$.pipe(
+      switchMap(() => this.shared.getTeamMembers()),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.teamMembers = res.data;
+        }
+      },
+      error: (err) => {
+        console.error('Error occurred while trying to get team members.');
+      }
+    });
 
   }
+
+
+
+  private loadTeamMembers() {
+    this.shared.getTeamMembers().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.teamMembers = res.data;
+        }
+      },
+      error: (err) => {
+        this.toast.showError('Error occurred while trying to get team members.');
+      }
+    });
+  }
+
 
   handleEvent(event: any) {
     this.isChatOpened = event;

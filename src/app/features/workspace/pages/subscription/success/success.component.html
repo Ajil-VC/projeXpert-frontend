@@ -1,0 +1,11 @@
+<div class="success-wrapper">
+    <div class="glass-card">
+        <h2>{{header}}</h2>
+        <div *ngIf="isLoading">Loading your subscription details...</div>
+        <div *ngIf="!isLoading">
+            <p>{{message}} <span class="highlight">{{ planName }}</span> plan.</p>
+            <p>Billing Cycle: <strong>{{ billingCycle | titlecase }}</strong></p>
+        </div>
+        
+    </div>
+</div>

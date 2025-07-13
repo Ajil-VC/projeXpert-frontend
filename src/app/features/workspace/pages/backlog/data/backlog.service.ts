@@ -5,13 +5,14 @@ import { environment } from '../../../../../../environments/environment';
 import { Task } from '../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../core/domain/entities/sprint.model';
 import { LayoutService } from '../../../../../shared/services/layout.service';
+import { NotificationService } from '../../../../../core/data/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BacklogService {
 
-  constructor(private http: HttpClient, private layoutSer: LayoutService) { }
+  constructor(private http: HttpClient, private layoutSer: LayoutService, private toast: NotificationService) { }
 
   createOrUpdateEpic(title: string, description: string, startDate: string, endDate: string, epic: Task | null): Observable<any> {
 
@@ -39,6 +40,13 @@ export class BacklogService {
   getSprints(projectId: string | null = null): Observable<{ status: boolean, result: Sprint[] }> {
     if (!projectId) {
       projectId = localStorage.getItem('projectId');
+    }
+    if (!projectId) {
+      this.toast.showInfo("Create or select a project");
+      return new Observable<{ status: boolean, result: Sprint[] }>(observer => {
+        observer.next({ status: false, result: [] });
+        observer.complete();
+      });
     }
     return this.http.get<{ status: boolean, result: Sprint[] }>(`${environment.apiUserUrl}get-sprints/${projectId}`);
   }

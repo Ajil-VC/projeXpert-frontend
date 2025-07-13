@@ -54,15 +54,18 @@ export class AuthService implements RegisterUseCase {
     const currentProjectId = localStorage.getItem('projectId');
 
     if (!currentProjectId) {
-      const curProj = workspace.projects[0] as unknown as Project;
+      const curProj = workspace.projects[0] as unknown as Project || null;
 
-      localStorage.setItem('projectId', curProj._id as string);
+      if (curProj) {
+        localStorage.setItem('projectId', curProj._id as string);
+      }
+
       this.shared.curProject.next(curProj);
       return;
     }
 
     const workspaceWithProjects = (workspace.projects as unknown as Project[])
-      .filter(ele => ele._id === currentProjectId); 
+      .filter(ele => ele._id === currentProjectId);
     this.shared.curProject.next(workspaceWithProjects[0]);
 
   }

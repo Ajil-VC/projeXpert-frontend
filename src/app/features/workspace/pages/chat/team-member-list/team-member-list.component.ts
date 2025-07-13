@@ -24,7 +24,7 @@ export class TeamMemberListComponent {
 
   currentUser: any;
   searchText: string = '';
-  availableChatIds = new Set(); //Just to ensure duplicates are not adding into the chats array.
+  availableChatIds = new Set(); 
   chats: Conversation[] = [];
   activeChat: any;
 
@@ -65,9 +65,8 @@ export class TeamMemberListComponent {
 
     this.sharedSer.currentPro$.subscribe((project) => {
 
-      if (project) {
-        this.refreshChatView();
-      }
+      this.refreshChatView();
+  
     })
 
 
@@ -100,7 +99,8 @@ export class TeamMemberListComponent {
   }
 
   filteredMembers() {
-    if (!this.searchText) return;
+    if (!this.searchText || !this.teamMembers) return;
+
     return this.teamMembers.filter(member =>
       member.email.toLowerCase().includes(this.searchText.toLowerCase()) &&
       member.email !== this.currentUser.email

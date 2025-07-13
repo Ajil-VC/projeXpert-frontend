@@ -36,7 +36,7 @@ export class CreateEpicComponent {
 
     const epic = this.data.issue;
     if (epic) {
-      console.log(' asd fasd asdf asdf')
+      
       const startDate = epic.startDate ? new Date(epic.startDate) : '';
       const minEnd = startDate ? new Date(startDate) : '';
 

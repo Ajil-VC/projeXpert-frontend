@@ -26,6 +26,9 @@ import { verifyAdminGuard } from './core/guards/admin/verify-admin.guard';
 import { CompanyComponent } from './features/admin/presentation/company/company.component';
 import { Forbidden403Component } from './features/reusable/forbidden-403/forbidden-403.component';
 import { VideoCallComponent } from './features/workspace/pages/video-call/video-call.component';
+import { SubscriptionComponent } from './features/workspace/pages/subscription/subscription.component';
+import { SuccessComponent } from './features/workspace/pages/subscription/success/success.component';
+import { CancelComponent } from './features/workspace/pages/subscription/cancel/cancel.component';
 
 export const routes: Routes = [
 
@@ -44,11 +47,14 @@ export const routes: Routes = [
             { path: 'backlog', component: BacklogComponent },
             { path: 'create-workspace', component: CreateWorkspaceComponent },
             { path: 'create-project', component: ProjectComponent },
-            { path: 'project-info', component: ProjectinfoComponent},
+            { path: 'project-info', component: ProjectinfoComponent },
 
             { path: 'board', component: KanbanComponent },
             { path: 'chat', component: ChatPageComponent },
-            { path: 'video-call', component: VideoCallComponent }
+            { path: 'video-call', component: VideoCallComponent },
+            { path: 'subscription', component: SubscriptionComponent },
+            { path: 'success', component: SuccessComponent },
+            { path: 'cancel', component: CancelComponent }
         ]
     },
 

@@ -12,6 +12,11 @@
     --dark-gray: #666;
     --background-color: #18181B;
     --darkish-gray: #202020;
+
+    --glass-blue: rgba(0, 150, 255, 0.15);
+    --glass-green: rgba(0, 255, 150, 0.15);
+    --border-blue: rgba(0, 150, 255, 0.4);
+    --border-green: rgba(0, 255, 150, 0.4);
 }
 
 * {

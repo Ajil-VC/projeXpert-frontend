@@ -96,6 +96,11 @@ export class KanbanComponent {
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
 
+        if (!res.status) {
+          this.allTasks = [];
+          this.seperatingOnStatus();
+          return;
+        }
         this.allTasks = res.result;
         this.seperatingOnStatus();
       },
@@ -120,9 +125,8 @@ export class KanbanComponent {
 
     this.shared.currentPro$.subscribe((project) => {
 
-      if (project) {
-        this.refreshKanbanView();
-      }
+      this.refreshKanbanView();
+      
     })
 
   }
@@ -175,7 +179,7 @@ export class KanbanComponent {
 
   completeSprint() {
     const groupedTasks = this.groupTasksBySprint()
-    console.log(groupedTasks, 'grouped tasks');
+
     const dialogRef = this.dialog.open(SprintCompleteComponent, {
       width: '500px',
       data: { groupedTasks }
@@ -183,7 +187,7 @@ export class KanbanComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result.status) {
-        
+
         for (let task of result.result) {
           const ind = this.allTasks.findIndex((item: Task) => item._id == task._id);
           if (ind !== -1) {

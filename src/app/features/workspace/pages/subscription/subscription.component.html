@@ -1,0 +1,32 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="pricing-container" *ngIf="!isSubscribed">
+    <h2 class="title">Choose a Plan</h2>
+
+    <div class="cards">
+        <div class="card" *ngFor="let plan of plans" [ngClass]="plan.color">
+            <h3 class="plan-name">{{ plan.name }}</h3>
+            <p class="price">{{ plan.price }}</p>
+            <p class="description">{{ plan.description }}</p>
+            <button class="subscribe-btn" [disabled]="isButtonDisabled" (click)="subscribe(plan)">
+                {{ plan.buttonText }}
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="pricing-container" *ngIf="isSubscribed">
+
+    <h2 class="title">You have subscribed to the plan {{subcriptionDetails.plan}}</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3 class="plan-name">{{ subcriptionDetails.plan }}</h3>
+            <p class="price">Plan valid until : </p>
+            <p class="price">{{ subcriptionDetails.currentPeriodEnd |date: 'mediumDate' }}</p>
+            <!-- <p class="description">{{ subcriptionDetails. }}</p> -->
+        </div>
+    </div>
+
+</div>
