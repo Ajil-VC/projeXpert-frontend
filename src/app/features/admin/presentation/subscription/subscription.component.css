@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  padding: 1rem;
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.subscription-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.subscription-table th,
+.subscription-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #2c2c2c;
+}
+
+.subscription-table th {
+  background-color: #2a2a2a;
+  color: #bdbdbd;
+  font-weight: bold;
+}
+
+.subscription-table tr:hover {
+  background-color: #2d2d2d;
+}
+
+.subscription-table td.plan {
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.subscription-table td.active {
+  color: #66bb6a;
+  font-weight: bold;
+}
+
+.subscription-table td.canceled {
+  color: #ef5350;
+  font-weight: bold;
+}
+
+.subscription-table td.past_due {
+  color: #ffa726;
+  font-weight: bold;
+}

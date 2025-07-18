@@ -10,11 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { Project } from '../../../../../../../core/domain/entities/project.model';
 import { User } from '../../../../../../../core/domain/entities/user.model';
 import { projectView } from '../../../domain/projectView.interface';
+
 import { EditProjectUseCase } from '../../../domain/projectEditing.domain';
 import { EditProjectService } from '../../../data/edit-project.service';
 import { LoaderComponent } from '../../../../../../../core/presentation/loader/loader.component';
 import { NotificationService } from '../../../../../../../core/data/notification.service';
 import { SharedService } from '../../../../../../../shared/services/shared.service';
+import { ProjectService } from '../../../data/project.service';
 
 @Component({
   selector: 'app-edit-project-modal',
@@ -55,20 +57,13 @@ export class EditProjectModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: Project,
     private editProjectSer: EditProjectUseCase,
     private toast: NotificationService,
-    private shared: SharedService
+    private shared: SharedService,
   ) {
 
-    this.setupProjectDataForView();
+    this.setupProjectDataForView(this.data);
 
   }
 
-  ngOnInit() {
-    this.shared.currentPro$.subscribe((project) => {
-
-      this.setupProjectDataForView(project);
-
-    })
-  }
 
   setupProjectDataForView(data: Project | null = this.data) {
 
@@ -81,7 +76,6 @@ export class EditProjectModalComponent {
     };
     const d = data?.members as unknown;
     const mems = d as Array<User> || [];
-
 
     initData.members = mems.map(ele => {
       return {

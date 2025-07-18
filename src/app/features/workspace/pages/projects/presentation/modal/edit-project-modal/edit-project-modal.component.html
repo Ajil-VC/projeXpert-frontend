@@ -53,6 +53,12 @@
         <div class="members-list">
             <div class="member-row" *ngFor="let member of projectData.members; let i = index ; trackBy: trackByIndex ">
                 <span>{{ member.email }}</span>
+
+                <!-- <mat-slide-toggle [(ngModel)]="member.role" name="isBlocked"
+                    (change)="onUserToggle(member)">
+                    {{data.companyDetails.isBlocked ? 'Unblock Company' : 'Block Company'}}
+                </mat-slide-toggle> -->
+
                 <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select">
                     <mat-option value="admin">Admin</mat-option>
                     <mat-option value="user">User</mat-option>

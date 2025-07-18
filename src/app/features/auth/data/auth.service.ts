@@ -98,7 +98,6 @@ export class AuthService implements RegisterUseCase {
     return this.http.post<AuthResponse>(`${environment.apiUserUrl}login`, { email, passWord }, { withCredentials: true })
       .pipe(
         tap(response => {
-
           if (!response.token) throw new Error('Token Missing');
 
           localStorage.setItem('forceChangePass', String(response.forceChangePassword));
@@ -120,7 +119,6 @@ export class AuthService implements RegisterUseCase {
   }
 
   logout() {
-
     localStorage.removeItem('authToken');
     localStorage.removeItem('forceChangePass');
     localStorage.removeItem('role');

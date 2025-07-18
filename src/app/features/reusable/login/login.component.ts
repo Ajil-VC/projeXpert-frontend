@@ -62,10 +62,11 @@ export class LoginComponent {
         if (res.status) {
 
           if (this.systemRole === 'company-user') {
-
             if (!res.forceChangePassword) {
+
               this.router.navigate(['user/dashboard']);
             } else {
+              
               this.router.navigate(['user/change-password']);
             }
 

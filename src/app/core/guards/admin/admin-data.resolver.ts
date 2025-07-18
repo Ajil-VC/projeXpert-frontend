@@ -7,7 +7,7 @@ export const adminDataResolver: ResolveFn<any> = (route, state) => {
 
   const guardService = inject(GuardsService);
 
-  return guardService.getCompanydataForPlatformAdmin().pipe(
+  return guardService.getInitDataPlatformAdmin().pipe(
     catchError((error) => {
       console.error('Error occurred while getting company data.', error);
       return of(null); 

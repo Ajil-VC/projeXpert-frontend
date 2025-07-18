@@ -39,7 +39,11 @@ export class GuardsService {
   }
 
   //Getting platform-admin related data.
-  getCompanydataForPlatformAdmin() {
+  getInitDataPlatformAdmin() {
     return this.http.get(`${environment.apiAdminUrl}admin-init`);
+  }
+
+  adminData(){
+    return this.http.get(`${environment.apiAdminUrl}admin`);
   }
 }

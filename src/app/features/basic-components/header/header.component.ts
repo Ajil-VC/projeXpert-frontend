@@ -41,9 +41,11 @@ export class HeaderComponent {
 
   notifications: Array<Notification> = [];
 
-  currentUser!: any;
+  currentUser!: User;
   workspaces: Workspace[] = [];
   currentWorkspace!: Workspace | null;
+
+  isAdmin: boolean = false;
 
   canCreateWorkspace: boolean = false;
   constructor(
@@ -60,8 +62,8 @@ export class HeaderComponent {
     private projectSer: ProjectDataService
   ) {
 
-    const isAdmin = this.authService.isAdmin();
-    if (isAdmin) {
+    this.isAdmin = this.authService.isAdmin();
+    if (this.isAdmin) {
       this.canCreateWorkspace = true;
     }
 
@@ -74,6 +76,14 @@ export class HeaderComponent {
 
   canActivateNavbar() {
     return this.systemRole === 'company-user';
+  }
+
+  get profilePic() {
+
+    if (this.currentUser && this.currentUser.profilePicUrl) {
+      return this.currentUser.profilePicUrl.url;
+    }
+    return null;
   }
 
   ngOnInit() {
@@ -94,11 +104,12 @@ export class HeaderComponent {
 
     this.authService.user$.subscribe({
       next: (res) => {
-
-        this.currentUser = res;
-        this.workspaces = this.currentUser.workSpaces || [];
-        const projects = res?.defaultWorkspace.projects as unknown as Project[];
-        this.availableProjects = projects || [];
+        if (res) {
+          this.currentUser = res;
+          this.workspaces = this.currentUser.workSpaces || [];
+          const projects = res?.defaultWorkspace.projects as unknown as Project[];
+          this.availableProjects = projects || [];
+        }
 
       },
       error: (err) => {

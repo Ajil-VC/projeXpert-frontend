@@ -29,6 +29,9 @@ import { VideoCallComponent } from './features/workspace/pages/video-call/video-
 import { SubscriptionComponent } from './features/workspace/pages/subscription/subscription.component';
 import { SuccessComponent } from './features/workspace/pages/subscription/success/success.component';
 import { CancelComponent } from './features/workspace/pages/subscription/cancel/cancel.component';
+import { SettingsComponent } from './features/workspace/pages/settings/settings.component';
+import { adminResolver } from './core/guards/admin/admin.resolver';
+import { SubscriptionDetailComponent } from './features/admin/presentation/subscription/subscription.component';
 
 export const routes: Routes = [
 
@@ -48,6 +51,7 @@ export const routes: Routes = [
             { path: 'create-workspace', component: CreateWorkspaceComponent },
             { path: 'create-project', component: ProjectComponent },
             { path: 'project-info', component: ProjectinfoComponent },
+            { path: 'settings', component: SettingsComponent },
 
             { path: 'board', component: KanbanComponent },
             { path: 'chat', component: ChatPageComponent },
@@ -61,10 +65,12 @@ export const routes: Routes = [
 
     { path: 'admin/login', component: LoginComponent, canActivate: [adminLoginGuard], data: { systemRole: 'platform-admin' } },
     {
-        path: 'admin', component: LayoutComponent, data: { systemRole: 'platform-admin' }, canActivate: [verifyAdminGuard],
+        path: 'admin', component: LayoutComponent, data: { systemRole: 'platform-admin' }, canActivate: [verifyAdminGuard], resolve: { adminData: adminResolver },
         children: [
             { path: 'dashboard', component: AdminDashboardComponent, resolve: { companyData: adminDataResolver } },
-            { path: 'companies', component: CompanyComponent, resolve: { companyData: adminDataResolver } }
+            { path: 'companies', component: CompanyComponent, resolve: { companyData: adminDataResolver } },
+            { path: 'settings', component: SettingsComponent, data: { systemRole: 'platform-admin' } },
+            { path: 'subscription', component: SubscriptionDetailComponent }
         ]
 
     }

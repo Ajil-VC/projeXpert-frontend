@@ -22,4 +22,8 @@ export class AdminService {
     return this.http.put(`${environment.apiAdminUrl}change-company-status`, { companyId, status });
   }
 
+  getSubscriptionDetails():Observable<any>{
+    return this.http.get(`${environment.apiAdminUrl}get-subscriptions`);
+  }
+
 }

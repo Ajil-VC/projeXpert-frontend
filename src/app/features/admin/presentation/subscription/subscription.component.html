@@ -1,0 +1,26 @@
+<div class="table-container">
+    <table class="subscription-table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Stripe Customer ID</th>
+                <th>Subscription ID</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Billing Cycle</th>
+                <th>Current Period End</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let sub of subscriptions">
+                <td>{{ sub.companyId?.name || sub.companyId }}</td>
+                <td>{{ sub.stripeCustomerId }}</td>
+                <td>{{ sub.stripeSubscriptionId }}</td>
+                <td class="plan">{{ sub.plan }}</td>
+                <td [class]="sub.status">{{ sub.status }}</td>
+                <td>{{ sub.billingCycle }}</td>
+                <td>{{ sub.currentPeriodEnd | date: 'mediumDate' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

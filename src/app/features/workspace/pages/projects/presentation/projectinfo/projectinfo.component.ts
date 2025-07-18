@@ -9,6 +9,7 @@ import { EditProjectModalComponent } from '../modal/edit-project-modal/edit-proj
 import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
 import { PaginationComponent } from '../../../../../reusable/pagination/pagination.component';
 import { SharedService } from '../../../../../../shared/services/shared.service';
+import { AuthService } from '../../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-projectinfo',
@@ -39,7 +40,8 @@ export class ProjectinfoComponent {
     private projectService: ProjectDataService,
     private router: Router,
     public dialog: MatDialog,
-    private shared: SharedService
+    private shared: SharedService,
+    private auth: AuthService
 
   ) { }
 
@@ -47,8 +49,10 @@ export class ProjectinfoComponent {
 
     this.getProjectData(1, this.statusFilters);
     this.shared.currentPro$.subscribe((project) => {
-
-      this.getProjectData(1, this.statusFilters);
+      if (this.auth.getCurrentUser()?.role === 'admin') {
+console.log(project,'hmm')
+        this.getProjectData(1, this.statusFilters);
+      }
 
     })
   }

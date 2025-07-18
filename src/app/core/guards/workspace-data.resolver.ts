@@ -11,6 +11,7 @@ export const workspaceDataResolver: ResolveFn<boolean> = (route, state) => {
   const guardsService = inject(GuardsService);
   const authService = inject(AuthService);
   const toast = inject(NotificationService)
+
   return guardsService.getWorkSpaceData().pipe(
     tap((res: AuthResponse) => {
       const currentWorkSpace = res.user.defaultWorkspace;
