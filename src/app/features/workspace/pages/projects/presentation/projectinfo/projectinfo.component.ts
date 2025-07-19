@@ -50,7 +50,7 @@ export class ProjectinfoComponent {
     this.getProjectData(1, this.statusFilters);
     this.shared.currentPro$.subscribe((project) => {
       if (this.auth.getCurrentUser()?.role === 'admin') {
-console.log(project,'hmm')
+
         this.getProjectData(1, this.statusFilters);
       }
 

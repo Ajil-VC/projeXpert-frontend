@@ -1,0 +1,81 @@
+/* Container for filter controls */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.filters mat-form-field {
+  width: 250px;
+  min-width: 200px;
+}
+
+/* User Table */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+  padding: 8px 16px;
+  text-align: left;
+}
+
+/* Profile column layout */
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+  object-fit: cover;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-details .name {
+  font-weight: 500;
+}
+
+.user-details .email {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Role select inside the table */
+.role-select {
+  width: 150px;
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filters mat-form-field {
+    width: 100%;
+  }
+
+  .role-select {
+    width: 100%;
+  }
+}

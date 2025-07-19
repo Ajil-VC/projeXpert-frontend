@@ -32,6 +32,7 @@ import { CancelComponent } from './features/workspace/pages/subscription/cancel/
 import { SettingsComponent } from './features/workspace/pages/settings/settings.component';
 import { adminResolver } from './core/guards/admin/admin.resolver';
 import { SubscriptionDetailComponent } from './features/admin/presentation/subscription/subscription.component';
+import { TeamManagementComponent } from './features/workspace/pages/team-management/team-management.component';
 
 export const routes: Routes = [
 
@@ -56,6 +57,7 @@ export const routes: Routes = [
             { path: 'board', component: KanbanComponent },
             { path: 'chat', component: ChatPageComponent },
             { path: 'video-call', component: VideoCallComponent },
+            { path: 'teams-members', component: TeamManagementComponent },
             { path: 'subscription', component: SubscriptionComponent },
             { path: 'success', component: SuccessComponent },
             { path: 'cancel', component: CancelComponent }

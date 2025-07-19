@@ -79,7 +79,7 @@ export class SidebarComponent {
           if (res) {
 
             if (res.role !== 'admin') {
-              this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog' && item.id !== 'subscription'));
+              this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog' && item.id !== 'subscription' && item.id !== 'teams'));
             }
           }
 
@@ -95,8 +95,8 @@ export class SidebarComponent {
     // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
     // { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
-    // { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/teams-members', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
+    { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/user/teams-members', active: false },
     { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/user/settings', active: false }
   ];

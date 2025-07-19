@@ -14,6 +14,7 @@ export interface User {
     plan: string;
     role: string;
     isBlocked: boolean;
+    restrict: boolean;
     defaultWorkspace: Workspace;
     workSpaces: Array<Workspace>;
     forceChangePassword?: boolean;

@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, of, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../features/auth/data/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../data/notification.service';
@@ -22,7 +22,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-  
+
   const authService = inject(AuthService);
 
   return next(cloneReq).pipe(
@@ -49,11 +49,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           }),
           catchError(refreshError => {
             // Refresh token is also invalid => logout and clear everything
-            authService.logout();    
+            authService.logout();
             return throwError(() => new Error('Session expired. Please log in again.'));
           })
         );
       } else if (error.status === 403) {
+
+        if (error.error && error.error['message'] && error.error['message'] === 'Dont have permission to perform this operation') {
+          notificationService.showError('Dont have permission to perform this operation');
+         return of(); 
+        }
+
         authService.logout();
 
         if (error.error && error.error['message'] && (error.error['message'] === 'Company blocked' || error.error['message'] === 'User account is blocked.')) {
@@ -80,7 +86,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         userFriendlyMessage = 'Server error. Please try again later.';
         notificationService.showError(userFriendlyMessage);
       }
-      
+
       return throwError(() => new Error(userFriendlyMessage));
     })
   );
