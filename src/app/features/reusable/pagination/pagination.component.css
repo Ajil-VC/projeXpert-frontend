@@ -15,9 +15,9 @@
 
 .pagination li {
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 1px 12px;
   border-radius: 8px;
-  background-color: var(--darkish-gray);
+  background-color: var(--secondary-color);
   transition: all 0.2s ease;
   user-select: none;
 }
@@ -28,12 +28,12 @@
 
 .pagination li.active {
   background-color: var(--secondary-color);
-  color: var(--text-color);
+  color: white;
   font-weight: bold;
 }
 
 .pagination li.disabled {
   pointer-events: none;
-  color: #969696;
-  background-color: #f9f9f9;
+  color: white;
+  background-color: var(--logo-color);
 }

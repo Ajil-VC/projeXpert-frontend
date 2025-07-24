@@ -4,14 +4,26 @@
 
 :root {
 
-    --primary-color: #002147;
-    --secondary-color: #FFCC00;
+    /* --primary-color: #002147; */
+    /* --secondary-color: #FFCC00; */
+
+    --secondary-color: #3f4948;
+    --primary-color: #0e3727;
+    --logo-color: #889392;
+    --primarydark-color: #101414;
+
     --text-color: #333;
     --light-gray: #f5f5f5;
     --medium-gray: #e0e0e0;
     --dark-gray: #666;
     --background-color: #18181B;
     --darkish-gray: #202020;
+
+
+    --radius: 8px;
+    --transition: 0.3s ease;
+
+
 
     --glass-blue: rgba(0, 150, 255, 0.15);
     --glass-green: rgba(0, 255, 150, 0.15);

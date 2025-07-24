@@ -1,47 +1,54 @@
 <!-- project-list.component.html -->
 <div class="project-list-container">
-  <div class="page-header">
-    <div class="header-content">
-      <div class="path-nav">Projects</div>
-      <h1>Projects</h1>
-      <p class="page-subtitle">Manage all your projects from one place</p>
+
+  <div class="page-main-header" >
+    <div class="page-header">
+      <div class="header-content">
+   
+        <h1>Projects</h1>
+        <p class="page-subtitle">Manage all your projects from one place</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="openCreateProjectDialog()">
+          <i class="fas fa-plus"></i> Create Project
+        </button>
+      </div>  
     </div>
-    <div class="header-actions">
-      <button class="btn btn-primary" (click)="openCreateProjectDialog()">
-        <i class="fas fa-plus"></i> Create Project
-      </button>
+  
+    <div class="filters-bar">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search projects..." class="search-input" (input)="search($event)">
+      </div>
+  
+      
+      <div class="filter-actions">
+        <div class="status-filters">
+          <button class="filter-btn" [class.active]="statusFilters.active" (click)="toggleStatusFilter('active')">
+            Active
+          </button>
+          <button class="filter-btn" [class.active]="statusFilters.completed" (click)="toggleStatusFilter('completed')">
+            Completed
+          </button>
+          <button class="filter-btn" [class.active]="statusFilters.archived" (click)="toggleStatusFilter('archived')">
+            Archived
+          </button>
+        </div>
+  
+        <div class="view-toggle">
+          <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+            <i class="fas fa-th-large"></i>
+          </button>
+          <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+            <i class="fas fa-list"></i>
+          </button>
+        </div>
+      </div>
+
+
     </div>
   </div>
 
-  <div class="filters-bar">
-    <div class="search-container">
-      <i class="fas fa-search search-icon"></i>
-      <input type="text" placeholder="Search projects..." class="search-input" (input)="search($event)">
-    </div>
-
-    <div class="filter-actions">
-      <div class="status-filters">
-        <button class="filter-btn" [class.active]="statusFilters.active" (click)="toggleStatusFilter('active')">
-          Active
-        </button>
-        <button class="filter-btn" [class.active]="statusFilters.completed" (click)="toggleStatusFilter('completed')">
-          Completed
-        </button>
-        <button class="filter-btn" [class.active]="statusFilters.archived" (click)="toggleStatusFilter('archived')">
-          Archived
-        </button>
-      </div>
-
-      <div class="view-toggle">
-        <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
-          <i class="fas fa-th-large"></i>
-        </button>
-        <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
-          <i class="fas fa-list"></i>
-        </button>
-      </div>
-    </div>
-  </div>
 
   <div class="projects-content">
     <div *ngIf="isLoading" class="loading">

@@ -94,12 +94,11 @@
 
 .sideList a:hover {
     background-color: var(--secondary-color);
-    color: var(--background-color);
+
 }
 
 .active {
     background-color: var(--secondary-color);
-    color: var(--background-color) !important;
 }
 
 

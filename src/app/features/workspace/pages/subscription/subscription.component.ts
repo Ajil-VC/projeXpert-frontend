@@ -38,7 +38,7 @@ export class SubscriptionComponent {
         this.isLoading = false;
       },
       error: (err) => {
-        this.toast.showError('Something went wrong while fetching subscription.');
+        this.toast.showInfo('It seems you havnt subscribed to any plan');
         this.isLoading = false;
       }
     })
