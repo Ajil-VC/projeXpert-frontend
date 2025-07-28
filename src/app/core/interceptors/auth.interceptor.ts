@@ -54,10 +54,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           })
         );
       } else if (error.status === 403) {
-
-        if (error.error && error.error['message'] && error.error['message'] === 'Dont have permission to perform this operation') {
-          notificationService.showError('Dont have permission to perform this operation');
-         return of(); 
+        if (error.error['issue']) {
+          notificationService.showInfo(error.error['message']);
+          return throwError(() => error);
+        }
+        if (error.error && error.error['message']) {
+          const msg1 = 'Please subscribe to a plan to perform this operation';
+          const msg2 = 'Dont have permission to perform this operation';
+          if (error.error['message'] === msg1 || error.error['message'] === msg2) {
+            notificationService.showError(error.error['message']);
+            return of();
+          }
         }
 
         authService.logout();

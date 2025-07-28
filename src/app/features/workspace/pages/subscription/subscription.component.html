@@ -4,12 +4,33 @@
     <h2 class="title">Choose a Plan</h2>
 
     <div class="cards">
-        <div class="card" *ngFor="let plan of plans" [ngClass]="plan.color">
+        <div class="card" *ngFor="let plan of plans"
+            [ngClass]="plan.billingCycle == 'year' ? 'glass-green': 'glass-blue'">
             <h3 class="plan-name">{{ plan.name }}</h3>
-            <p class="price">{{ plan.price }}</p>
+            <p class="price">&#8377;{{ plan.price }}</p>
+
+            <div class="plan-info">
+                <div class="plan-item">
+                    <span class="plan-label">Max Workspace:</span>
+                    <span>{{ plan.maxWorkspace }}</span>
+                </div>
+                <div class="plan-item">
+                    <span class="plan-label">Max Projects:</span>
+                    <span>{{ plan.maxProjects }}</span>
+                </div>
+                <div class="plan-item">
+                    <span class="plan-label">Max Members:</span>
+                    <span>{{ plan.maxMembers }}</span>
+                </div>
+                <!-- <div class="plan-item">
+                    <span class="plan-label">Video Call:</span>
+                    <span>{{ plan.canUseVideoCall ? 'Allowed' : 'Not Allowed' }}</span>
+                </div> -->
+            </div>
+
             <p class="description">{{ plan.description }}</p>
             <button class="subscribe-btn" [disabled]="isButtonDisabled" (click)="subscribe(plan)">
-                {{ plan.buttonText }}
+                Choose
             </button>
         </div>
     </div>
@@ -18,14 +39,34 @@
 
 <div class="pricing-container" *ngIf="isSubscribed">
 
-    <h2 class="title">You have subscribed to the plan {{subcriptionDetails.plan}}</h2>
+    <h2 class="title">You have subscribed to the plan {{companySubscription.plan?.name}}</h2>
 
     <div class="cards">
         <div class="card">
-            <h3 class="plan-name">{{ subcriptionDetails.plan }}</h3>
+            <h3 class="plan-name">{{ companySubscription.plan?.name }}</h3>
             <p class="price">Plan valid until : </p>
-            <p class="price">{{ subcriptionDetails.currentPeriodEnd |date: 'mediumDate' }}</p>
-            <!-- <p class="description">{{ subcriptionDetails. }}</p> -->
+            <p class="price">{{ companySubscription.currentPeriodEnd |date: 'mediumDate' }}</p>
+            <p class="description">{{ companySubscription.plan?.description }}</p>
+
+            <div class="plan-info">
+                <div class="plan-item">
+                    <span class="plan-label">Max Workspace:</span>
+                    <span>{{ companySubscription.plan?.maxWorkspace }}</span>
+                </div>
+                <div class="plan-item">
+                    <span class="plan-label">Max Projects:</span>
+                    <span>{{ companySubscription.plan?.maxProjects }}</span>
+                </div>
+                <div class="plan-item">
+                    <span class="plan-label">Max Members:</span>
+                    <span>{{ companySubscription.plan?.maxMembers }}</span>
+                </div>
+                <!-- <div class="plan-item">
+                    <span class="plan-label">Video Call:</span>
+                    <span>{{ companySubscription.plan?.canUseVideoCall ? 'Allowed' : 'Not Allowed' }}</span>
+                </div> -->
+            </div>
+
         </div>
     </div>
 

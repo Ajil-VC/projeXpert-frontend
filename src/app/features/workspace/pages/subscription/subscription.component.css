@@ -89,3 +89,19 @@ button:disabled:hover {
     background-color: #ccc;
 }
 
+.plan-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.plan-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--secondary-color);
+    padding-bottom: 4px;
+}
+
+.plan-label {
+    color: var(--logo-color)
+}

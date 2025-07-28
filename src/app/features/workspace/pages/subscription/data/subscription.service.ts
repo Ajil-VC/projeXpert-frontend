@@ -20,7 +20,7 @@ export class SubscriptionService {
     return this.http.get(`${environment.apiUserUrl}stripe/session/${sessionId}`);
   }
 
-  getSubscriptionDetails(): Observable<any> {
-    return this.http.get(`${environment.apiUserUrl}subscription`);
+  getSubscriptionDetails(pageNum: number): Observable<any> {
+    return this.http.get(`${environment.apiUserUrl}subscription?page_num=${pageNum}`);
   }
 }

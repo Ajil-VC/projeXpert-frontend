@@ -6,20 +6,19 @@
                 <th>Stripe Customer ID</th>
                 <th>Subscription ID</th>
                 <th>Plan</th>
-                <th>Status</th>
+
                 <th>Billing Cycle</th>
                 <th>Current Period End</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let sub of subscriptions">
-                <td>{{ sub.companyId?.name || sub.companyId }}</td>
-                <td>{{ sub.stripeCustomerId }}</td>
-                <td>{{ sub.stripeSubscriptionId }}</td>
-                <td class="plan">{{ sub.plan }}</td>
-                <td [class]="sub.status">{{ sub.status }}</td>
-                <td>{{ sub.billingCycle }}</td>
-                <td>{{ sub.currentPeriodEnd | date: 'mediumDate' }}</td>
+            <tr *ngFor="let company of subscribedCompanies">
+                <td>{{ company.name || company.companyId }}</td>
+                <td>{{ company.stripeCustomerId }}</td>
+                <td>{{ company.stripeSubscriptionId }}</td>
+                <td class="plan">{{ company.plan?.name }}</td>
+                <td>{{ company.plan?.billingCycle }}</td>
+                <td>{{ isExpired(company?.currentPeriodEnd) }}</td>
             </tr>
         </tbody>
     </table>

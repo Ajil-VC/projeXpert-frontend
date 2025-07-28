@@ -105,6 +105,7 @@ export class SidebarComponent {
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/admin/dashboard', active: false },
     { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false },
     // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
+    { id: 'create-plan', icon: '	fa-tools', label: 'Create plan', route: '/admin/create-plan', active: false },
     { id: 'subscription', icon: 'fa-coins', label: 'Subscription', route: '/admin/subscription', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/admin/settings', active: false }
   ];

@@ -33,6 +33,7 @@ import { SettingsComponent } from './features/workspace/pages/settings/settings.
 import { adminResolver } from './core/guards/admin/admin.resolver';
 import { SubscriptionDetailComponent } from './features/admin/presentation/subscription/subscription.component';
 import { TeamManagementComponent } from './features/workspace/pages/team-management/team-management.component';
+import { CreatePlanComponent } from './features/admin/presentation/create-plan/create-plan.component';
 
 export const routes: Routes = [
 
@@ -72,6 +73,7 @@ export const routes: Routes = [
             { path: 'dashboard', component: AdminDashboardComponent, resolve: { companyData: adminDataResolver } },
             { path: 'companies', component: CompanyComponent, resolve: { companyData: adminDataResolver } },
             { path: 'settings', component: SettingsComponent, data: { systemRole: 'platform-admin' } },
+            { path: 'create-plan', component: CreatePlanComponent },
             { path: 'subscription', component: SubscriptionDetailComponent }
         ]
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthFlowService, AuthService } from '../../data/auth.service';
 import { RegisterUseCase } from '../../domain/auth.domain';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-create-profile',
@@ -23,7 +24,8 @@ export class CreateProfileComponent {
     private fb: FormBuilder,
     private getEmail: AuthFlowService,
     private createProfileInterface: RegisterUseCase,
-    private router: Router
+    private router: Router,
+    private toast: NotificationService
   ) {
 
     this.createProfileForm = this.fb.group({
@@ -56,13 +58,13 @@ export class CreateProfileComponent {
 
         if (res.status) {
 
-          console.log(res);
           this.router.navigate(['user/dashboard']);
 
         }
       },
       error: (err) => {
-        console.log(err);
+        this.toast.showError('Couldnt create company');
+
       }
 
     })

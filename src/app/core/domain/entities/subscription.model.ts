@@ -1,14 +1,20 @@
 
-export interface Subscription {
+export interface SubscriptionPlan {
 
     _id: string;
-    companyId: string;
-    stripeCustomerId: string;
-    stripeSubscriptionId: string;
-    plan: 'Pro' | 'Enterprise';
-    status: 'active' | 'canceled' | 'past_due' | 'other';
+    name: string;
+    price: number;
+    description?: string;
+    isActive: boolean;
     billingCycle: 'month' | 'year';
-    currentPeriodEnd: Date;
+
+    stripePriceId: string;
+    stripeProductId: string;
+
+    maxWorkspace: number;
+    maxProjects: number;
+    maxMembers: number;
+    canUseVideoCall: boolean;
 
     createdAt?: Date;
     updatedAt?: Date;

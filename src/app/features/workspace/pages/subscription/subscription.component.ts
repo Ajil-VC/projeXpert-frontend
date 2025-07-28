@@ -3,8 +3,9 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SubscriptionService } from './data/subscription.service';
 import { NotificationService } from '../../../../core/data/notification.service';
-import { Subscription } from '../../../../core/domain/entities/subscription.model';
+import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.model';
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
+import { Company } from '../../../../core/domain/entities/company.model';
 
 @Component({
   selector: 'app-subscription',
@@ -16,24 +17,31 @@ export class SubscriptionComponent {
 
   isButtonDisabled: boolean = false;
   isSubscribed: boolean = false;
-  subcriptionDetails!: Subscription;
+  companySubscription!: Company;
   isLoading: boolean = true;
+
+  currentPage = 1;
+  totalPages = 1;
+  plans: SubscriptionPlan[] = [];
 
   constructor(private subSer: SubscriptionService, private toast: NotificationService) { }
 
   ngOnInit() {
+    this.loadSubscription();
+  }
 
-    this.subSer.getSubscriptionDetails().subscribe({
+  loadSubscription(page: number = 1): void {
+    this.isLoading = true;
+    this.subSer.getSubscriptionDetails(page).subscribe({
       next: (res) => {
 
         if (res.status) {
 
-          const subscription = res.result as Subscription;
-          this.subcriptionDetails = subscription;
-          if (this.subcriptionDetails.status === 'active') {
-            this.isSubscribed = true;
-          }
+          this.companySubscription = res.result;
+          this.isSubscribed = true;
 
+        } else {
+          this.plans = res?.plans?.plans || [];
         }
         this.isLoading = false;
       },
@@ -45,28 +53,9 @@ export class SubscriptionComponent {
 
   }
 
-  plans = [
-    {
-      name: 'Pro',
-      price: '₹499/month',
-      description: 'Get access to essential project management tools to organize your tasks and collaborate with up to 3 team members.Includes 1 workspace, up to 3 projects, 10 team members',
-      color: 'glass-blue',
-      buttonText: 'Choose Pro',
-      priceId: 'price_1Riy8cPTno59Z2O1dAO1TViC'
-    },
-    {
-      name: 'Enterprise',
-      price: '₹999/month',
-      description: 'Ideal for large organizations needing full control, advanced security, and priority support. Get all Pro features plus unlimited workspaces, projects, and team members—along with custom integrations and a dedicated success team.',
-      color: 'glass-green',
-      buttonText: 'Choose Enterprise',
-      priceId: 'price_1RiyBRPTno59Z2O1G5lvje4W'
-    }
-  ];
-
-  subscribe(plan: any) {
+  subscribe(plan: SubscriptionPlan) {
     this.isButtonDisabled = true;
-    this.subSer.checkout(plan.priceId).subscribe({
+    this.subSer.checkout(plan.stripePriceId).subscribe({
       next: (res: any) => {
         if (res.url) {
           window.location.href = res.url
@@ -82,6 +71,5 @@ export class SubscriptionComponent {
       }
     })
   }
-
 
 }

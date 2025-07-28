@@ -1,0 +1,126 @@
+<div class="subscription-list-container">
+
+  <!-- Page Header -->
+  <div class="page-main-header">
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Subscription Plans</h1>
+        <p class="page-subtitle">Manage your product plans and pricing</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="openCreatePlanDialog($event)">
+          <i class="fas fa-plus"></i> Create Plan
+        </button>
+      </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search plans..." class="search-input" (input)="search($event)">
+      </div>
+
+      <div class="view-toggle">
+        <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+          <i class="fas fa-th-large"></i>
+        </button>
+        <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plans Content -->
+  <div class="plans-content">
+
+    <div *ngIf="isLoading" class="loading">
+      <!-- <i class="fas fa-spinner fa-spin"></i> Loading plans... -->
+    </div>
+
+    <div *ngIf="!isLoading && filteredSubscriptions.length === 0" class="no-results">
+      <div class="no-data-icon">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <h3>No plans found</h3>
+      <p>Try adjusting your search criteria</p>
+      <button class="btn btn-primary mt-3" (click)="openCreatePlanDialog($event)">
+        Create New Plan
+      </button>
+    </div>
+
+    <!-- Grid View -->
+    <div *ngIf="!isLoading && viewMode === 'grid'" class="plans-grid">
+      <div *ngFor="let plan of filteredSubscriptions" class="plan-card">
+        <div class="plan-header">
+          <h3 class="plan-name">{{ plan.name }}</h3>
+          <label class="toggle-switch">
+            <input type="checkbox" [checked]="plan.isActive" (change)="onToggleChange($event,plan)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="plan-price">
+          {{ plan.price | currency: 'INR' }} / {{ plan.billingCycle }}
+        </div>
+
+        <div class="plan-info">
+          <div class="plan-item">
+            <span class="plan-label">Max Workspace:</span>
+            <span>{{ plan.maxWorkspace }}</span>
+          </div>
+          <div class="plan-item">
+            <span class="plan-label">Max Projects:</span>
+            <span>{{ plan.maxProjects }}</span>
+          </div>
+          <div class="plan-item">
+            <span class="plan-label">Max Members:</span>
+            <span>{{ plan.maxMembers }}</span>
+          </div>
+          <!-- <div class="plan-item">
+            <span class="plan-label">Video Call:</span>
+            <span>{{ plan.canUseVideoCall ? 'Allowed' : 'Not Allowed' }}</span>
+          </div> -->
+        </div>
+        <p class="plan-description">{{ plan.description || 'No description available.' }}</p>
+        <div class="plan-actions">
+          <button class="icon-action danger" (click)="deletePlan($event, plan)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div *ngIf="!isLoading && viewMode === 'list'" class="plans-list">
+      <table class="plans-table">
+        <thead>
+          <tr>
+            <th>Plan Name</th>
+            <th>Price</th>
+            <th>Interval</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let plan of filteredSubscriptions">
+            <td>{{ plan.name }}</td>
+            <td>{{ plan.price | currency: 'INR' }}</td>
+            <td>{{ plan.billingCycle }}</td>
+            <td>
+              <div class="table-actions">
+                <button class="icon-action danger" (click)="deletePlan($event, plan)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
