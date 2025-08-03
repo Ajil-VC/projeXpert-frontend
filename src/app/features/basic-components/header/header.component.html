@@ -13,7 +13,7 @@
       <img src="assets/icons/Projexpert.png" alt="">
     </div>
 
-    <nav class="main-nav" *ngIf="canActivateNavbar()">
+    <nav class="main-nav" *ngIf="isCompanyUser()">
       <ul>
 
         <li class="dropdown">
@@ -116,7 +116,7 @@
             </div>
           </div>
           <div class="dropdown-divider"></div>
-          <a href="javascript:void(0)">Profile Settings</a>
+          <a [routerLink]="[isCompanyUser() ? '/user/settings' : '/admin/settings']">Profile Settings</a>
           <!-- <a href="javascript:void(0)">Account Settings</a>
           <a href="javascript:void(0)">Subscription Plan</a> -->
           <div class="dropdown-divider"></div>

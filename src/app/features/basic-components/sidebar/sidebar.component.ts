@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/data/auth.service';
 import { LayoutService } from '../../../shared/services/layout.service';
@@ -8,6 +8,8 @@ import { SharedService } from '../../../shared/services/shared.service';
 import { User } from '../../../core/domain/entities/user.model';
 import { NotificationService } from '../../../core/data/notification.service';
 import { ProjectDataService } from '../../../shared/services/project-data.service';
+
+import { LoaderService } from '../../../core/data/loader.service';
 
 interface MenuItem {
   id: string,
@@ -19,10 +21,12 @@ interface MenuItem {
 
 
 @Component({
+
   selector: 'app-sidebar',
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
+
 })
 export class SidebarComponent {
 
@@ -30,12 +34,15 @@ export class SidebarComponent {
   public currentProjectName: string = '';
   private currentProject!: Project;
   menuItems: MenuItem[] = [];
+  isProjectSelected!: boolean;
+  @Output() response = new EventEmitter();
 
   constructor(
     private authSer: AuthService,
     private shared: SharedService,
     private toast: NotificationService,
-    private projSer: ProjectDataService
+    private projSer: ProjectDataService,
+    private loadSer: LoaderService
   ) {
 
   }
@@ -53,11 +60,13 @@ export class SidebarComponent {
       this.shared.currentPro$.subscribe({
         next: (res: any) => {
           if (!res) {
-            this.currentProjectName = '_________';
+            this.currentProjectName = 'Select a project';
+            this.isProjectSelected = false;
             return;
           }
           this.currentProject = res as Project;
           this.currentProjectName = (res as Project).name as string;
+          this.isProjectSelected = true;
           return;
         },
         error: (err) => {
@@ -69,7 +78,8 @@ export class SidebarComponent {
         next: (res) => {
           if (res._id === this.currentProject._id) {
 
-            this.currentProjectName = '_________';
+            this.currentProjectName = 'Select a project';
+            this.isProjectSelected = false;
           }
         }
       })
@@ -94,7 +104,7 @@ export class SidebarComponent {
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false },
     // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
-    // { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/meeting', active: false },
+    { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/user/meeting', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
     { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/user/teams-members', active: false },
     { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false },
@@ -115,6 +125,8 @@ export class SidebarComponent {
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+    this.response.emit(this.isCollapsed);
+    this.loadSer.changeValue(this.isCollapsed);
   }
 
 

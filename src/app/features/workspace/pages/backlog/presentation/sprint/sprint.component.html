@@ -19,8 +19,7 @@
       <span class="count">0</span>
       <button class="start-sprint-button" *ngIf="sprint.status === 'not-started'" (click)="startSprint()">Start
         sprint</button>
-      <button class="start-sprint-button" *ngIf="sprint.status === 'active'" (click)="completeSprint()">Complete
-        sprint</button>
+      <button class="start-sprint-button" *ngIf="sprint.status === 'active'" (click)="completeSprint()">GoTo Board</button>
       <button class="more-options-button">
         <i class="fa fa-ellipsis-h"></i>
       </button>

@@ -91,7 +91,7 @@ export class CreateBacklogComponent implements OnChanges {
     this.backlogSer.addIssue$.subscribe({
       next: (res: Task) => {
         if (!res.sprintId) {
-          this.backlogs.push(res);
+          this.backlogs.unshift(res);
           this.filteredIssues();
         }
 

@@ -16,7 +16,7 @@ import { LoaderComponent } from '../../../../../../core/presentation/loader/load
 
 @Component({
   selector: 'app-backlog',
-  imports: [CommonModule, BacklogHeaderComponent, EpicsComponent, SprintComponent, CreateBacklogComponent, LoaderComponent],
+  imports: [CommonModule, EpicsComponent, SprintComponent, CreateBacklogComponent, LoaderComponent],
   templateUrl: './backlog.component.html',
   styleUrl: './backlog.component.css'
 })
@@ -131,18 +131,6 @@ export class BacklogComponent {
     })
 
     this.refreshBacklogView();
-
-
-    //Here Im adding sprint into the backlog on adding sprint 
-    // this.backlogSer.addSprint$.subscribe({
-    //   next: (res: Sprint) => {
-
-    //     this.sprints = [...this.sprints, res];;
-    //     this.sprintIds = [...this.sprintIds, res._id as string];
-    //     this.cdRef.detectChanges();
-    //   }
-
-    // });
 
   }
 

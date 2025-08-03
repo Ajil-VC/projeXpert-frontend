@@ -1,12 +1,12 @@
 <div class="layout">
 
     <app-header [systemRole]="systemRole"></app-header>
-    <div class="main-content">
+    <app-sidebar [systemRole]="systemRole" (response)="handleIsCollapsed($event)"></app-sidebar>
 
-        <app-sidebar [systemRole]="systemRole"></app-sidebar>
+    <div class="main-content" [ngClass]="{'collapsed':isCollapsed}">
         <main class="content">
             <router-outlet></router-outlet>
         </main>
-
     </div>
+
 </div>

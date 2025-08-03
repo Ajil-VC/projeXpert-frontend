@@ -1,0 +1,119 @@
+<div class="meeting-list-container">
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>📅 Upcoming Meetings</h1>
+                <p class="header-subtitle">Manage your scheduled group calls and meetings</p>
+            </div>
+            <button class="create-room-btn" (click)="onCreateRoom()">
+                <i class="icon-plus"></i>
+                Create New Room
+            </button>
+        </div>
+        <!-- Search and Filter Section -->
+        <div class="controls-section">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search meetings, members, or descriptions..."
+                    [(ngModel)]="searchQuery" (input)="onSearch($event)">
+                <div class="search-icon">🔍</div>
+            </div>
+    
+      
+        </div>
+    </div>
+
+    <!-- Loading State -->
+     <app-loader [isLoading]="isLoading"></app-loader>
+
+    <!-- Meetings Grid -->
+    <div class="meetings-grid" *ngIf="!isLoading">
+        <!-- No meetings message -->
+        <div class="no-meetings" *ngIf="filteredMeetings.length === 0 && !isLoading">
+            <div class="no-meetings-icon">📭</div>
+            <h3>No meetings found</h3>
+            <p *ngIf="searchQuery.trim() !== ''">
+                No meetings match your search for "{{ searchQuery }}"
+            </p>
+            <p *ngIf="searchQuery.trim() === ''">
+                You don't have any meetings scheduled yet.
+            </p>
+            <button class="create-room-btn secondary" (click)="onCreateRoom()">
+                Create Your First Meeting
+            </button>
+        </div>
+
+        <!-- Meeting Cards -->
+        <div class="meeting-card" *ngFor="let meeting of filteredMeetings">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="meeting-status" [class]="meeting.status">
+                    {{ meeting.status | titlecase }}
+                </div>
+                <div class="card-actions">
+                    <!-- <button class="action-btn edit" (click)="editMeeting(meeting)"
+                        [attr.aria-label]="'Edit ' + meeting.roomName">
+                        ✏️
+                    </button> -->
+                    <button class="action-btn delete" (click)="deleteMeeting(meeting)"
+                        [attr.aria-label]="'Delete ' + meeting.roomName">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Meeting Info -->
+            <div class="meeting-info">
+                <h3 class="meeting-title">{{ meeting.roomName }}</h3>
+
+                <div class="meeting-datetime">
+                    <div class="datetime-item">
+                        <span class="datetime-icon">📅</span>
+                        <span class="datetime-text">{{ formatDate(meeting.meetingDate) }}</span>
+                    </div>
+                    <div class="datetime-item">
+                        <span class="datetime-icon">⏰</span>
+                        <span class="datetime-text">{{ formatTime(meeting.meetingTime) }}</span>
+                    </div>
+                    <div class="time-until">
+                        {{ getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) }}
+                    </div>
+                </div>
+
+                <div class="meeting-description" *ngIf="meeting.description">
+                    <p>{{ meeting.description }}</p>
+                </div>
+
+                <!-- Meeting Members -->
+                <div class="meeting-members">
+                    <div class="members-label">Participants ({{ meeting.members.length }})</div>
+                    <div class="members-list">
+                        <div class="member-avatar" *ngFor="let member of meeting.members; let i = index"
+                            [class.overflow]="i >= 4" [attr.title]="member.name + ' - ' + member.email">
+                            <span *ngIf="i < 4">{{ getUserInitials(member.email) }}</span>
+                            <span *ngIf="i === 4 && meeting.members.length > 4" class="overflow-count">
+                                +{{ meeting.members.length - 4 }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meeting Meta -->
+                <div class="meeting-meta">
+                    <span class="created-by">Created by {{ meeting.createdBy.email }}</span>
+                    <span class="created-date">{{ formatDate(meeting?.createdAt) }}</span>
+                </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer">
+                <button class="join-btn" (click)="joinMeeting(meeting)">
+                    <i class="icon-video"></i>
+                    Join Meeting
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <app-pagination></app-pagination> -->
+</div>

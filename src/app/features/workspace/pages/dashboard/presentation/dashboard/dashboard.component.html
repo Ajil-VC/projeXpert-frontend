@@ -1,87 +1,94 @@
 <!-- dashboard.component.html -->
 <div class="dashboard-container">
-  
-    <!-- Summary Cards -->
-    <div class="summary-cards">
-      <div class="card" *ngFor="let card of summaryCards">
 
-        <!-- <div class="card-header" [ngClass]="'card-color-' + card.color">
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="card" *ngFor="let card of summaryCards">
+
+      <!-- <div class="card-header" [ngClass]="'card-color-' + card.color">
             <i class="fas {{card.icon}}"></i>
           </div> -->
-          
-        <div class="card-body">
-          <h2 class="card-count">{{card.count}}</h2>
-          <div class="card-label">{{card.label}}</div>
-          <div class="card-sublabel">{{card.sublabel}}</div>
-        </div>
+
+      <div class="card-body">
+        <h2 class="card-count">{{card.count}}</h2>
+        <div class="card-label">{{card.label}}</div>
+        <div class="card-sublabel">{{card.sublabel}}</div>
       </div>
     </div>
-  
-    <div class="dashboard-content">
-      <!-- Epic Progress Section -->
-      <div class="dashboard-section">
-        <div class="section-header">
-          <h2>Epic progress</h2>
-          <div class="section-subtitle">See how your epics are progressing at a glance. <a>View all epics</a></div>
-        </div>
-  
-        <div class="section-content">
-          <div class="status-legend">
-            <span class="status-item">
-              <i class="fas fa-circle status-done"></i> Done
-            </span>
-            <span class="status-item">
-              <i class="fas fa-circle status-progress"></i> In progress
-            </span>
-            <span class="status-item">
-              <i class="fas fa-circle status-todo"></i> To do
-            </span>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Epic Progress Section -->
+    <div class="dashboard-section">
+      <div class="section-header">
+        <h2>Epic progress</h2>
+        <div class="section-subtitle">See how your epics are progressing at a glance. </div>
+      </div>
+
+      <div class="section-content">
+        <!-- <div class="status-legend">
+          <span class="status-item">
+            <i class="fas fa-circle status-done"></i> Done
+          </span>
+          <span class="status-item">
+            <i class="fas fa-circle status-progress"></i> In progress
+          </span>
+          <span class="status-item">
+            <i class="fas fa-circle status-todo"></i> To do
+          </span>
+        </div> -->
+
+        <div class="epic-list">
+          <div class="epic-item" *ngFor="let epic of epicItems">
+            <div class="epic-header">
+              <span class="epic-id"><i class="fas fa-bolt"></i> {{epic.title}}</span>
+              <!-- <span class="epic-title"></span> -->
+            </div>
+            <div class="epic-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="epic.progress"></div>
+              </div>
+            </div>
           </div>
-  
-          <div class="epic-list">
-            <div class="epic-item" *ngFor="let epic of epicItems">
-              <div class="epic-header">
-                <span class="epic-id"><i class="fas fa-bolt"></i> {{epic.title}}</span>
-                <!-- <span class="epic-title"></span> -->
+
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="dashboard-section">
+      <div class="section-header">
+        <h2>Recent activity</h2>
+        <div class="section-subtitle">Stay up to date with what's happening across the project.</div>
+      </div>
+
+      <div class="section-content">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of activityItems">
+            <div class="activity-avatar">
+              <div class="avatar">
+                <img *ngIf="profilePic(activity.user)" src="{{profilePic(activity.user)}}" alt="">
+                <h3 *ngIf="profilePic(activity.user)">{{activity.user.email.charAt(0).toUpperCase()}}</h3>
+
               </div>
-              <div class="epic-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" [style.width.%]="epic.progress"></div>
-                </div>
+            </div>
+            <div class="activity-content">
+              <div class="activity-text">
+                <span class="user-name">{{activity.user.email}}</span> {{activity.action}}
+                <span class="target">{{activity.target}}</span>
               </div>
+              <div class="activity-time">{{activity.createdAt | date: 'mediumDate'}}</div>
             </div>
           </div>
         </div>
       </div>
-  
-      <!-- Recent Activity Section -->
-      <div class="dashboard-section">
-        <div class="section-header">
-          <h2>Recent activity</h2>
-          <div class="section-subtitle">Stay up to date with what's happening across the project.</div>
-        </div>
-  
-        <div class="section-content">
-          <div class="activity-list">
-            <div class="activity-item" *ngFor="let activity of activityItems">
-              <div class="activity-avatar">
-                <div class="avatar">{{activity.user.initials}}</div>
-              </div>
-              <div class="activity-content">
-                <div class="activity-text">
-                  <span class="user-name">{{activity.user.name}}</span> {{activity.action}} 
-                  <span class="target">{{activity.target}}</span>
-                </div>
-                <div class="activity-time">{{activity.timestamp}}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  
-    <!-- Today's Schedule Section -->
-    <!-- <div class="dashboard-section schedule-section">
+  </div>
+
+  <!-- Today's Schedule Section -->
+  <!-- <div class="dashboard-section schedule-section">
       <div class="section-header">
         <h2>Today's Schedule</h2>
         <div class="section-actions">
@@ -114,4 +121,4 @@
         </div>
       </div>
     </div> -->
-  </div>
+</div>

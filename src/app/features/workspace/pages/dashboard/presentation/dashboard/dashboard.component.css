@@ -21,7 +21,7 @@
     margin: 0;
     font-size: 24px;
     font-weight: 600;
-    color : white
+    color: white
 }
 
 .dashboard-header .dashboard-actions {
@@ -35,7 +35,7 @@
     margin-left: 10px;
     cursor: pointer;
     background-color: var(--text-color);
-    color : var(--dark-gray);
+    color: var(--dark-gray);
 }
 
 .dashboard-header .dashboard-actions .action-button:hover {
@@ -92,7 +92,7 @@
     font-size: 28px;
     font-weight: 700;
     margin: 0 0 5px 0;
-    color : white;
+    color: white;
 }
 
 .summary-cards .card .card-body .card-label {
@@ -122,7 +122,7 @@
 
 .dashboard-section .section-header {
     margin-bottom: 20px;
-    color : white
+    color: white
 }
 
 .dashboard-section .section-header h2 {
@@ -215,7 +215,7 @@
 }
 
 .epic-list .epic-item .epic-header .epic-title {
-    color : white;
+    color: white;
     font-weight: 500;
 }
 
@@ -252,6 +252,14 @@
     justify-content: center;
     font-size: 14px;
     font-weight: 600;
+    overflow: hidden;
+}
+
+.activity-list .activity-item .activity-avatar .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .activity-list .activity-item .activity-content {
@@ -261,7 +269,7 @@
 .activity-list .activity-item .activity-content .activity-text {
     margin-bottom: 5px;
     line-height: 1.4;
-    color : var(--medium-gray);
+    color: var(--medium-gray);
 }
 
 .activity-list .activity-item .activity-content .activity-text .user-name {
@@ -296,7 +304,7 @@
 
 .schedule-list .schedule-item .schedule-header .schedule-title {
     font-weight: 500;
-    color : var(--light-gray)
+    color: var(--light-gray)
 }
 
 .schedule-list .schedule-item .schedule-header .toggle-button {

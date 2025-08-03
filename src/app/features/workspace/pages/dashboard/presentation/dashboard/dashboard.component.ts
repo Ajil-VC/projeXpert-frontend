@@ -7,6 +7,8 @@ import { NotificationService } from '../../../../../../core/data/notification.se
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Task } from '../../../../../../core/domain/entities/task.model';
+import { Activity } from '../../../../../../core/domain/entities/activity.model';
+import { User } from '../../../../../../core/domain/entities/user.model';
 
 
 @Component({
@@ -17,6 +19,14 @@ import { Task } from '../../../../../../core/domain/entities/task.model';
 })
 export class DashboardComponent {
 
+
+  profilePic(user: User) {
+
+    if (user.profilePicUrl?.url) {
+      return user.profilePicUrl?.url;
+    }
+    return null;
+  }
 
   summaryCards: SummaryCard[] = [
     {
@@ -58,43 +68,7 @@ export class DashboardComponent {
   ];
 
   epicItems: Task[] = [];
-
-  activityItems: ActivityItem[] = [
-    {
-      id: '1',
-      user: {
-        name: 'Don Bold',
-        avatar: 'assets/avatars/don.jpg',
-        initials: 'DB'
-      },
-      action: 'changed the Status from To Do to Done on',
-      target: 'Order Management',
-      timestamp: 'about 1 hour ago'
-    },
-    {
-      id: '2',
-      user: {
-        name: 'Don Bold',
-        avatar: 'assets/avatars/don.jpg',
-        initials: 'DB'
-      },
-      action: 'changed the Status from To Do to Done on',
-      target: 'User Roles',
-      timestamp: 'about 2 hours ago'
-    },
-    {
-      id: '3',
-      user: {
-        name: 'Claire Di',
-        avatar: 'assets/avatars/claire.jpg',
-        initials: 'CD'
-      },
-      action: 'changed the Assignee to',
-      target: 'Don Bold',
-      timestamp: 'about 2 hours ago'
-    }
-  ];
-
+  activityItems: Activity[] = [];
   scheduleItems: ScheduleItem[] = [
     {
       id: '1',
@@ -169,6 +143,17 @@ export class DashboardComponent {
       },
       error: (err) => {
         this.toast.showError('Couldnt initialize dashboard.');
+      }
+    });
+
+    this.dashboardSer.getActivities().subscribe({
+      next: (res) => {
+
+        this.activityItems = res.activities;
+
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt retrieve the activities');
       }
     })
 

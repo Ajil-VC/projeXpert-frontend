@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
+import { LoaderService } from '../../data/loader.service';
 
 @Component({
   selector: 'app-loader',
@@ -10,4 +11,15 @@ import { Component, Input } from '@angular/core';
 export class LoaderComponent {
 
   @Input() isLoading = false;
+  isCollapsed!: boolean;
+
+  constructor(private loadSer: LoaderService) {
+
+    effect(() => {
+
+      this.isCollapsed = this.loadSer.isCollapsed();
+    
+    })
+  }
+
 }

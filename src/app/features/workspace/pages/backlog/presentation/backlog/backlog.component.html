@@ -1,13 +1,16 @@
 <app-loader [isLoading]="isLoading"></app-loader>
 
 <div class="app-container">
-    <app-backlog-header></app-backlog-header>
+    <!-- <app-backlog-header></app-backlog-header> -->
 
     <div class="main-content" *ngIf="isProjectSelected">
         <app-epics [epics]="epics"></app-epics>
         <div class="board-container backlog-content">
-            <app-sprint *ngFor="let sprint of sprints ; trackBy:trackBySprintId" [sprint]="sprint"
-                [allSprintIds]="sprintIds" (itemDropped)="handleDrop($event)"></app-sprint>
+
+            <div class="sprint-container" >
+                <app-sprint *ngFor="let sprint of sprints ; trackBy:trackBySprintId" [sprint]="sprint"
+                    [allSprintIds]="sprintIds" (itemDropped)="handleDrop($event)"></app-sprint>
+            </div>
             <app-create-backlog [backlogs]="backlogs" [allSprintIds]="sprintIds"
                 (sprintCreated)="onSprintCreated($event)"></app-create-backlog>
         </div>

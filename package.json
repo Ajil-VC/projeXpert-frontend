@@ -24,6 +24,7 @@
     "@ngrx/entity": "^19.1.0",
     "@ngrx/store": "^19.1.0",
     "@ngrx/store-devtools": "^19.1.0",
+    "@zegocloud/zego-uikit-prebuilt": "^2.15.1",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.8.1",

@@ -1,21 +1,30 @@
 .layout {
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  background-color: var(--background-color);
+
+  height: 100vh;
 
 }
 
 .main-content {
-  flex-grow: 1;
-  display: flex;
   margin-top: 60px;
+  margin-left: 250px;
+  height: calc(100vh - 60px);
+  min-width: calc(100vw - 250px);
+  
+  position: fixed;
 
+  right:0;
+  transition: min-width 0.3s ease;
 }
 
 .content {
-  flex-grow: 1;
-  padding: 1rem;
-  overflow-y: auto;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 20px;
+}
+
+.collapsed {
+
+  margin-left: 70px;
+  min-width: calc(100vw - 70px);
 
 }

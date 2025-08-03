@@ -80,7 +80,8 @@ export class BacklogService {
   }
 
   startSprint(sprintId: string, sprintName: string, duration: number, startDate: Date): Observable<any> {
-    return this.http.put(`${environment.apiUserUrl}start-sprint`, { sprintId, sprintName, duration, startDate });
+    const projectId = this.layoutSer.getProjectId();
+    return this.http.put(`${environment.apiUserUrl}start-sprint`, { sprintId, sprintName, duration, startDate, projectId });
   }
 
 }

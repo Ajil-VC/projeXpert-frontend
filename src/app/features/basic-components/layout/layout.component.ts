@@ -7,17 +7,19 @@ import { SharedService } from '../../../shared/services/shared.service';
 import { SocketService } from '../../../shared/services/socket.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IncomingCallComponent } from '../../workspace/pages/video-call/incoming-call/incoming-call.component';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-layout',
-  imports: [SidebarComponent, HeaderComponent, RouterOutlet],
+  imports: [SidebarComponent, HeaderComponent, RouterOutlet, CommonModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
 
   systemRole!: string;
+  isCollapsed!: boolean;
   constructor(
     private shared: SharedService,
     private socketService: SocketService,
@@ -62,6 +64,10 @@ export class LayoutComponent {
       }
     });
 
+  }
+
+  handleIsCollapsed(response: boolean) {
+    this.isCollapsed = response;
   }
 
 

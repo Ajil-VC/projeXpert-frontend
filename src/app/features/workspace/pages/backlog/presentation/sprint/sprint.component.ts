@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
-import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
+import { Sprint, SprintTaskGroup } from '../../../../../../core/domain/entities/sprint.model';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { IssueRowComponent } from "../issue-row/issue-row.component";
 import { Team } from '../../../../../../core/domain/entities/team.model';
@@ -13,6 +13,8 @@ import { SprintDialogComponent } from '../sprint-dialog/sprint-dialog.component'
 import { Router } from '@angular/router';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
+import { NotificationService } from '../../../../../../core/data/notification.service';
+import { SprintCompleteComponent } from '../../../kanban/presentation/sprint-complete/sprint-complete.component';
 
 @Component({
   selector: 'app-sprint',
@@ -45,7 +47,9 @@ export class SprintComponent implements OnChanges {
   constructor(private backlogSer: BacklogService,
     private dialog: MatDialog,
     private router: Router,
-    private shared: SharedService) {
+    private shared: SharedService,
+    private toast: NotificationService
+  ) {
 
   }
 
@@ -91,12 +95,12 @@ export class SprintComponent implements OnChanges {
               foundInBacklog.sprintId = res.result.sprintId;
 
             }
-            
+
             this.filteredIssues();
           }
         },
         error: (err) => {
-          console.error('Something went wrong while updating moved task.');
+          this.toast.showError('Something went wrong while updating moved task.');
         }
       })
 
@@ -146,7 +150,7 @@ export class SprintComponent implements OnChanges {
         this.filteredIssues();
       },
       error: (err) => {
-        console.error('Error occured while getting selected epics', err);
+        this.toast.showError('Error occured while getting selected epics');
       }
     });
 
@@ -223,6 +227,9 @@ export class SprintComponent implements OnChanges {
     }
   }
 
+  completeSprint(){
+    this.router.navigate(['user/board']);
+  }
 
   toggleSprintCollapse(): void {
     // Logic to collapse/expand sprint section
@@ -252,7 +259,12 @@ export class SprintComponent implements OnChanges {
               this.router.navigate(['/user/board']);
             },
             error: (err) => {
-              console.error('something went wrong while starting sprint', err);
+
+              if (err.statusText === "Conflict") {
+                this.toast.showError(err.error['message'] || 'Conflict');
+                return;
+              }
+              this.toast.showError('something went wrong while starting sprint');
             }
           })
         }
@@ -260,10 +272,7 @@ export class SprintComponent implements OnChanges {
     })
   }
 
-  completeSprint() {
-    console.log('wORKING');
-  }
-
+ 
 
   handleSelectedIssue(issueId: string) {
 

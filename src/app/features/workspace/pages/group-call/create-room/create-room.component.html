@@ -1,0 +1,141 @@
+<div class="room-creation-container">
+    <div class="room-creation-card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="icon-video"></i>
+                Create Group Call Room
+            </h2>
+            <p class="card-subtitle">Set up your meeting room with all the details</p>
+        </div>
+
+        <form [formGroup]="roomForm" (ngSubmit)="onSubmit()" class="room-form">
+            <!-- Room Name Field -->
+            <div class="form-group">
+                <label for="roomName" class="form-label">
+                    Room Name <span class="required">*</span>
+                </label>
+                <input type="text" id="roomName" formControlName="roomName" class="form-input"
+                    [class.error]="isFieldInvalid('roomName')" placeholder="Enter room name (e.g., Team Daily Standup)"
+                    maxlength="50">
+                <div class="error-message" *ngIf="isFieldInvalid('roomName')">
+                    {{ getFieldError('roomName') }}
+                </div>
+            </div>
+
+            <!-- Date and Time Row -->
+            <div class="datetime-row">
+                <!-- Meeting Date Field -->
+                <div class="form-group flex-1">
+                    <label for="meetingDate" class="form-label">
+                        Meeting Date <span class="required">*</span>
+                    </label>
+                    <input type="date" id="meetingDate" formControlName="meetingDate" class="form-input"
+                        [class.error]="isFieldInvalid('meetingDate')" [min]="minDate">
+                    <div class="error-message" *ngIf="isFieldInvalid('meetingDate')">
+                        {{ getFieldError('meetingDate') }}
+                    </div>
+                </div>
+
+                <!-- Meeting Time Field -->
+                <div class="form-group flex-1">
+                    <label for="meetingTime" class="form-label">
+                        Meeting Time <span class="required">*</span>
+                    </label>
+                    <input type="time" id="meetingTime" formControlName="meetingTime" class="form-input"
+                        [class.error]="isFieldInvalid('meetingTime')"
+                        [min]="roomForm.get('meetingDate')?.value === minDate.split('T')[0] ? minTime : '00:00'">
+                    <div class="error-message" *ngIf="isFieldInvalid('meetingTime')">
+                        {{ getFieldError('meetingTime') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label for="description" class="form-label">
+                    Description
+                </label>
+                <textarea id="description" formControlName="description" class="form-textarea"
+                    [class.error]="isFieldInvalid('description')"
+                    placeholder="Add meeting agenda, notes, or any additional information..." rows="4"
+                    maxlength="500"></textarea>
+                <div class="character-count">
+                    {{ roomForm.get('description')?.value?.length || 0 }}/500 characters
+                </div>
+                <div class="error-message" *ngIf="isFieldInvalid('description')">
+                    {{ getFieldError('description') }}
+                </div>
+            </div>
+
+            <!-- Members Selection Field -->
+            <div class="form-group">
+                <label for="memberSearch" class="form-label">
+                    Meeting Members <span class="required">*</span>
+                </label>
+
+                <!-- Selected Members Display -->
+                <div class="selected-members" *ngIf="selectedMembers.length > 0">
+                    <div class="member-chip" *ngFor="let member of selectedMembers">
+                    
+                        <div class="member-info">
+                            <span class="member-email">{{ member.email }}</span>
+                        </div>
+                        <button type="button" class="remove-member" (click)="removeMember(member._id)"
+                            [attr.aria-label]="'Remove ' + member.name">×
+                            
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Member Search Input -->
+                <div class="search-container">
+                    <input type="text" id="memberSearch" class="form-input search-input"
+                        [class.error]="isFieldInvalid('members')" [(ngModel)]="searchQuery" [ngModelOptions]="{ standalone: true }"
+                        (input)="onSearchMembers($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()"
+                        placeholder="Search and add team members..." autocomplete="off">
+                    <div class="search-icon">🔍</div>
+
+                    <!-- User Dropdown -->
+                    <div class="user-dropdown" *ngIf="showUserDropdown && filteredUsers.length > 0">
+                        <div class="user-option" *ngFor="let user of filteredUsers"
+                            [class.selected]="isMemberSelected(user)" (click)="addMember(user)">
+                           
+                            <div class="user-info">
+                                <div class="user-name">{{ user.email }}</div>
+
+                            </div>
+                            <div class="user-status" *ngIf="isMemberSelected(user)">✓</div>
+                        </div>
+                    </div>
+
+                    <!-- No results message -->
+                    <div class="user-dropdown no-results"
+                        *ngIf="showUserDropdown && filteredUsers.length === 0 && searchQuery.trim() !== ''">
+                        <div class="no-results-message">
+                            <span>No users found for "{{ searchQuery }}"</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="members-count" *ngIf="selectedMembers.length > 0">
+                    {{ selectedMembers.length }} member{{ selectedMembers.length === 1 ? '' : 's' }} selected
+                </div>
+                <div class="error-message" *ngIf="isFieldInvalid('members')">
+                    {{ getFieldError('members') }}
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="roomForm.invalid || isSubmitting">
+                    <span *ngIf="isSubmitting" class="spinner"></span>
+                    <i *ngIf="!isSubmitting" class="icon-plus"></i>
+                    {{ isSubmitting ? 'Creating Room...' : 'Create Room' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

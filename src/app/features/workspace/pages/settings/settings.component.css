@@ -1,7 +1,5 @@
 /* Settings Container */
 .settings-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   padding: 2rem;
   display: flex;
   justify-content: center;

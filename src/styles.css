@@ -47,11 +47,11 @@ body {
 
 .make-center {
     width: 100%;
-    ;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    ;
+
 }
 
 
@@ -69,6 +69,8 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: var(--background-color);
+
 }
 
 
@@ -96,4 +98,84 @@ body {
 .toast-info {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6) !important;
     border-radius: 6px;
+}
+
+
+
+
+
+/* Header style */
+.header-section {
+    background: var(--darkish-gray);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-title h1 {
+    margin: 0 0 8px 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-subtitle {
+    margin: 0;
+    color: #64748b;
+    font-size: 16px;
+}
+
+.controls-section {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin-top: 15px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-container {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 12px;
+    font-size: 16px;
+    background: var(--darkish-gray);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 18px;
 }

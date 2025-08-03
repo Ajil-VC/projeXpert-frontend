@@ -17,7 +17,8 @@ export class CommentService {
   }
 
   addComment(comment: Comment): Observable<any> {
-    return this.http.post(`${environment.apiUserUrl}add-comment`, { taskId: comment.taskId, content: comment.content });
+    const projectId = localStorage.getItem('projectId');
+    return this.http.post(`${environment.apiUserUrl}add-comment`, { taskId: comment.taskId, content: comment.content, projectId });
   }
 
 }

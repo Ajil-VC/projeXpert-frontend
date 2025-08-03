@@ -34,6 +34,8 @@ import { adminResolver } from './core/guards/admin/admin.resolver';
 import { SubscriptionDetailComponent } from './features/admin/presentation/subscription/subscription.component';
 import { TeamManagementComponent } from './features/workspace/pages/team-management/team-management.component';
 import { CreatePlanComponent } from './features/admin/presentation/create-plan/create-plan.component';
+import { GroupCallComponent } from './features/workspace/pages/group-call/group-call.component';
+import { RoomComponent } from './features/workspace/pages/group-call/room/room.component';
 
 export const routes: Routes = [
 
@@ -58,6 +60,8 @@ export const routes: Routes = [
             { path: 'board', component: KanbanComponent },
             { path: 'chat', component: ChatPageComponent },
             { path: 'video-call', component: VideoCallComponent },
+            { path: 'meeting', component: GroupCallComponent },
+            { path: 'room/:roomId', component: RoomComponent },
             { path: 'teams-members', component: TeamManagementComponent },
             { path: 'subscription', component: SubscriptionComponent },
             { path: 'success', component: SuccessComponent },

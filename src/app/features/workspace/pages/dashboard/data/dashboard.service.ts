@@ -24,7 +24,7 @@ export class DashboardService {
 
   constructor(private http: HttpClient, private toast: NotificationService) { }
 
-  getProjectStats(): Observable<projectStatType > {
+  getProjectStats(): Observable<projectStatType> {
 
     const projectId = localStorage.getItem('projectId');
     if (!projectId) {
@@ -32,5 +32,11 @@ export class DashboardService {
       return new Observable<projectStatType>(observer => observer.complete());
     }
     return this.http.get<projectStatType>(`${environment.apiUserUrl}dashboard/${projectId}`);
+  }
+
+  getActivities(): Observable<any> {
+
+    const projectId = localStorage.getItem('projectId');
+    return this.http.get(`${environment.apiUserUrl}activity?projectId=${projectId}`);
   }
 }

@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, 
 import { AuthService } from '../../auth/data/auth.service';
 import { User } from '../../../core/domain/entities/user.model';
 import { Workspace } from '../../../core/domain/entities/workspace.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LayoutService } from '../../../shared/services/layout.service';
 import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
@@ -19,7 +19,7 @@ import { ProjectDataService } from '../../../shared/services/project-data.servic
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -74,7 +74,7 @@ export class HeaderComponent {
     return this.notifications.filter(note => note.read == false).length;
   }
 
-  canActivateNavbar() {
+  isCompanyUser() {
     return this.systemRole === 'company-user';
   }
 

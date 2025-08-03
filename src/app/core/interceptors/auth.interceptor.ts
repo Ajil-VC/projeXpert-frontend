@@ -89,6 +89,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status === 404 || error.status === 400) {
         userFriendlyMessage = error.error?.message || 'Something went wrong. Please try again.';
         notificationService.showError(userFriendlyMessage);
+      } else if (error.status === 409) {
+        return throwError(() => error);
       } else if (error.status >= 500) {
         userFriendlyMessage = 'Server error. Please try again later.';
         notificationService.showError(userFriendlyMessage);
