@@ -7,7 +7,7 @@
     <a class="current-project" *ngIf="!isPlatformAdmin()">
 
       <div class="project-icon" [ngClass]="{'project-selected-icon':isProjectSelected}">
-        <h3>{{isProjectSelected ?currentProjectName.charAt(0).toLocaleUpperCase() : 'N' }}</h3>
+        <h3>{{isProjectSelected ?currentProjectName.charAt(0).toLocaleUpperCase() : '!' }}</h3>
       </div>
 
       <p *ngIf="!isCollapsed" [ngClass]="{'project-selected-text' : isProjectSelected}"> {{currentProjectName ||

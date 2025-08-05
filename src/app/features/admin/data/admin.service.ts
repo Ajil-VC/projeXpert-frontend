@@ -14,6 +14,9 @@ export class AdminService {
   companySubject = new BehaviorSubject(null);
   company$ = this.companySubject.asObservable();
 
+  getDashBoardData(): Observable<any> {
+    return this.http.get(`${environment.apiAdminUrl}dashboard`);
+  }
 
   blockOrUnblockUser(userId: string, status: boolean): Observable<any> {
     return this.http.put(`${environment.apiAdminUrl}change-user-status`, { userId, status });

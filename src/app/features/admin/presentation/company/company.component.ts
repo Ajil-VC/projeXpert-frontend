@@ -6,14 +6,54 @@ import { Company } from '../../../../core/domain/entities/company.model';
 import { User } from '../../../../core/domain/entities/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCompanyModalComponent } from './edit-company-modal/edit-company-modal.component';
+import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
+import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
+import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 
 @Component({
   selector: 'app-company',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ContentHeaderComponent],
   templateUrl: './company.component.html',
   styleUrl: './company.component.css'
 })
 export class CompanyComponent {
+
+
+  headerConfig: HeaderConfig = {
+
+    title: 'Companies',
+    icon: '🏛️',
+    subtitle: 'Manage all your companies from one place',
+    placeHolder: 'Search companies...',
+    searchQuery: '',
+    buttons: [
+      { type: 'view' }
+    ]
+
+  }
+
+  handleSearchEvent(event: string) {
+
+    this.searchTerm = event;
+    this.fileteredCompanies();
+
+  }
+  handlebuttonClick(btn: ButtonType) {
+    if (btn.triggeredFor === this.headerConfig.title) {
+      if (btn.type === 'main') {
+
+      } else if (btn.type === 'filter') {
+        if (btn.action && 'statusFilters' in btn.action) {
+          // this.toggleStatusFilter(btn.action.statusFilters)
+        }
+      } else if (btn.type === 'view') {
+        if (btn.action && 'viewMode' in btn.action && btn.action.viewMode) {
+          this.viewMode = btn.action.viewMode;
+        }
+      }
+    }
+  }
+
 
   viewMode: 'grid' | 'list' = 'grid';
   isLoading = false;
@@ -36,10 +76,6 @@ export class CompanyComponent {
 
   }
 
-  openCreateCompanyDialog() {
-
-  }
-
   fileteredCompanies() {
 
     this.companyData = this.companyDataRetrieved;
@@ -49,12 +85,6 @@ export class CompanyComponent {
         company.companyDetails.name.toLowerCase().includes(term)
       );
     }
-  }
-  search(event: any) {
-
-    this.searchTerm = event.target.value;
-    this.fileteredCompanies();
-
   }
 
   openCompany(company: any) { }

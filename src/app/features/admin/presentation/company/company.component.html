@@ -1,33 +1,11 @@
 <!-- company-list.component.html -->
 <div class="company-list-container">
-    <div class="page-header">
-        <div class="header-content">
-            <!-- <div class="path-nav">Companies</div> -->
-            <h1>Companies</h1>
-            <p class="page-subtitle">Manage all your companies from one place</p>
-        </div>
-        <div class="header-actions">
-            <!-- <button class="btn btn-primary" (click)="openCreateCompanyDialog()">
-                <i class="fas fa-plus"></i> Create Company
-            </button> -->
-        </div>
-    </div>
 
-    <div class="filters-bar">
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Search companies..." class="search-input" (input)="search($event)">
-        </div>
 
-        <div class="view-toggle">
-            <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
-                <i class="fas fa-th-large"></i>
-            </button>
-            <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
-                <i class="fas fa-list"></i>
-            </button>
-        </div>
-    </div>
+    <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
+        (buttonClicked)="handlebuttonClick($event)"></app-content-header>
+
+
 
     <div class="companies-content">
         <div *ngIf="isLoading" class="loading">
@@ -40,9 +18,7 @@
             </div>
             <h3>No companies found</h3>
             <p>Try adjusting your search criteria</p>
-            <button class="btn btn-primary mt-3" (click)="openCreateCompanyDialog()">
-                Create New Company
-            </button>
+
         </div>
 
         <ng-container *ngIf="!isLoading && companyData.length > 0">
@@ -57,9 +33,7 @@
                             <button class="icon-action" (click)="editCompany($event, company)">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
-                            <button class="icon-action danger" (click)="deleteCompany($event, company)">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+
                         </div>
                     </div>
 
@@ -134,9 +108,7 @@
                                     <button class="icon-action" (click)="editCompany($event, company)">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="icon-action danger" (click)="deleteCompany($event, company)">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+
                                 </div>
                             </td>
                         </tr>

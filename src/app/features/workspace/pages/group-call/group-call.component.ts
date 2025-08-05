@@ -17,6 +17,9 @@ import { NotificationService } from '../../../../core/data/notification.service'
 import { Router } from '@angular/router';
 import { PaginationComponent } from "../../../reusable/pagination/pagination.component";
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
+import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
+import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
+import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 
 
 function randomID(len = 5): string {
@@ -41,14 +44,44 @@ function randomID(len = 5): string {
     MatTooltipModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    LoaderComponent
-  
-],
+    LoaderComponent,
+    ContentHeaderComponent
+
+  ],
   templateUrl: './group-call.component.html',
   styleUrl: './group-call.component.css',
 
 })
 export class GroupCallComponent {
+
+  headerConfig: HeaderConfig = {
+
+    title: 'Upcoming Meetings',
+    icon: '📅',
+    subtitle: 'Manage your scheduled group calls and meetings',
+    placeHolder: 'Search meetings, members, or descriptions...',
+    searchQuery: '',
+    buttons: [
+      {
+        type: 'main',
+        label: '+ Create New Room',
+      },
+    ]
+
+  }
+
+  handleSearchEvent(event: string) {
+    this.searchQuery = event.toLowerCase();
+    this.filterMeetings();
+  }
+  handlebuttonClick(btn: ButtonType) {
+    if (btn.triggeredFor === this.headerConfig.title) {
+      if (btn.type === 'main') {
+        this.onCreateRoom();
+      }
+    }
+  }
+
 
   @Output() createRoomClicked = new EventEmitter<void>();
 
@@ -101,12 +134,6 @@ export class GroupCallComponent {
 
       }
     });
-  }
-
-  onSearch(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery = target.value.toLowerCase();
-    this.filterMeetings();
   }
 
 

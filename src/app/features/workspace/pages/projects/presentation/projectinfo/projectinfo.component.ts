@@ -10,14 +10,36 @@ import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.c
 import { PaginationComponent } from '../../../../../reusable/pagination/pagination.component';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { AuthService } from '../../../../../auth/data/auth.service';
+import { ContentHeaderComponent } from '../../../../../reusable/content-header/content-header.component';
+import { HeaderConfig } from '../../../../../../core/domain/entities/UI Interface/header.interface';
+import { ButtonType } from '../../../../../../core/domain/entities/UI Interface/button.interface';
 
 @Component({
   selector: 'app-projectinfo',
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, ContentHeaderComponent],
   templateUrl: './projectinfo.component.html',
   styleUrl: './projectinfo.component.css'
 })
 export class ProjectinfoComponent {
+
+  headerConfig: HeaderConfig = {
+
+    title: 'Projects',
+    icon: '📁',
+    subtitle: 'Manage all your projects from one place',
+    placeHolder: 'Search projects...',
+    searchQuery: '',
+    buttons: [
+      {
+        type: 'main',
+        label: '+ Create Project',
+      },
+      { type: 'filter' },
+      { type: 'view' }
+    ]
+
+  }
+
 
   projects: Project[] = [];
   filteredProjects: Project[] = [];
@@ -35,6 +57,30 @@ export class ProjectinfoComponent {
     archived: false,
     completed: false
   };
+
+
+  handleSearchEvent(event: string) {
+
+    this.searchTerm = event;
+    this.applyFilters();
+
+  }
+  handlebuttonClick(btn: ButtonType) {
+    if (btn.triggeredFor === this.headerConfig.title) {
+      if (btn.type === 'main') {
+        this.openCreateProjectDialog();
+      } else if (btn.type === 'filter') {
+        if (btn.action && 'statusFilters' in btn.action) {
+          this.toggleStatusFilter(btn.action.statusFilters)
+        }
+      } else if (btn.type === 'view') {
+        if (btn.action && 'viewMode' in btn.action && btn.action.viewMode) {
+          this.viewMode = btn.action.viewMode;
+        }
+      }
+    }
+  }
+
 
   constructor(
     private projectService: ProjectDataService,
@@ -129,8 +175,9 @@ export class ProjectinfoComponent {
     this.filteredProjects = filtered;
   }
 
-  toggleStatusFilter(status: 'active' | 'archived' | 'completed'): void {
-    this.statusFilters[status] = !this.statusFilters[status];
+  toggleStatusFilter(statusFilter: { active: boolean, archived: boolean, completed: boolean }): void {
+
+    this.statusFilters = statusFilter;
 
     const trueCount = Object.values(this.statusFilters).filter(v => v === true).length;
     if (trueCount == 1) {
@@ -156,10 +203,6 @@ export class ProjectinfoComponent {
     this.applyFilters();
   }
 
-  search(event: any): void {
-    this.searchTerm = event.target.value;
-    this.applyFilters();
-  }
 
   toggleViewMode(): void {
     this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';

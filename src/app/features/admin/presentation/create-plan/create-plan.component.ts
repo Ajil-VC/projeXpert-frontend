@@ -8,14 +8,58 @@ import { MatDialog } from '@angular/material/dialog';
 import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.model';
 import { ConfirmDialogComponent } from '../../../workspace/pages/projects/presentation/modal/confirm-dialog/confirm-dialog.component';
 import { PlanCreationModalComponent } from './plan-creation-modal/plan-creation-modal.component';
+import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
+import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
+import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 
 @Component({
   selector: 'app-create-plan',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ContentHeaderComponent],
   templateUrl: './create-plan.component.html',
   styleUrl: './create-plan.component.css'
 })
 export class CreatePlanComponent {
+
+  headerConfig: HeaderConfig = {
+
+    title: 'Subscription Plans',
+    icon: '🛠️',
+    subtitle: 'Manage your product plans and pricing',
+    placeHolder: 'Search plans...',
+    searchQuery: '',
+    buttons: [
+      {
+        type: 'main',
+        label: '+ Create Plan',
+      },
+      { type: 'view' }
+    ]
+
+  }
+
+  handleSearchEvent(event: string) {
+
+    this.searchTerm = event;
+    this.applyFilters();
+
+  }
+  handlebuttonClick(btn: ButtonType) {
+    if (btn.triggeredFor === this.headerConfig.title) {
+      if (btn.type === 'main') {
+        this.openCreatePlanDialog();
+      } else if (btn.type === 'filter') {
+        if (btn.action && 'statusFilters' in btn.action) {
+          // this.toggleStatusFilter(btn.action.statusFilters)
+        }
+      } else if (btn.type === 'view') {
+        if (btn.action && 'viewMode' in btn.action && btn.action.viewMode) {
+          this.viewMode = btn.action.viewMode;
+        }
+      }
+    }
+  }
+
+
   subscriptions: SubscriptionPlan[] = [];
   filteredSubscriptions: SubscriptionPlan[] = [];
 
@@ -102,8 +146,8 @@ export class CreatePlanComponent {
   }
 
 
-  openCreatePlanDialog(event: Event): void {
-    event.stopPropagation();
+  openCreatePlanDialog(): void {
+
 
     const dialogRef = this.dialog.open(PlanCreationModalComponent, {
       width: '500px',

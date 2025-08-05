@@ -1,1 +1,66 @@
-<p>content-header works!</p>
+<div class="header-section">
+    <div class="header-content">
+        <div class="header-title">
+            <h1>{{headerConfig.icon}}{{headerConfig.title}}</h1>
+            <p class="header-subtitle">{{headerConfig.subtitle}}</p>
+
+            <!-- Search and Filter Section -->
+            <div class="controls-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="{{headerConfig.placeHolder}}"
+                        (input)="onSearch($event)">
+                    <div class="search-icon">🔍</div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="button-area">
+
+            <button *ngIf="getButton('main')" class="main-button" (click)="onButtonClick('main')">
+                <i class="icon-plus"></i>
+                {{getButton('main')?.label}}
+            </button>
+
+
+
+            <div class="filter-actions">
+                <div class="status-filters" *ngIf="getButton('filter')">
+                    <button class="filter-btn" [class.active]="statusFilters.active"
+                        (click)="onButtonClick('filter','active')">
+                        Active
+                    </button>
+                    <button class="filter-btn" [class.active]="statusFilters.completed"
+                        (click)="onButtonClick('filter','completed')">
+                        Completed
+                    </button>
+                    <button class="filter-btn" [class.active]="statusFilters.archived"
+                        (click)="onButtonClick('filter','archived')">
+                        Archived
+                    </button>
+                </div>
+
+                <div class="view-toggle" *ngIf="getButton('view')">
+                    <button class="toggle-btn" [class.active]="viewMode === 'grid'"
+                        (click)="onButtonClick('view','grid')">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="toggle-btn" [class.active]="viewMode === 'list'"
+                        (click)="onButtonClick('view','list')">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+</div>

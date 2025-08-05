@@ -1,1 +1,21 @@
-<p>admin-dashboard works!</p>
+<div class="dashboard-container">
+
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="card" *ngFor="let card of summaryCards">
+
+            <!-- <div class="card-header" [ngClass]="'card-color-' + card.color">
+            <i class="fas {{card.icon}}"></i>
+          </div> -->
+
+            <div class="card-body">
+                <h2 class="card-count">{{card.count}}</h2>
+                <div class="card-label">{{card.label}}</div>
+                <div class="card-sublabel">{{card.sublabel}}</div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

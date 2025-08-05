@@ -2,8 +2,8 @@
 .meeting-list-container {
 
     padding: 24px;
-
-}   
+    /* background-color: red; */
+}
 
 
 
@@ -107,9 +107,9 @@
 /* Meetings Grid */
 .meetings-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 24px;
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -385,6 +385,26 @@
 }
 
 /* Responsive Design */
+
+@media (max-width: 1600px) {
+    .meetings-grid {
+        
+        grid-template-columns: repeat(3, minmax(300px, 1fr));
+    
+    }
+}
+
+
+@media (max-width: 1400px) {
+    .meetings-grid {
+        
+        grid-template-columns: repeat(2, minmax(300px, 1fr));
+    
+    }
+}
+
+
+
 @media (max-width: 768px) {
     .meeting-list-container {
         padding: 16px;

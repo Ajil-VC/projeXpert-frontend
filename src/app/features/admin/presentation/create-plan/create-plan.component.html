@@ -1,37 +1,8 @@
 <div class="subscription-list-container">
 
+  <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
+    (buttonClicked)="handlebuttonClick($event)"></app-content-header>
 
-  <!-- Page Header -->
-  <div class="page-main-header">
-    <div class="page-header">
-      <div class="header-content">
-        <h1>Subscription Plans</h1>
-        <p class="page-subtitle">Manage your product plans and pricing</p>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn-primary" (click)="openCreatePlanDialog($event)">
-          <i class="fas fa-plus"></i> Create Plan
-        </button>
-      </div>
-    </div>
-
-    <!-- Filters Bar -->
-    <div class="filters-bar">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search plans..." class="search-input" (input)="search($event)">
-      </div>
-
-      <div class="view-toggle">
-        <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
-          <i class="fas fa-th-large"></i>
-        </button>
-        <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
-          <i class="fas fa-list"></i>
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Plans Content -->
   <div class="plans-content">
@@ -46,7 +17,7 @@
       </div>
       <h3>No plans found</h3>
       <p>Try adjusting your search criteria</p>
-      <button class="btn btn-primary mt-3" (click)="openCreatePlanDialog($event)">
+      <button class="btn btn-primary mt-3" (click)="openCreatePlanDialog()">
         Create New Plan
       </button>
     </div>
