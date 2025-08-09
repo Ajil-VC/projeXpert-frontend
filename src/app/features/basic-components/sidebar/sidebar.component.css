@@ -3,6 +3,7 @@
     top: 60px;
     left: 0;
     height: calc(100vh - 60px);
+    padding: 0 0 0 0;
 
     width: 250px;
     background-color: var(--background-color);
@@ -130,7 +131,10 @@
 }
 
 .sideMenuPanel {
+
     margin-top: 1rem;
+    min-width: 210px;
+
 }
 
 .sideList a {
@@ -140,12 +144,12 @@
     padding: 0.4rem;
     border-radius: 5px;
 
-   
+
 }
 
 .sideList a span {
     margin-left: 1rem;
-    
+
 
 
 }
@@ -159,6 +163,39 @@
     background-color: var(--secondary-color);
 }
 
+
+
+.admin-panel-icon-area {
+    width: 100%;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    padding-left: 25px;
+}
+
+.admin-panel-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background-color: var(--text-color);
+}
+
+
+
+.admin-panel-icon-area span {
+    color: var(--dark-gray);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.collapsed-sidebar .side-top .admin-panel-icon-area  .admin-panel-icon{
+    margin-left: 170px;
+}
 
 @media (max-width: 768px) {
     .sidebar {

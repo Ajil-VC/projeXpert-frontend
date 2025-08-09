@@ -18,6 +18,7 @@
     --dark-gray: #666;
     --background-color: #18181B;
     --darkish-gray: #202020;
+    --danger-red: #dc3545;
 
 
     --radius: 8px;
@@ -43,6 +44,16 @@ body {
     font-family: 'Poppins', sans-serif;
     color: var(--text-color);
     line-height: 1.6;
+}
+
+.greenlabel {
+    background: #d1f1d4;
+    color: #0f5132;
+}
+
+.redlabel {
+    background-color: #f8d7da;
+    color: #842029;
 }
 
 .make-center {
@@ -99,6 +110,3 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6) !important;
     border-radius: 6px;
 }
-
-
-

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.model';
-import { ConfirmDialogComponent } from '../../../workspace/pages/projects/presentation/modal/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
 import { PlanCreationModalComponent } from './plan-creation-modal/plan-creation-modal.component';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';

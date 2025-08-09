@@ -1,5 +1,14 @@
+.confirm-modal {
+    border-radius: 10px;
+    background-color: var(--darkish-gray);
+    padding: 15px 0 0 25px;
+}
 
-.confirm-btn{
+.confirm-modal h2 {
+    color: white;
+}
+
+.cancel-btn {
     display: inline-block;
     padding: 5px 10px;
     margin-right: 5px;
@@ -11,24 +20,24 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    
+
 }
 
-.cancel-btn{
+.confirm-btn {
     display: inline-block;
     padding: 5px 10px;
     margin-right: 5px;
     font-size: 14px;
     font-weight: 500;
     color: white;
-    background-color: orangered;
+    background-color: var(--danger-red);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.confirm-btn:focus,.cancel-btn:focus  {
+.confirm-btn:focus,
+.cancel-btn:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.4);
-  }
+}

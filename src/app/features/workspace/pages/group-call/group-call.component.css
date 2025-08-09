@@ -147,7 +147,7 @@
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-    border: 1px solid var(--primary-color);
+
 }
 
 .meeting-card:hover {
@@ -162,7 +162,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--text-color);
     background: var(--darkish-gray);
 }
 
@@ -205,13 +205,13 @@
     transition: all 0.2s ease;
 }
 
-.action-btn:hover {
-    background: #f1f5f9;
-    transform: scale(1.1);
+
+.action-btn.delete {
+    color: white;
 }
 
 .action-btn.delete:hover {
-    background: #fef2f2;
+    color: var(--danger-red);
 }
 
 /* Meeting Info */
@@ -248,13 +248,12 @@
 }
 
 .time-until {
-    background: #fef3c7;
-    color: #92400e;
+
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
-    margin-left: auto;
+
 }
 
 .meeting-description {
@@ -330,14 +329,14 @@
     font-size: 12px;
     color: #64748b;
     padding-top: 12px;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--text-color);
 }
 
 /* Card Footer */
 .card-footer {
     padding: 16px 20px;
     background: var(--darkish-gray);
-    border-top: 1px solid var(--primary-color);
+
 }
 
 .join-btn {
@@ -388,18 +387,18 @@
 
 @media (max-width: 1600px) {
     .meetings-grid {
-        
+
         grid-template-columns: repeat(3, minmax(300px, 1fr));
-    
+
     }
 }
 
 
 @media (max-width: 1400px) {
     .meetings-grid {
-        
+
         grid-template-columns: repeat(2, minmax(300px, 1fr));
-    
+
     }
 }
 

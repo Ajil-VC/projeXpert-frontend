@@ -126,14 +126,15 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-    background-color: #172b4d;
+    background-color: var(--darkish-gray);
 }
 
 .company-card:hover {
     transform: translateY(-2px);
 }
 
-tbody tr,tbody button{
+tbody tr,
+tbody button {
     cursor: pointer;
 }
 
@@ -141,7 +142,15 @@ tbody tr,tbody button{
     display: flex;
     justify-content: space-between;
     padding: 12px 16px;
-    background-color: #111827;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.company-footer .company-meta-info {
+    display: flex;
+    justify-content: space-between;
+}
+.company-footer .company-meta-info .meta-item i{
+    margin-right: 5px;
 }
 
 .company-icon {
@@ -191,7 +200,7 @@ tbody tr,tbody button{
 .company-meta-info {
     padding: 0 16px 12px;
     font-size: 13px;
-    color : white
+    color: white
 }
 
 .meta-row {

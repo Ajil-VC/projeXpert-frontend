@@ -6,7 +6,7 @@ import { ProjectDataService } from '../../../../../../shared/services/project-da
 import { Project } from '../../../../../../core/domain/entities/project.model';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProjectModalComponent } from '../modal/edit-project-modal/edit-project-modal.component';
-import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
 import { PaginationComponent } from '../../../../../reusable/pagination/pagination.component';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { AuthService } from '../../../../../auth/data/auth.service';
@@ -257,7 +257,7 @@ export class ProjectinfoComponent {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: {
-        title: 'Delete Project',
+        title: 'Heads Up!!!',
         message: `Are you sure you want to delete ${project.name}? This action cannot be undone.`,
         confirmButton: 'Delete',
         cancelButton: 'Cancel'

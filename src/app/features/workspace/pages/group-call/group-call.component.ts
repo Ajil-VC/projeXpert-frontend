@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -15,20 +15,13 @@ import { CreateRoomComponent } from './create-room/create-room.component';
 import { GroupcallService } from './groupcall.service';
 import { NotificationService } from '../../../../core/data/notification.service';
 import { Router } from '@angular/router';
-import { PaginationComponent } from "../../../reusable/pagination/pagination.component";
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
+import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
 
 
-function randomID(len = 5): string {
-  const chars =
-    '12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP';
-  return Array.from({ length: len }, () =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
-  ).join('');
-}
 
 
 @Component({
@@ -153,6 +146,7 @@ export class GroupCallComponent {
     }
 
     this.filteredMeetings = filtered;
+
   }
 
   formatDate(dateString: Date | undefined): string {
@@ -196,7 +190,15 @@ export class GroupCallComponent {
   }
 
   getTimeUntilMeeting(date: Date, time: string): string {
-    const meetingDateTime = new Date(`${date}T${time}`);
+    const [hours, minutes] = time.split(':').map(Number);
+
+    // Clone date and set time
+    const meetingDateTime = new Date(date);
+    meetingDateTime.setHours(hours);
+    meetingDateTime.setMinutes(minutes);
+    meetingDateTime.setSeconds(0);
+    meetingDateTime.setMilliseconds(0);
+
     const now = new Date();
     const diffMs = meetingDateTime.getTime() - now.getTime();
 
@@ -204,7 +206,8 @@ export class GroupCallComponent {
       return 'Meeting time passed';
     }
 
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffDays > 0) {
@@ -212,10 +215,10 @@ export class GroupCallComponent {
     } else if (diffHours > 0) {
       return `in ${diffHours} hour${diffHours === 1 ? '' : 's'}`;
     } else {
-      const diffMinutes = Math.floor(diffMs / (1000 * 60));
       return `in ${diffMinutes} minute${diffMinutes === 1 ? '' : 's'}`;
     }
   }
+
 
   joinMeeting(meeting: Meeting): void {
 
@@ -230,18 +233,35 @@ export class GroupCallComponent {
   }
 
   deleteMeeting(meeting: Meeting): void {
-    if (confirm(`Are you sure you want to delete "${meeting.roomName}"?`)) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Heads Up!!!',
+        message: `Are you sure you want to delete ${meeting.roomName}? This action cannot be undone.`,
+        confirmButton: 'Delete',
+        cancelButton: 'Cancel'
+      }
+    });
 
-      this.callService.removeMeeting(meeting._id).subscribe({
-        next: () => {
-          this.meetings = this.meetings.filter(m => m._id !== meeting._id);
-          this.filterMeetings();
-        },
-        error: (err) => {
-          this.toast.showError('Couldnt remove the meeting.');
-        }
-      })
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isLoading = true;
+        this.callService.removeMeeting(meeting._id).subscribe({
+          next: (res) => {
+
+            const indexOfMeet = this.meetings.findIndex(ele => ele._id === meeting._id);
+            this.meetings.splice(indexOfMeet, 1);
+            this.filterMeetings();
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.toast.showError('Couldnt remove the meeting.');
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+
   }
 
 

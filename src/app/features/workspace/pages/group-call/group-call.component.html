@@ -28,9 +28,17 @@
         <div class="meeting-card" *ngFor="let meeting of filteredMeetings">
             <!-- Card Header -->
             <div class="card-header">
-                <div class="meeting-status" [class]="meeting.status">
+
+                <!-- <div class="meeting-status" [class]="meeting.status">
                     {{ meeting.status | titlecase }}
+                </div> -->
+                <div class="time-until" [ngClass]="{
+                        'greenlabel' : getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) !== 'Meeting time passed',
+                        'redlabel':getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) === 'Meeting time passed'
+                        }">
+                    {{ getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) }}
                 </div>
+
                 <div class="card-actions">
                     <!-- <button class="action-btn edit" (click)="editMeeting(meeting)"
                         [attr.aria-label]="'Edit ' + meeting.roomName">
@@ -38,7 +46,7 @@
                     </button> -->
                     <button class="action-btn delete" (click)="deleteMeeting(meeting)"
                         [attr.aria-label]="'Delete ' + meeting.roomName">
-                        🗑️
+                        <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
             </div>
@@ -56,9 +64,7 @@
                         <span class="datetime-icon">⏰</span>
                         <span class="datetime-text">{{ formatTime(meeting.meetingTime) }}</span>
                     </div>
-                    <div class="time-until">
-                        {{ getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) }}
-                    </div>
+
                 </div>
 
                 <div class="meeting-description" *ngIf="meeting.description">

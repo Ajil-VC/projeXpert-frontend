@@ -14,6 +14,15 @@
         'Select a project'}}</p>
     </a>
 
+    <a class="admin-panel-icon-area" *ngIf="isPlatformAdmin()">
+      <div class="admin-panel-icon">
+        <i class="fas fa-shield"></i>
+      </div>
+      <span *ngIf="!isCollapsed">Admin Panel</span>
+    </a>
+
+
+
     <div class="sidebar-toggle" (click)="toggleSidebar()">
       <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>
     </div>

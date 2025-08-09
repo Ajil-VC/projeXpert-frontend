@@ -61,3 +61,87 @@
     color: #6b778c;
     margin-top: 5px;
 }
+
+
+
+.graph {
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.bar-graph {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    /* Takes up remaining space */
+    min-width: 400px;
+    /* Increased minimum width to prevent square shape */
+    height: 100%;
+    background: var(--darkish-gray);
+    /* Optional: for visualization */
+    border-radius: 8px;
+}
+
+.doughnut-graph {
+    flex: 0 0 auto;
+    /* Don't grow, don't shrink, auto width */
+    width: 350px;
+    /* Fixed width for doughnut chart */
+    height: 350px;
+    /* Fixed height - square for doughnut charts */
+    align-self: flex-start;
+    /* Align to top of container */
+    background: var(--darkish-gray);
+    /* Optional: for visualization */
+    border-radius: 8px;
+    padding:10px;
+}
+
+/* Responsive breakpoint - stack vertically when space is tight */
+@media (max-width: 900px) {
+    .graph {
+        flex-direction: column;
+        height: auto;
+        /* Allow height to grow when stacked */
+        min-height: 60vh;
+    }
+
+    .bar-graph {
+        min-height: 250px;
+        /* Ensure bar graph has minimum height when stacked */
+        width: 100%;
+        /* Full width when stacked to maintain wide aspect ratio */
+        min-width: unset;
+        /* Remove min-width constraint when stacked */
+        order: 1;
+        /* Bar graph first */
+    }
+
+    .doughnut-graph {
+        width: 100%;
+        max-width: 350px;
+        /* Don't let it get larger than intended */
+        height: 350px;
+        align-self: center;
+        /* Center the doughnut chart */
+        order: 2;
+        /* Doughnut second */
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .graph {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .doughnut-graph {
+        width: 300px;
+        height: 300px;
+    }
+}

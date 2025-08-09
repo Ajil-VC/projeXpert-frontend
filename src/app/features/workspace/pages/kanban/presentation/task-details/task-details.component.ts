@@ -73,16 +73,16 @@ export class TaskDetailsComponent {
 
     this.setDaysLeft();
 
-    if (this.userRole === 'admin') {
-      this.shared.getTeamMembers().subscribe({
-        next: (res) => {
-          this.teamMembers = res.data;
-        },
-        error: (err) => {
-          console.log('Error while getting team members.', err);
-        }
-      })
-    }
+    this.shared.getTeamMembers().subscribe({
+      next: (res) => {
+        this.teamMembers = res.data;
+
+      },
+      error: (err) => {
+        console.log('Error while getting team members.', err);
+      }
+    })
+
 
   }
 
@@ -170,8 +170,6 @@ export class TaskDetailsComponent {
     this.assigningUser = user.email;
     this.assigningUserId = user._id;
   }
-
-
 
 
   onDrop(event: DragEvent) {

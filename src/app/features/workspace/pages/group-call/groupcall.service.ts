@@ -27,7 +27,9 @@ export class GroupcallService {
   }
 
   removeMeeting(meetId: string): Observable<any> {
-    return this.http.delete(`${environment.apiUserUrl}remove-meeting?meetId=${meetId}`);
+    return this.http.delete(`${environment.apiUserUrl}remove-meeting?meetId=${meetId}`, {
+      observe: 'response',
+    });
   }
 
 }

@@ -17,5 +17,19 @@
         </div>
     </div>
 
+    <div class="graph">
+
+        <div class='bar-graph'>
+            <canvas baseChart [data]="{ labels: barChartLabels, datasets: barChartData }" [options]="barChartOptions"
+                [type]="'bar'"> </canvas>
+        </div>
+
+        <div class="doughnut-graph">
+            <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions" [type]="'doughnut'">
+            </canvas>
+        </div>
+
+    </div>
+
 
 </div>
