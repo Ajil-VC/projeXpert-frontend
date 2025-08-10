@@ -1,6 +1,5 @@
 .backlog-section {
-  background-color: var(--primarydark-color);
-  border: 1px solid var(--primarydark-color);
+  background-color: var(--darkish-gray);
   border-radius: 6px;
 }
 
@@ -9,7 +8,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  background-color: var(--secondary-color);
+  border-top: 1px solid var(--secondary-color);
+  background-color: var(--darkish-gray);
 }
 
 .header-left,
@@ -84,7 +84,7 @@
 .backlog-content {
   padding: 20px;
   height: 150px;
-
+  
   overflow-y: scroll;
 }
 
@@ -118,4 +118,27 @@
 .create-issue-button span {
   margin-right: 5px;
   font-size: 16px;
+}
+
+
+
+
+.backlog-content {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+}
+
+/* Chrome, Edge, Safari */
+.backlog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.backlog-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+}
+
+.backlog-content::-webkit-scrollbar-track {
+  background: transparent;
 }

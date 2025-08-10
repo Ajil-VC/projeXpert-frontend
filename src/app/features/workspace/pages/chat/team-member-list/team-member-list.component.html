@@ -2,7 +2,8 @@
     <div class="chat-header">Chats</div>
 
     <div class="member-search-container">
-        <input type="text" [(ngModel)]="searchText" placeholder="Type @ to see all team members..." class="member-search-input" />
+        <input type="text" [(ngModel)]="searchText" placeholder="Type @ to see all team members..."
+            class="member-search-input" />
         <i class="fas fa-search search-icon"></i>
 
     </div>
@@ -42,5 +43,22 @@
 
             </div>
         </li>
+        
+        <li class="chat-item" *ngFor="let member of getUsersHaventStartedChat()" (click)="startConversation(member)">
+            <div class="profileData">
+
+                <div class="assignee-container">
+                    <span>{{getUserEmail([member])?.charAt(0)?.toUpperCase()}}</span>
+                </div>
+
+                <div class="email-lastmessage">
+                    <div class="name-time">
+                        <div class="name">{{getUserEmail([member])}}</div>
+                    </div>               
+                </div>
+
+            </div>
+        </li>
+
     </ul>
 </div>

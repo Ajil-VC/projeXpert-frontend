@@ -5,13 +5,13 @@
     </div>
 
     <div class="controls">
-        <button mat-icon-button color="primary" (click)="toggleMic()">
+        <button class="media-control" mat-icon-button color="primary" (click)="toggleMic()">
             <mat-icon>{{ micOn ? 'mic' : 'mic_off' }}</mat-icon>
         </button>
-        <button mat-icon-button color="primary" (click)="toggleCamera()">
+        <button class="media-control" mat-icon-button color="primary" (click)="toggleCamera()">
             <mat-icon>{{ camOn ? 'videocam' : 'videocam_off' }}</mat-icon>
         </button>
-        <button mat-icon-button color="warn" (click)="endCall()">
+        <button class="hang-btn" mat-icon-button color="warn" (click)="endCall()">
             <mat-icon>call_end</mat-icon>
         </button>
     </div>

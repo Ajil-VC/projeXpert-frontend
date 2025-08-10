@@ -1,4 +1,4 @@
 <div class="chat-container" *ngIf="currentUserObj">
-  <app-team-member-list [teamMembers]="teamMembers" (isChatOpen)="handleEvent($event)"></app-team-member-list>
-  <app-message-area [hidden]="!isChatOpened"></app-message-area>
+  <app-team-member-list [teamMembers]="teamMembers"></app-team-member-list>
+  <app-message-area></app-message-area>
 </div>

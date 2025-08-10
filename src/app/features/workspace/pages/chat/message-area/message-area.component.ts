@@ -1,16 +1,19 @@
 import { ChangeDetectorRef, Component, ElementRef, Input, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
-import { ChatService } from '../data/chat.service';
-import { Message } from '../../../../../core/domain/entities/message.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+
+
+import { ChatService } from '../data/chat.service';
+import { Message } from '../../../../../core/domain/entities/message.model';
 import { Conversation } from '../../../../../core/domain/entities/conversation.model';
 import { AuthService } from '../../../../auth/data/auth.service';
 import { User } from '../../../../../core/domain/entities/user.model';
 import { SocketService } from '../../../../../shared/services/socket.service';
-import { Router } from '@angular/router';
 import { Team } from '../../../../../core/domain/entities/team.model';
-import { Subject, takeUntil } from 'rxjs';
 import { SharedService } from '../../../../../shared/services/shared.service';
+
 
 @Component({
   selector: 'app-message-area',
@@ -25,6 +28,10 @@ export class MessageAreaComponent {
   messageText: string = '';
   chat!: Conversation;
   reciever!: Team | undefined;
+  isChatOpened: boolean = false;
+
+  onlineUsers = new Set<string>();
+  onlieStatus: boolean = false;
 
   private destroy$ = new Subject<void>();
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
@@ -63,8 +70,19 @@ export class MessageAreaComponent {
     });
   }
 
+  get isUserOnline() {
+    if (!this.reciever?._id) return false;
+    return this.onlineUsers.has(this.reciever?._id);
+  }
+
 
   ngOnInit() {
+
+    this.chatSer.isChatOpened$.subscribe({
+      next: (res) => {
+        this.isChatOpened = res;
+      }
+    })
 
     //Connected to socket in layout component as it is the root component of all pages.
     this.socketService.receiveMessage().pipe(
@@ -75,6 +93,17 @@ export class MessageAreaComponent {
         this.messages.push(msg);
       }
     });
+
+    this.socketService.onlineStatus().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((data) => {
+      this.onlineUsers.add(data);
+    });
+    this.socketService.userOffline().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((data) => {
+      this.onlineUsers.delete(data);
+    })
 
     //Getting the current user.
     this.authSer.user$.pipe(
@@ -114,8 +143,11 @@ export class MessageAreaComponent {
     ).subscribe({
       next: (res) => {
         this.chat = res as Conversation;
+        if (!this.chat.participants) {
+          this.chatSer.isChatOpened.next(false);
+          return;
+        }
         this.reciever = this.chat.participants.find(user => this.currentUser!._id !== user._id);
-
       },
       error: (err) => {
         console.error('Error occured while retrieving chat details.', err);
@@ -149,6 +181,7 @@ export class MessageAreaComponent {
 
 
   ngOnDestroy() {
+    this.chatSer.chatSubject.next(false);
     this.destroy$.next();
     this.destroy$.complete();
     this.sharedSer.activeChatUserId = '';

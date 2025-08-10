@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/data/auth.service';
-import { LayoutService } from '../../../shared/services/layout.service';
 import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
 import { User } from '../../../core/domain/entities/user.model';

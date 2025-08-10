@@ -1,7 +1,6 @@
 .sprint-section {
     margin-bottom: 20px;
-    background-color: var(--primarydark-color);
-    border: 1px solid #30363d;
+    background-color: var(--darkish-gray);
     border-radius: 6px;
     /* overflow: hidden; */
 }
@@ -11,7 +10,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 15px;
-    background-color: var(--secondary-color);
+    background-color: var(--darkish-gray);
 }
 
 .header-left,

@@ -1,8 +1,8 @@
 <div class="chat-main">
-    <div class="chat-header">
+    <div *ngIf="isChatOpened" class="chat-header">
         <div>
-            <div class="name"></div>
-            <!-- <div class="status">Online</div> -->
+            <div class="name">{{reciever ? reciever.email : ''}}</div>
+            <div class="status">{{isUserOnline ? 'Online' : ''}}</div>
         </div>
         <div class="icons">
 
@@ -17,10 +17,15 @@
     </div>
 
     <div class="messages" #messagesContainer>
+
         <div class="start-chat" *ngIf="messages.length === 0">
-            <i class="fa-solid fa-comments chat-icon"></i>
-            <span>Start conversation</span>
+            <div class="start-chat-msg">
+                <i class="fa-solid fa-comments chat-icon"></i>
+                <span>Start conversation</span>
+            </div>
         </div>
+
+
         <div class="message" *ngFor="let message of messages" [ngClass]="{
     'right': message.senderId === currentUser?._id,
     'left': message.senderId !== currentUser?._id
@@ -41,9 +46,9 @@
         <!-- <div class="typing">typing...</div> -->
     </div>
 
-    <div class="input-area">
+    <div *ngIf="isChatOpened" class="input-area">
 
-        <span class="icon media-icon"><i class="fas fa-paperclip"></i></span>
+        <!-- <span class="icon media-icon"><i class="fas fa-paperclip"></i></span> -->
         <input [(ngModel)]="messageText" (keydown.enter)="sendMessage()" type="text" placeholder="Type a message..." />
         <button class="send-button" type="button" (click)="sendMessage()">
             <i class="fas fa-paper-plane"></i>
@@ -51,4 +56,6 @@
 
 
     </div>
+
+
 </div>

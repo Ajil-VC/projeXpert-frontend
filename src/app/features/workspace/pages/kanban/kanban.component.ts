@@ -14,6 +14,9 @@ import { User } from '../../../../core/domain/entities/user.model';
 import { SprintCompleteComponent } from './presentation/sprint-complete/sprint-complete.component';
 import { Sprint, SprintTaskGroup } from '../../../../core/domain/entities/sprint.model';
 import { NotificationService } from '../../../../core/data/notification.service';
+import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
+import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
+import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 
 @Component({
   selector: 'app-kanban',
@@ -24,12 +27,42 @@ import { NotificationService } from '../../../../core/data/notification.service'
     DragDropModule,
     CdkDropList,
     CdkDrag,
-    SearchPipe
+    SearchPipe,
+    ContentHeaderComponent
   ],
   templateUrl: './kanban.component.html',
   styleUrl: './kanban.component.css'
 })
 export class KanbanComponent {
+
+
+  headerConfig: HeaderConfig = {
+
+    title: 'Board',
+    icon: '📝',
+    subtitle: 'Manage your project tasks here.',
+    placeHolder: 'Search tasks...',
+    searchQuery: '',
+    buttons: [
+      {
+        type: 'main',
+        label: '+ Complete Sprint',
+      },
+    ]
+
+  }
+  handleSearchEvent(event: string) {
+    this.searchQuery = event.toLowerCase();
+    // this.filterMeetings();
+  }
+  handlebuttonClick(btn: ButtonType) {
+    if (btn.triggeredFor === this.headerConfig.title) {
+      if (btn.type === 'main') {
+        this.completeSprint();
+      }
+    }
+  }
+
 
   searchQuery = '';
 
@@ -126,7 +159,7 @@ export class KanbanComponent {
     this.shared.currentPro$.subscribe((project) => {
 
       this.refreshKanbanView();
-      
+
     })
 
   }

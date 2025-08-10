@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Team } from '../../../../../core/domain/entities/team.model';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../data/chat.service';
@@ -20,11 +21,12 @@ import { SharedService } from '../../../../../shared/services/shared.service';
 export class TeamMemberListComponent {
 
   @Input() teamMembers: Team[] = [];
-  @Output() isChatOpen = new EventEmitter();
 
   currentUser: any;
   searchText: string = '';
-  availableChatIds = new Set(); 
+  availableChatIds = new Set();
+  chatStartedUserId = new Set();
+
   chats: Conversation[] = [];
   activeChat: any;
 
@@ -66,7 +68,7 @@ export class TeamMemberListComponent {
     this.sharedSer.currentPro$.subscribe((project) => {
 
       this.refreshChatView();
-  
+
     })
 
 
@@ -83,7 +85,10 @@ export class TeamMemberListComponent {
           this.chats = res.result;
           this.chats.forEach((item) => {
             this.availableChatIds.add(item._id);
-          })
+            for (let user of item.participants) {
+              this.chatStartedUserId.add(user._id);
+            }
+          });
         }
       },
       error: (err) => {
@@ -96,6 +101,13 @@ export class TeamMemberListComponent {
 
     const userData = users.find(user => user._id !== this.currentUser._id);
     return userData?.email;
+  }
+  getUsersHaventStartedChat() {
+    if (!this.teamMembers) return [];
+    return this.teamMembers.filter(member =>
+      !this.chatStartedUserId.has(member._id) &&
+      member.email !== this.currentUser.email
+    );
   }
 
   filteredMembers() {
@@ -117,7 +129,7 @@ export class TeamMemberListComponent {
           if (!this.availableChatIds.has(res.result._id)) {
             this.availableChatIds.add(res.result._id);
             this.chats.push(res.result);
-
+            this.chatStartedUserId.add(member._id);
             this.sharedSer.activeChatUserId = res.result._id;
             //Open the particular chat.
           } else {
@@ -144,7 +156,8 @@ export class TeamMemberListComponent {
         this.sharedSer.activeChatUserId = chat.participants.find(ele => {
           return ele._id !== this.currentUser._id
         })?._id || '';
-        this.isChatOpen.emit(true);
+        
+        this.chatService.isChatOpened.next(true);
       },
       error: (err) => {
         console.error('Error occured while retrieving messages.', err);

@@ -59,6 +59,34 @@ export class SocketService {
 
   }
 
+
+  userOffline(): Observable<any> {
+
+    return new Observable(observer => {
+      this.socket.on('user_offline', (data) => {
+        observer.next(data);
+      })
+    })
+  };
+  onlineStatus(): Observable<any> {
+    return new Observable(observer => {
+
+      this.socket.on('user_online', (data) => {
+        observer.next(data);
+      });
+
+      this.socket.on('online-users', (data: any[]) => {
+        if (Array.isArray(data)) {
+          data.forEach(user => {
+            observer.next(user);
+          });
+        }
+      });
+
+    });
+  }
+
+
   //For text messages
   sendMessage(message: any) {
     this.socket.emit('send-message', message);

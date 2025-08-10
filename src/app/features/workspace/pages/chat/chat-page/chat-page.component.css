@@ -1,10 +1,43 @@
 .chat-container {
 
     display: flex;
-    height: calc(100vh - 60px);
+    height: 100%;
 
     overflow: hidden;
 
-    
+
     color: white;
+}
+
+app-team-member-list {
+    width: 380px;
+    height: 100%;
+    background-color: #121212;
+    border-right: 1px solid #333;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+app-message-area {
+    flex-grow: 1;
+    height: 100%;
+    min-width: 380px;
+
+    height: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+}
+
+@media (max-width : 880px) {
+
+    app-team-member-list {
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    app-message-area {
+        display: none;
+    }
 }

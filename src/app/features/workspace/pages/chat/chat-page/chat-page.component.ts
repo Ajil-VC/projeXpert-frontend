@@ -22,7 +22,6 @@ export class ChatPageComponent {
 
   teamMembers!: Team[];
   currentUserObj: { id: string } = { id: '' };
-  isChatOpened: boolean = false;
 
   ngOnInit() {
 
@@ -74,11 +73,6 @@ export class ChatPageComponent {
         this.toast.showError('Error occurred while trying to get team members.');
       }
     });
-  }
-
-
-  handleEvent(event: any) {
-    this.isChatOpened = event;
   }
 
 

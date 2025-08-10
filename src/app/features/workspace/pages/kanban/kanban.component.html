@@ -1,30 +1,48 @@
-<div class="kanban-header">
-    <input type="text" placeholder="Search" [(ngModel)]="searchQuery" class="search-bar" />
-    <button class="complete-btn" (click)="completeSprint()">Complete Sprint</button>
-</div>
 
 
 <div class="kanban-container">
 
-    <div class="kanban-column" id="todo" cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoTasks"
-        [cdkDropListConnectedTo]="[inProgressList, doneList]" (cdkDropListDropped)="onDrop($event)">
-        <h3>TO DO ({{ todoTasks.length }})</h3>
-        <app-task-card *ngFor="let task of todoTasks | search :searchQuery: ['title']" [task]="task" cdkDrag
-            [cdkDragData]="task" (click)="taskDetails($event, task)"></app-task-card>
+    <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
+        (buttonClicked)="handlebuttonClick($event)"></app-content-header>
+
+    <div class="board">
+
+        <div class="kanban-column" id="todo" cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoTasks"
+            [cdkDropListConnectedTo]="[inProgressList, doneList]" (cdkDropListDropped)="onDrop($event)">
+            <div class="board-header">
+                <h3>TO DO ({{ todoTasks.length }})</h3>
+            </div>
+            <div class="board-tasks">
+                <app-task-card *ngFor="let task of todoTasks | search :searchQuery: ['title']" [task]="task" cdkDrag
+                    [cdkDragData]="task" (click)="taskDetails($event, task)"></app-task-card>
+            </div>
+        </div>
+
+        <div class="kanban-column" id="in-progress" cdkDropList #inProgressList="cdkDropList"
+            [cdkDropListData]="inProgressTasks" [cdkDropListConnectedTo]="[todoList, doneList]"
+            (cdkDropListDropped)="onDrop($event)">
+            <div class="board-header">
+                <h3>IN PROGRESS ({{ inProgressTasks.length }})</h3>
+            </div>
+
+            <div class="board-tasks">
+                <app-task-card *ngFor="let task of inProgressTasks | search :searchQuery: ['title']" cdkDrag
+                    [cdkDragData]="task" [task]="task" (click)="taskDetails($event, task)"></app-task-card>
+            </div>
+        </div>
+
+        <div class="kanban-column" id="done" cdkDropList #doneList="cdkDropList" [cdkDropListData]="doneTasks"
+            [cdkDropListConnectedTo]="[todoList, inProgressList]" (cdkDropListDropped)="onDrop($event)">
+            <div class="board-header">
+                <h3>DONE ({{ doneTasks.length }})</h3>
+            </div>
+
+            <div class="board-tasks">
+                <app-task-card *ngFor="let task of doneTasks | search :searchQuery: ['title']" cdkDrag
+                    [cdkDragData]="task" [task]="task" (click)="taskDetails($event, task)"></app-task-card>
+            </div>
+        </div>
+
     </div>
 
-    <div class="kanban-column" id="in-progress" cdkDropList #inProgressList="cdkDropList"
-        [cdkDropListData]="inProgressTasks" [cdkDropListConnectedTo]="[todoList, doneList]"
-        (cdkDropListDropped)="onDrop($event)">
-        <h3>IN PROGRESS ({{ inProgressTasks.length }})</h3>
-        <app-task-card *ngFor="let task of inProgressTasks | search :searchQuery: ['title']" cdkDrag
-            [cdkDragData]="task" [task]="task" (click)="taskDetails($event, task)"></app-task-card>
-    </div>
-
-    <div class="kanban-column" id="done" cdkDropList #doneList="cdkDropList" [cdkDropListData]="doneTasks"
-        [cdkDropListConnectedTo]="[todoList, inProgressList]" (cdkDropListDropped)="onDrop($event)">
-        <h3>DONE ({{ doneTasks.length }})</h3>
-        <app-task-card *ngFor="let task of doneTasks | search :searchQuery: ['title']" cdkDrag [cdkDragData]="task"
-            [task]="task" (click)="taskDetails($event, task)"></app-task-card>
-    </div>
 </div>
