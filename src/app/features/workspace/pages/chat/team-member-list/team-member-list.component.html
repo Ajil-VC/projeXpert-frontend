@@ -2,22 +2,17 @@
     <div class="chat-header">Chats</div>
 
     <div class="member-search-container">
-        <input type="text" [(ngModel)]="searchText" placeholder="Type @ to see all team members..."
+
+        <input type="text" [formControl]="searchControl" placeholder="Search team members..."
             class="member-search-input" />
         <i class="fas fa-search search-icon"></i>
 
     </div>
-    <ul class="member-list">
-        <li *ngFor="let member of filteredMembers()" (click)="startConversation(member)">
-            <div class="member-info">
-                <div class="email">{{ member.email }}</div>
-            </div>
-        </li>
-    </ul>
+
 
 
     <ul class="chat-list">
-        <li class="chat-item" [ngClass]="activeChat === chat._id ? 'selected': ''" *ngFor="let chat of chats"
+        <li class="chat-item" [ngClass]="activeChat === chat._id ? 'selected': ''" *ngFor="let chat of filteredChats"
             (click)="openChat(chat)" id="{{chat._id}}">
 
             <div class="profileData">
@@ -43,8 +38,8 @@
 
             </div>
         </li>
-        
-        <li class="chat-item" *ngFor="let member of getUsersHaventStartedChat()" (click)="startConversation(member)">
+
+        <li class="chat-item" *ngFor="let member of filteredTeamMembers" (click)="startConversation(member)">
             <div class="profileData">
 
                 <div class="assignee-container">
@@ -54,7 +49,7 @@
                 <div class="email-lastmessage">
                     <div class="name-time">
                         <div class="name">{{getUserEmail([member])}}</div>
-                    </div>               
+                    </div>
                 </div>
 
             </div>

@@ -54,6 +54,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           })
         );
       } else if (error.status === 403) {
+        console.log(error)
         if (error.error['issue']) {
           notificationService.showInfo(error.error['message']);
           return throwError(() => error);
@@ -61,6 +62,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.error && error.error['message']) {
           const msg1 = 'Please subscribe to a plan to perform this operation';
           const msg2 = 'Dont have permission to perform this operation';
+          const msg3 = 'Please subscribe to a plan to add more members';
+
+          if (error.error['message'] === msg3) {
+
+            return throwError(() => error);
+          }
+
           if (error.error['message'] === msg1 || error.error['message'] === msg2) {
             notificationService.showError(error.error['message']);
             return of();

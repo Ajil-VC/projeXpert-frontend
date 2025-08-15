@@ -13,6 +13,7 @@ import { User } from '../../../../core/domain/entities/user.model';
 import { AuthService } from '../../../auth/data/auth.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
 
 @Component({
   selector: 'app-team-management',
@@ -25,7 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSelectModule,
     MatSlideToggleModule,
     MatInputModule,
-    MatTooltipModule
+    MatTooltipModule,
+    PaginationComponent
   ],
   templateUrl: './team-management.component.html',
   styleUrl: './team-management.component.css'
@@ -42,12 +44,20 @@ export class TeamManagementComponent {
   selectedRole: string = '';
   selectedStatus: string = '';
 
+  currentPage: number = 1;
+  totalPages: number = 1;
+
   constructor(private teamSer: TeamManagementService, private toast: NotificationService, private authService: AuthService) { }
 
   ngOnInit() {
 
     this.currentUser = this.authService.getCurrentUser()
     this.fetchUsers();
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.fetchUsers(page);
   }
 
   profilePic(user: User) {
@@ -58,16 +68,21 @@ export class TeamManagementComponent {
   }
 
 
-  fetchUsers() {
+  fetchUsers(page: number = 1) {
 
     let allUsers: User[] = [];
 
-    this.teamSer.getUsers().subscribe({
+    this.teamSer.getUsers(page).subscribe({
       next: (res) => {
-        allUsers = res.result;
 
-        this.users = allUsers.filter(user => user.email !== this.currentUser?.email);
-        this.applyFilters();
+        if (res.status) {
+
+          this.totalPages = res.result.totalPages;
+          allUsers = res.result.users;
+          this.users = allUsers.filter(user => user.email !== this.currentUser?.email);
+          this.applyFilters();
+
+        }
       },
       error: (err) => {
         this.toast.showError('Couldnt retrieve users data');

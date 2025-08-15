@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-create-workspace',
@@ -34,7 +35,8 @@ export class CreateWorkspaceComponent {
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<CreateWorkspaceComponent>
+    public dialogRef: MatDialogRef<CreateWorkspaceComponent>,
+    private authSer: AuthService
   ) {
 
     this.workspaceForm = this.fb.group({
@@ -42,6 +44,11 @@ export class CreateWorkspaceComponent {
     })
   }
 
+  ngOnInit() {
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
+    })
+  }
 
   onSave(): void {
     if (this.workspaceForm.valid) {

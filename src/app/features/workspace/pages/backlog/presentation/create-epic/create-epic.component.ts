@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } fro
 import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Task } from '../../../../../../core/domain/entities/task.model';
+import { AuthService } from '../../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-create-epic',
@@ -24,7 +25,8 @@ export class CreateEpicComponent {
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateEpicComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { issue: Task }
+    @Inject(MAT_DIALOG_DATA) public data: { issue: Task },
+    private authSer : AuthService
   ) {
 
     this.epicForm = this.fb.group({
@@ -71,6 +73,9 @@ export class CreateEpicComponent {
       }
     });
 
+    this.authSer.logout$.subscribe({
+      next : ()=> this.dialogRef.close(null)
+    })
 
   }
 

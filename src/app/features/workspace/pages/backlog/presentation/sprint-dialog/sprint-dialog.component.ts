@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../../../auth/data/auth.service';
 
 
 @Component({
@@ -21,13 +22,20 @@ export class SprintDialogComponent {
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<SprintDialogComponent>
+    public dialogRef: MatDialogRef<SprintDialogComponent>,
+    private authSer: AuthService
   ) {
     this.sprintForm = this.fb.group({
       sprintName: [''],
       duration: ['', [Validators.required, Validators.min(1)]],
       startDate: ['', Validators.required]
     });
+  }
+
+  ngOnInit(){
+    this.authSer.logout$.subscribe({
+      next : ()=> this.dialogRef.close(null)
+    })
   }
 
   onSave(): void {

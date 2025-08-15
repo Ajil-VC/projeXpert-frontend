@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubscriptionPlan } from '../../../../../core/domain/entities/subscription.model';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-plan-creation-modal',
@@ -25,6 +26,7 @@ export class PlanCreationModalComponent {
   isLoading = false;
 
   constructor(
+    private authSer: AuthService,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<PlanCreationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -39,6 +41,12 @@ export class PlanCreationModalComponent {
       maxMembers: [null, [Validators.required, Validators.min(0)]],
       canUseVideoCall: ['', Validators.required],
     });
+  }
+
+  ngOnInit() {
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
+    })
   }
 
   onCancel(): void {

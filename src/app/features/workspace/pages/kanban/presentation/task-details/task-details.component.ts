@@ -14,6 +14,7 @@ import { SearchPipe } from '../../../../../../core/pipes/search.pipe';
 import { KanbanService } from '../../data/kanban.service';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { CommentSectionComponent } from "../../../../components/comment-section/comment-section.component";
+import { AuthService } from '../../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-task-details',
@@ -49,7 +50,8 @@ export class TaskDetailsComponent {
     public dialogRef: MatDialogRef<TaskDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { task: Task, userRole: string, daysLeft: string },
     private shared: SharedService,
-    private kanbanSer: KanbanService
+    private kanbanSer: KanbanService,
+    private authSer: AuthService
   ) {
     this.task = this.data.task;
     this.userRole = this.data.userRole;
@@ -81,6 +83,10 @@ export class TaskDetailsComponent {
       error: (err) => {
         console.log('Error while getting team members.', err);
       }
+    });
+
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
     })
 
 

@@ -7,6 +7,7 @@ import { SharedService } from '../../../../../shared/services/shared.service';
 import { NotificationService } from '../../../../../core/data/notification.service';
 import { Team } from '../../../../../core/domain/entities/team.model';
 import { GroupcallService } from '../groupcall.service';
+import { AuthService } from '../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-create-room',
@@ -32,7 +33,8 @@ export class CreateRoomComponent {
     private fb: FormBuilder,
     private sharedSer: SharedService,
     private toast: NotificationService,
-    private callSer: GroupcallService
+    private callSer: GroupcallService,
+    private authSer: AuthService
   ) {
     // Set minimum date to today
     const today = new Date();
@@ -46,6 +48,10 @@ export class CreateRoomComponent {
 
     this.initializeForm();
     this.loadAvailableUsers();
+
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
+    })
   }
 
   private initializeForm(): void {
@@ -229,7 +235,7 @@ export class CreateRoomComponent {
 
       this.callSer.createRoom(formData).subscribe({
         next: (res) => {
-    
+
           this.isSubmitting = false;
           this.dialogRef.close(res.createdMeeting);
         },

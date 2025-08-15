@@ -105,7 +105,7 @@ export class SidebarComponent {
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/user/meeting', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
-    { id: 'teams', icon: 'fa-users', label: 'Teams & Members', route: '/user/teams-members', active: false },
+    { id: 'teams', icon: 'fa-users', label: 'Company Members', route: '/user/teams-members', active: false },
     { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/user/settings', active: false }
   ];

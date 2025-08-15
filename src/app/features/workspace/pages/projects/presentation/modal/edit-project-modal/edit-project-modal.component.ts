@@ -17,6 +17,7 @@ import { LoaderComponent } from '../../../../../../../core/presentation/loader/l
 import { NotificationService } from '../../../../../../../core/data/notification.service';
 import { SharedService } from '../../../../../../../shared/services/shared.service';
 import { ProjectService } from '../../../data/project.service';
+import { AuthService } from '../../../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-edit-project-modal',
@@ -58,10 +59,17 @@ export class EditProjectModalComponent {
     private editProjectSer: EditProjectUseCase,
     private toast: NotificationService,
     private shared: SharedService,
+    private authSer: AuthService
   ) {
 
     this.setupProjectDataForView(this.data);
 
+  }
+
+  ngOnInit() {
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
+    })
   }
 
 
@@ -128,7 +136,12 @@ export class EditProjectModalComponent {
           this.toast.showSuccess('User added to the project.');
         },
         error: (err) => {
+
           this.isLoading = false;
+          if (err.error.message === 'Please subscribe to a plan to add more members') {
+            this.toast.showInfo(err.error.message);
+            return;
+          }
           this.toast.showError('User couldnt add to the project.');
         }
       })

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { AuthService } from '../../auth/data/auth.service';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -13,6 +14,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } fro
 export class ConfirmDialogComponent {
 
   constructor(
+    private authSer: AuthService,
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       title: string;
@@ -22,12 +24,18 @@ export class ConfirmDialogComponent {
     }
   ) { }
 
+  ngOnInit() {
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
+    })
+  }
+
   onConfirm(): void {
-    this.dialogRef.close(true); 
+    this.dialogRef.close(true);
   }
 
   onCancel(): void {
-    this.dialogRef.close(false); 
+    this.dialogRef.close(false);
   }
 
 }

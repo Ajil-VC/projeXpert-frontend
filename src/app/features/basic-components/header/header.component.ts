@@ -253,10 +253,10 @@ export class HeaderComponent {
 
   }
 
-  selectProject(projectId: String | undefined) {
+  selectProject(projectId: String | undefined | null = null) {
 
-    if (!projectId) return;
     this.showProjectMenu = false;
+    if (!projectId) return;
 
     this.layoutSer.getProject(projectId as string).subscribe({
       next: (res: { status: boolean, result: Project, tasks: Task[] }) => {

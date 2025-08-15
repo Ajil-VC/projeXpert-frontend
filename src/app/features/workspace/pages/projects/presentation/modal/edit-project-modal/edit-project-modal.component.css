@@ -1,81 +1,102 @@
 .edit-project-modal {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.edit-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .full-width {
+    width: 100%;
   }
-  
-  .edit-project-form {
+
+  .add-member-section {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    .member-email-field {
+      flex: 1;
+    }
+  }
+
+  .add-member-btn {
+    height: 56px;
+
+    margin-top: 0;
+    padding: 0 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken(#002147, 5%);
+    }
+  }
+
+  .members-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-  
-    .full-width {
-      width: 100%;
-    }
-  
-    .add-member-section {
+    gap: 0.5rem;
+
+    .member-row {
       display: flex;
+      align-items: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
-      align-items: flex-start;
-  
-      .member-email-field {
+      justify-content: space-between;
+
+      span {
+        flex: 2;
+        word-break: break-word;
+      }
+
+      .role-select {
         flex: 1;
       }
     }
+  }
+}
 
-    .add-member-btn {
-        height: 56px;
-
-        margin-top: 0;
-        padding: 0 16px;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      
-        &:hover {
-          background-color: darken(#002147, 5%);
-        }
-      }
-  
-    .members-list {
-      display: flex;
+@media (max-width: 600px) {
+  .edit-project-form {
+    .member-row {
       flex-direction: column;
-      gap: 0.5rem;
-  
-      .member-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        justify-content: space-between;
-  
-        span {
-          flex: 2;
-          word-break: break-word;
-        }
-  
-        .role-select {
-          flex: 1;
-        }
+      align-items: flex-start;
+
+      .role-select,
+      button {
+        align-self: flex-end;
       }
     }
   }
-  
-  @media (max-width: 600px) {
-    .edit-project-form {
-      .member-row {
-        flex-direction: column;
-        align-items: flex-start;
-  
-        .role-select,
-        button {
-          align-self: flex-end;
-        }
-      }
-    }
-  }
-  
+}
+
+
+
+.edit-project-modal {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+}
+
+/* Chrome, Edge, Safari */
+.edit-project-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.edit-project-modal::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+}
+
+.edit-project-modal::-webkit-scrollbar-track {
+  background: transparent;
+}

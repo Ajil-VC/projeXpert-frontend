@@ -12,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButton } from '@angular/material/button';
 import { AdminService } from '../../../data/admin.service';
 import { SearchPipe } from '../../../../../core/pipes/search.pipe';
+import { AuthService } from '../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-edit-company-modal',
@@ -39,9 +40,17 @@ export class EditCompanyModalComponent {
 
   constructor(public dialogRef: MatDialogRef<EditCompanyModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { companyDetails: Company, companyId: string, users: Array<User> },
-    private adminService: AdminService) { }
+    private adminService: AdminService,
+    private authSer: AuthService
+  ) { }
 
   removeUser(i: any, userId: any) { }
+
+  ngOnInit() {
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
+    })
+  }
 
   onCancel(): void {
     this.dialogRef.close();

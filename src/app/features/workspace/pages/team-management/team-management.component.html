@@ -82,3 +82,6 @@
 
 
 </table>
+
+<app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+    (pageChanged)="onPageChange($event)">></app-pagination>

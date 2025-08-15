@@ -9,6 +9,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { Sprint, SprintTaskGroup } from '../../../../../../core/domain/entities/sprint.model';
 import { MatSelectModule } from '@angular/material/select';
 import { Task } from '../../../../../../core/domain/entities/task.model';
+import { AuthService } from '../../../../../auth/data/auth.service';
 
 @Component({
   selector: 'app-sprint-complete',
@@ -42,7 +43,8 @@ export class SprintCompleteComponent {
     public dialogRef: MatDialogRef<SprintCompleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { groupedTasks: Array<SprintTaskGroup> },
     private shared: SharedService,
-    private kanbanSer: KanbanService
+    private kanbanSer: KanbanService,
+    private authSer: AuthService
   ) {
     this.activeSprints = this.data.groupedTasks;
   }
@@ -56,6 +58,10 @@ export class SprintCompleteComponent {
       error: (err) => {
         console.error('Error occured while getting sprints.', err);
       }
+    });
+
+    this.authSer.logout$.subscribe({
+      next: () => this.dialogRef.close(null)
     })
   }
 

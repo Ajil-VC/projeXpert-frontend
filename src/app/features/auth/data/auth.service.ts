@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OtpUseCase, RegisterUseCase } from '../domain/auth.domain';
 import { User } from '../../../core/domain/entities/user.model';
 import { Workspace } from '../../../core/domain/entities/workspace.model';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { AuthResponse } from '../domain/auth.domain';
@@ -16,6 +16,8 @@ import { SharedService } from '../../../shared/services/shared.service';
 })
 export class AuthService implements RegisterUseCase {
 
+  private logoutSubject = new Subject<void>();
+  logout$ = this.logoutSubject.asObservable();
 
   //******************************//
   //** For Initial loading **//
@@ -112,7 +114,6 @@ export class AuthService implements RegisterUseCase {
       withCredentials: true
     }).pipe(
       tap((res: any) => {
-        console.log('Refresh token in authservice: ', res);
         localStorage.setItem('authToken', res.token)
       })
     )
@@ -127,7 +128,7 @@ export class AuthService implements RegisterUseCase {
 
     this.currentUser = null;
     this.currentWorkspace = null;
-
+    this.logoutSubject.next();
     this.userSubject.next(null);
   }
 

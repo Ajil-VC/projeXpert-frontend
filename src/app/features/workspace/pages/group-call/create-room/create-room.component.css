@@ -326,3 +326,26 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
   outline-offset: 2px;
 
 }
+
+
+
+
+.room-creation-container {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+}
+
+/* Chrome, Edge, Safari */
+.room-creation-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.room-creation-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+}
+
+.room-creation-container::-webkit-scrollbar-track {
+  background: transparent;
+}
