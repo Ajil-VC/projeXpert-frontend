@@ -64,6 +64,25 @@
   width: 150px;
 }
 
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #555;
+  font-family: Arial, sans-serif;
+}
+
+.no-results p {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.no-results small {
+  color: #777;
+}
+
+
+
 /* Responsive Fixes */
 @media (max-width: 768px) {
   .filters {

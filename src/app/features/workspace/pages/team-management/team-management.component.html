@@ -1,12 +1,12 @@
 <div class="filters">
     <mat-form-field appearance="fill">
         <mat-label>Search (Name or Email)</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Type to search" />
+        <input matInput [formControl]="searchControl" placeholder="Type to search" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
         <mat-label>Filter by Role</mat-label>
-        <mat-select [(ngModel)]="selectedRole" (selectionChange)="applyFilters()">
+        <mat-select [formControl]="roleControl">
             <mat-option value="">All</mat-option>
             <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
         </mat-select>
@@ -14,7 +14,7 @@
 
     <mat-form-field appearance="fill">
         <mat-label>Filter by Status</mat-label>
-        <mat-select [(ngModel)]="selectedStatus" (selectionChange)="applyFilters()">
+        <mat-select [formControl]="statusControl">
             <mat-option value="">All</mat-option>
             <mat-option value="active">Active</mat-option>
             <mat-option value="blocked">Blocked</mat-option>
@@ -22,7 +22,7 @@
     </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="filteredUsers" class="user-table mat-elevation-z2" matSort>
+<table mat-table [dataSource]="users" class="user-table mat-elevation-z2" matSort>
 
     <!-- Profile Column -->
     <ng-container matColumnDef="profile">
@@ -82,6 +82,12 @@
 
 
 </table>
+
+<div *ngIf="users.length === 0" class="no-results">
+  <p>🔍 No results found</p>
+  <small>Try changing filters or search query.</small>
+</div>
+
 
 <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
     (pageChanged)="onPageChange($event)">></app-pagination>

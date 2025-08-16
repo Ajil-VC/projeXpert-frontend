@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSlideToggle, MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,12 +14,14 @@ import { AuthService } from '../../../auth/data/auth.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
+import { combineLatest, debounceTime, distinctUntilChanged, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-team-management',
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatTableModule,
     MatFormFieldModule,
@@ -34,15 +36,24 @@ import { PaginationComponent } from '../../../reusable/pagination/pagination.com
 })
 export class TeamManagementComponent {
 
+  private destroy$ = new Subject<void>();
+
   users: User[] = [];
   roles = ['admin', 'user'];
   displayedColumns = ['profile', 'name', 'email', 'role', 'block'];
-  filteredUsers: any[] = []; // Filtered for table
 
   currentUser!: User | null;
-  searchTerm: string = '';
   selectedRole: string = '';
   selectedStatus: string = '';
+
+  searchTerm: string = '';
+  role: string = '';
+  status: string = '';
+
+
+  searchControl = new FormControl('');
+  statusControl = new FormControl('');
+  roleControl = new FormControl('');
 
   currentPage: number = 1;
   totalPages: number = 1;
@@ -60,6 +71,33 @@ export class TeamManagementComponent {
     this.fetchUsers(page);
   }
 
+
+  filteredResult$ = combineLatest([
+    this.searchControl.valueChanges.pipe(startWith('')),
+    this.roleControl.valueChanges.pipe(startWith('')),
+    this.statusControl.valueChanges.pipe(startWith(''))
+  ]).pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
+    takeUntil(this.destroy$),
+    switchMap(([searchTerm, role, status]) => {
+
+      this.searchTerm = searchTerm ?? '';
+      this.role = role ?? '';
+      this.status = status ?? '';
+
+      return this.teamSer.getUsers(1, this.searchTerm, this.role, this.status);
+
+    })
+  ).subscribe({
+    next: (res) => {
+      if (res.status) {
+        this.users = res.result.users;
+        this.totalPages = res.result.totalPages;
+      }
+    }
+  })
+
   profilePic(user: User) {
     if (!user?.profilePicUrl?.url) {
       return null;
@@ -70,17 +108,13 @@ export class TeamManagementComponent {
 
   fetchUsers(page: number = 1) {
 
-    let allUsers: User[] = [];
-
-    this.teamSer.getUsers(page).subscribe({
+    this.teamSer.getUsers(page, this.searchTerm, this.role, this.status).subscribe({
       next: (res) => {
 
         if (res.status) {
 
           this.totalPages = res.result.totalPages;
-          allUsers = res.result.users;
-          this.users = allUsers.filter(user => user.email !== this.currentUser?.email);
-          this.applyFilters();
+          this.users = res.result.users;
 
         }
       },
@@ -90,27 +124,6 @@ export class TeamManagementComponent {
     })
 
   }
-
-  applyFilters() {
-    this.filteredUsers = this.users.filter(user => {
-      const matchesSearch =
-        !this.searchTerm ||
-        user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-      const matchesRole =
-        !this.selectedRole || user.role === this.selectedRole;
-
-      const matchesStatus =
-        !this.selectedStatus ||
-        (this.selectedStatus === 'active' && !user.restrict) ||
-        (this.selectedStatus === 'blocked' && user.restrict);
-
-      return matchesSearch && matchesRole && matchesStatus;
-    });
-  }
-
-
 
   toggleBlock(user: User, event: boolean) {
     this.updateUser(user, event)
@@ -136,5 +149,10 @@ export class TeamManagementComponent {
     })
   }
 
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }

@@ -11,7 +11,12 @@ export class TeamManagementService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(page: number): Observable<{ status: boolean, result: { users: User[], totalPages: number } }> {
+  getUsers(
+    page: number,
+    searchTerm: string = '',
+    role: string = '',
+    status: string = ''
+  ): Observable<{ status: boolean, result: { users: User[], totalPages: number } }> {
 
     return this.http.get<{
       status: boolean,
@@ -19,7 +24,8 @@ export class TeamManagementService {
         users: User[],
         totalPages: number
       }
-    }>(`${environment.apiUserUrl}get-users?page=${page}`);
+    }>(`${environment.apiUserUrl}get-users?page=${page}&searchTerm=${searchTerm}&role=${role}&status=${status}`);
+
   }
 
   controlUser(userId: string, status: boolean | null, userRole: string): Observable<any> {
