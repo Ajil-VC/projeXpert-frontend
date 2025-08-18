@@ -35,8 +35,12 @@
                 <div class="time-until" [ngClass]="{
                         'greenlabel' : getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) !== 'Meeting time passed',
                         'redlabel':getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) === 'Meeting time passed'
-                        }">
+                        }" *ngIf="!meeting.recurring">
                     {{ getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) }}
+                </div>
+
+                <div class="time-until recurring" *ngIf="meeting.recurring">
+                    {{ meeting.recurring ? 'Recurring' : '' }}
                 </div>
 
                 <div class="card-actions">
@@ -56,7 +60,7 @@
                 <h3 class="meeting-title">{{ meeting.roomName }}</h3>
 
                 <div class="meeting-datetime">
-                    <div class="datetime-item">
+                    <div class="datetime-item" *ngIf="!meeting.recurring">
                         <span class="datetime-icon">📅</span>
                         <span class="datetime-text">{{ formatDate(meeting.meetingDate) }}</span>
                     </div>
@@ -88,7 +92,7 @@
                 <!-- Meeting Meta -->
                 <div class="meeting-meta">
                     <span class="created-by">Created by {{ meeting.createdBy.email }}</span>
-                    <span class="created-date">{{ formatDate(meeting?.createdAt) }}</span>
+                    <span class="created-date" *ngIf="!meeting.recurring">{{ formatDate(meeting?.createdAt) }}</span>
                 </div>
             </div>
 

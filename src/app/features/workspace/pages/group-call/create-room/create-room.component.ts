@@ -8,10 +8,11 @@ import { NotificationService } from '../../../../../core/data/notification.servi
 import { Team } from '../../../../../core/domain/entities/team.model';
 import { GroupcallService } from '../groupcall.service';
 import { AuthService } from '../../../../auth/data/auth.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-create-room',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, MatSlideToggleModule],
   templateUrl: './create-room.component.html',
   styleUrl: './create-room.component.css'
 })
@@ -21,6 +22,8 @@ export class CreateRoomComponent {
   isSubmitting = false;
   minDate: string;
   minTime: string;
+
+  isRecurring: boolean = false;
 
   availableUsers: Team[] = [];
   selectedMembers: Team[] = [];
@@ -52,6 +55,18 @@ export class CreateRoomComponent {
     this.authSer.logout$.subscribe({
       next: () => this.dialogRef.close(null)
     })
+
+    this.roomForm.get('recurring')?.valueChanges.subscribe(isRecurring => {
+      const meetingDateControl = this.roomForm.get('meetingDate');
+      this.isRecurring = isRecurring;
+      if (isRecurring) {
+        meetingDateControl?.clearValidators();
+      } else {
+        meetingDateControl?.setValidators([Validators.required]);
+      }
+
+      meetingDateControl?.updateValueAndValidity();
+    });
   }
 
   private initializeForm(): void {
@@ -59,6 +74,7 @@ export class CreateRoomComponent {
       roomName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       meetingDate: ['', Validators.required],
       meetingTime: ['', Validators.required],
+      recurring: [false],
       description: ['', [Validators.maxLength(500)]],
       members: [[], Validators.required] // Array of selected user IDs
     });
@@ -200,6 +216,9 @@ export class CreateRoomComponent {
   }
 
   private isValidDateTime(): boolean {
+
+    if (this.isRecurring) return true;
+
     const dateValue = this.roomForm.get('meetingDate')?.value;
     const timeValue = this.roomForm.get('meetingTime')?.value;
 
@@ -227,6 +246,7 @@ export class CreateRoomComponent {
         roomName: this.roomForm.get('roomName')?.value,
         meetingDate: this.roomForm.get('meetingDate')?.value,
         meetingTime: this.roomForm.get('meetingTime')?.value,
+        recurring: this.roomForm.get('recurring')?.value || false,
         description: this.roomForm.get('description')?.value || '',
         members: this.selectedMembers.map(mem => mem._id),
         roomId: ROOM_ID,

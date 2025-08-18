@@ -16,7 +16,7 @@ export class GroupcallService {
   }
 
   createRoom(FormData: {
-    roomName: any; meetingDate: any; meetingTime: any; description: any; members: string[], roomId: string, url: string;
+    roomName: any; meetingDate: any; meetingTime: any; recurring: boolean; description: any; members: string[], roomId: string, url: string;
   }): Observable<any> {
     return this.http.post(`${environment.apiUserUrl}create-room`, FormData);
   }

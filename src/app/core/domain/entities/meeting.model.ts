@@ -8,6 +8,7 @@ export interface Meeting {
     roomName: string;
     meetingDate: Date;
     meetingTime: string;
+    recurring: boolean;
     description: string;
     members: User[];
     status: 'upcoming' | 'ongoing' | 'completed';

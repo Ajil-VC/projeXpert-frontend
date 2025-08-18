@@ -130,6 +130,10 @@ export class DashboardComponent {
       }
     }
 
+    if (!res) {
+      this.activityItems = [];
+    }
+
     this.epicItems = res?.result?.epics || [];
   }
 

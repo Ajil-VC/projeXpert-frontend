@@ -2,7 +2,7 @@
 .header-section {
     background: var(--darkish-gray);
     border-radius: 16px;
-    padding: 32px;
+    padding: 20px 28px;
     margin-bottom: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
@@ -18,7 +18,7 @@
 
 .header-title h1 {
     margin: 0 0 8px 0;
-    font-size: 32px;
+    font-size: 25px;
     font-weight: 700;
     color: white;
     display: flex;
@@ -29,7 +29,7 @@
 .header-subtitle {
     margin: 0;
     color: #64748b;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .controls-section {
@@ -51,7 +51,7 @@
 
 .search-input {
     width: 100%;
-    padding: 14px 16px 14px 48px;
+    padding: 10px 16px 10px 48px;
     border: 2px solid var(--secondary-color);
     border-radius: 12px;
     font-size: 16px;

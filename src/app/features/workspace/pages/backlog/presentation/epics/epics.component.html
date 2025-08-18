@@ -16,16 +16,16 @@
 
             <div class="epic-item-header">
                 <div class="epic-item-namepart">
-                    <span class="expand-icon" (click)="toggleEpicDetails(epic)"
-                        [ngClass]="isEpicExpanded(epic._id) ? 'fa-chevron-right ' : 'fa-chevron-down'"></span>
+                    <span class="expand-icon fas" (click)="toggleEpicDetails(epic)"
+                        [ngClass]="isEpicExpanded(epic._id) ? 'fa-chevron-down' : 'fa-chevron-right'"></span>
                     <input class="epic-color" type="checkbox" (change)="updateCheckStatus(epic._id, $event)">
                     <span class="epic-title" (click)="toggleEpicDetails(epic)">{{ epic.title }}</span>
 
                 </div>
 
-                <button class="icon-action danger" (click)="deleteProject($event, epic._id)">
+                <!-- <button class="icon-action danger" (click)="deleteProject($event, epic._id)">
                     <i class="fas fa-trash-alt"></i>
-                </button>
+                </button> -->
             </div>
             <div class="epic-details" [ngClass]="{'expanded': isEpicExpanded(epic._id)}" id="{{epic._id}}">
                 <div class="date-info">

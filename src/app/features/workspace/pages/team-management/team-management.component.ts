@@ -82,7 +82,7 @@ export class TeamManagementComponent {
     takeUntil(this.destroy$),
     switchMap(([searchTerm, role, status]) => {
 
-      this.searchTerm = searchTerm ?? '';
+      this.searchTerm = searchTerm?.trim() ?? '';
       this.role = role ?? '';
       this.status = status ?? '';
 

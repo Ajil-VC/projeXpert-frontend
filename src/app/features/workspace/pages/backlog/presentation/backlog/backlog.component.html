@@ -7,7 +7,7 @@
         <app-epics [epics]="epics"></app-epics>
         <div class="board-container backlog-content">
 
-            <div class="sprint-container" >
+            <div class="sprint-container" *ngIf="sprints.length > 0">
                 <app-sprint *ngFor="let sprint of sprints ; trackBy:trackBySprintId" [sprint]="sprint"
                     [allSprintIds]="sprintIds" (itemDropped)="handleDrop($event)"></app-sprint>
             </div>

@@ -256,6 +256,11 @@
 
 }
 
+.recurring {
+    background-color: var(--primary-color);
+    color: white;
+}
+
 .meeting-description {
     margin-bottom: 20px;
 }

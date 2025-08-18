@@ -1,26 +1,32 @@
 <div class="sprint-section">
-  
+
   <div class="section-header">
     <div class="header-left">
+
       <button class="collapse-button">
         <i class="fa fa-chevron-down"></i>
       </button>
       <h3>{{ sprint.name}}</h3>
-      <button class="add-dates-button">
-        <i class="fa fa-calendar"></i>
-        Add dates
-      </button>
       <span class="issue-count">({{ issueCount }} issues)</span>
+      <button class="add-dates-button" *ngIf="sprint.status === 'active'">
+        <i class="fa fa-calendar"></i>
+        {{sprint.startDate | date: 'mediumDate'}} TO {{sprint.endDate | date: 'mediumDate'}}
+        <p>{{daysLeft}}</p>
+      </button>
+
     </div>
     <div class="header-right">
       <!-- <div class="assignee-indicators">
         <div class="assignee-circle blue"></div>
         <div class="assignee-circle green"></div>
       </div> -->
-      <span class="count">0</span>
-      <button class="start-sprint-button" *ngIf="sprint.status === 'not-started'" (click)="startSprint()">Start
+      <!-- <span class="count">0</span> -->
+      <button class="start-sprint-button" *ngIf="sprint.status === 'not-started'" [disabled]="issueCount === 0"
+        (click)="startSprint()"
+        [matTooltip]="issueCount === 0 ? 'Sprint cannot be started because it contains no work items' : ''">Start
         sprint</button>
-      <button class="start-sprint-button" *ngIf="sprint.status === 'active'" (click)="completeSprint()">GoTo Board</button>
+      <button class="start-sprint-button" *ngIf="sprint.status === 'active'" (click)="completeSprint()">GoTo
+        Board</button>
       <button class="more-options-button">
         <i class="fa fa-ellipsis-h"></i>
       </button>
@@ -35,8 +41,8 @@
       <p>Plan a sprint by dragging work items into it.</p>
     </div>
 
-    <app-issue-row *ngFor="let task of filteredIssuesShallow" [issue]="task" [daysLeft]="daysLeft" cdkDrag [cdkDragData]="task"
-      (idFromIssueRow)="handleDropdown($event)" (assign)="handleIssued($event)" 
+    <app-issue-row *ngFor="let task of filteredIssuesShallow" [issue]="task" [daysLeft]="daysLeft" cdkDrag
+      [cdkDragData]="task" (idFromIssueRow)="handleDropdown($event)" (assign)="handleIssued($event)"
       (seletedIssueResponse)="handleSelectedIssue($event)" [openIdFromBacklog]="currentDivId"></app-issue-row>
 
     <app-create-issue-button [from]="issueCreationButton"></app-create-issue-button>

@@ -1,7 +1,7 @@
-<h2 mat-dialog-title>Edit Task</h2>
+<h2 mat-dialog-title>{{!showComments ? `Edit Task ${task.title}` : `Comment section of task ${task.title}`}}</h2>
 
 <mat-dialog-content class="edit-task-modal">
-    <form #form="ngForm" class="edit-task-form">
+    <form #form="ngForm" class="edit-task-form" *ngIf="!showComments">
 
         <!-- Task Title -->
         <mat-form-field appearance="fill" class="full-width">
@@ -31,7 +31,7 @@
         </mat-form-field>
 
 
-        <div class="assignee-section" >
+        <div class="assignee-section">
             <h3>Assign To</h3>
             <mat-form-field class="full-width">
                 <mat-label>Change Assignee</mat-label>

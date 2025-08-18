@@ -5,7 +5,6 @@
         <button (click)="addComment()" [disabled]="!newComment.trim()">Post</button>
     </div>
 
-
     <div class="comment" *ngFor="let comment of comments">
         <div class="header">
             <strong>{{ getEmail(comment.userId) }}</strong>

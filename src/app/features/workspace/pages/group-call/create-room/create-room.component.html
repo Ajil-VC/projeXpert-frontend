@@ -49,6 +49,17 @@
                     </div>
                 </div>
             </div>
+            <!-- recurring -->
+            <div class="form-group flex-1">
+                <div class="recurring">
+                    <label for="recurring" class="form-label">
+                        Recurring
+                    </label>
+                    <mat-slide-toggle formControlName="recurring" [class.error]="isFieldInvalid('recurring')">
+                    </mat-slide-toggle>
+                </div>
+            </div>
+
 
             <!-- Description Field -->
             <div class="form-group">
@@ -76,13 +87,13 @@
                 <!-- Selected Members Display -->
                 <div class="selected-members" *ngIf="selectedMembers.length > 0">
                     <div class="member-chip" *ngFor="let member of selectedMembers">
-                    
+
                         <div class="member-info">
                             <span class="member-email">{{ member.email }}</span>
                         </div>
                         <button type="button" class="remove-member" (click)="removeMember(member._id)"
                             [attr.aria-label]="'Remove ' + member.name">×
-                            
+
                         </button>
                     </div>
                 </div>
@@ -90,16 +101,17 @@
                 <!-- Member Search Input -->
                 <div class="search-container">
                     <input type="text" id="memberSearch" class="form-input search-input"
-                        [class.error]="isFieldInvalid('members')" [(ngModel)]="searchQuery" [ngModelOptions]="{ standalone: true }"
-                        (input)="onSearchMembers($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()"
-                        placeholder="Search and add team members..." autocomplete="off">
+                        [class.error]="isFieldInvalid('members')" [(ngModel)]="searchQuery"
+                        [ngModelOptions]="{ standalone: true }" (input)="onSearchMembers($event)"
+                        (focus)="onSearchFocus()" (blur)="onSearchBlur()" placeholder="Search and add team members..."
+                        autocomplete="off">
                     <div class="search-icon">🔍</div>
 
                     <!-- User Dropdown -->
                     <div class="user-dropdown" *ngIf="showUserDropdown && filteredUsers.length > 0">
                         <div class="user-option" *ngFor="let user of filteredUsers"
                             [class.selected]="isMemberSelected(user)" (click)="addMember(user)">
-                           
+
                             <div class="user-info">
                                 <div class="user-name">{{ user.email }}</div>
 

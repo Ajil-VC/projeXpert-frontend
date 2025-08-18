@@ -15,10 +15,11 @@ import { SharedService } from '../../../../../../shared/services/shared.service'
 import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
 import { NotificationService } from '../../../../../../core/data/notification.service';
 import { SprintCompleteComponent } from '../../../kanban/presentation/sprint-complete/sprint-complete.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-sprint',
-  imports: [CreateIssueButtonComponent, IssueRowComponent, CommonModule, DragDropModule],
+  imports: [CreateIssueButtonComponent, IssueRowComponent, CommonModule, DragDropModule, MatTooltipModule],
   templateUrl: './sprint.component.html',
   styleUrl: './sprint.component.css'
 })
@@ -227,7 +228,7 @@ export class SprintComponent implements OnChanges {
     }
   }
 
-  completeSprint(){
+  completeSprint() {
     this.router.navigate(['user/board']);
   }
 
@@ -272,7 +273,7 @@ export class SprintComponent implements OnChanges {
     })
   }
 
- 
+
 
   handleSelectedIssue(issueId: string) {
 
