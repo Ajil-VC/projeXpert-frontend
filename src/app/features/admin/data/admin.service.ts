@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { SubscriptionPlan } from '../../../core/domain/entities/subscription.model';
+import { SummaryCard } from '../../workspace/pages/dashboard/domain/dashboard.domain';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,50 @@ export class AdminService {
   companySubject = new BehaviorSubject(null);
   company$ = this.companySubject.asObservable();
 
-  getDashBoardData(): Observable<any> {
-    return this.http.get(`${environment.apiAdminUrl}dashboard`);
+  getDashBoardData(): Observable<{
+    status: boolean,
+    result: {
+      barChartData: Array<number>,
+      summaryCards: SummaryCard[],
+      doughnutChart: {
+        data: Array<number>,
+        labels: Array<string>
+      },
+      top5Companiesdata: Array<{
+        totalAmount: number,
+        subscriptionCount: number,
+        companyId: any,
+        companyName: string
+      }>,
+      largestEmployer: Array<{
+        employerCount: number,
+        email: string,
+        companyName: string
+      }>
+    }
+  }> {
+    return this.http.get<{
+      status: boolean,
+      result: {
+        barChartData: Array<number>,
+        summaryCards: SummaryCard[],
+        doughnutChart: {
+          data: Array<number>,
+          labels: Array<string>
+        },
+        top5Companiesdata: Array<{
+          totalAmount: number,
+          subscriptionCount: number,
+          companyId: any,
+          companyName: string
+        }>,
+        largestEmployer: Array<{
+          employerCount: number,
+          email: string,
+          companyName: string
+        }>
+      }
+    }>(`${environment.apiAdminUrl}dashboard`);
   }
 
   blockOrUnblockUser(userId: string, status: boolean): Observable<any> {

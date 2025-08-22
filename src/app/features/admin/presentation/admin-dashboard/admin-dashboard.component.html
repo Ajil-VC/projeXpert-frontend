@@ -31,5 +31,41 @@
 
     </div>
 
+    <div class="middle-data">
+
+        <div class="section">
+            <h3>Top 5 Companies <span>(On current year subscription)</span></h3>
+
+            <ul class="company-list">
+                <li *ngFor="let company of top5Companies">
+                    <span class="name">{{company.companyName}}</span>
+                    <span class="dots"></span>
+                    <span class="amount">{{company.totalAmount}}</span>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="section">
+            <h3>Largest Employer<span>(Included all companaies)</span></h3>
+
+            <ul class="company-list">
+
+                <li *ngFor="let data of largestEmployer">
+                    <span class="name">{{data.companyName}}</span>
+                    <span class="dots"></span>
+                    <span class="amount">{{data.employerCount}}</span>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="section">
+            <h3></h3>
+        </div>
+
+    </div>
+
 
 </div>

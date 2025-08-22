@@ -17,6 +17,9 @@ import { NotificationService } from '../../../../core/data/notification.service'
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
+import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
+import { LoaderService } from '../../../../core/data/loader.service';
+
 
 @Component({
   selector: 'app-kanban',
@@ -28,7 +31,8 @@ import { ButtonType } from '../../../../core/domain/entities/UI Interface/button
     CdkDropList,
     CdkDrag,
     SearchPipe,
-    ContentHeaderComponent
+    ContentHeaderComponent,
+    LoaderComponent
   ],
   templateUrl: './kanban.component.html',
   styleUrl: './kanban.component.css'
@@ -72,41 +76,47 @@ export class KanbanComponent {
   doneTasks: Task[] = [];
   userRole: string = '';
 
+  isLoading: boolean = false;
+
   constructor(
     private shared: SharedService,
     private backlogSer: BacklogService,
     public dialog: MatDialog,
     private authSer: AuthService,
-    private toast: NotificationService
+    private toast: NotificationService,
+    private loader: LoaderService
   ) { }
 
 
   onDrop(event: CdkDragDrop<any[]>) {
-
+    // this.loadService.
     const droppedTask = event.item.data;
+    this.loader.show();
 
     if (event.previousContainer === event.container) {
       // Reorder in same column
+      this.loader.hide();
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Move task to another column
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
 
-      // Optional: update status on task (e.g., 'todo' -> 'in-progress')
       // droppedTask.status = this.getStatusByContainer(event.container.id);
       this.backlogSer.updateIssueStatus(droppedTask._id, event.container.id).subscribe({
         next: (res) => {
           if ('status' in res && res.status === true) {
 
+            this.loader.hide();
+            transferArrayItem(
+              event.previousContainer.data,
+              event.container.data,
+              event.previousIndex,
+              event.currentIndex
+            );
+
             droppedTask.status = event.container.id;
           }
         },
         error: (err) => {
+          this.loader.hide();
           this.toast.showError('Failed to update the task status');
         }
       });
@@ -126,6 +136,8 @@ export class KanbanComponent {
 
   refreshKanbanView() {
 
+    this.loader.show();
+
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
 
@@ -134,10 +146,14 @@ export class KanbanComponent {
           this.seperatingOnStatus();
           return;
         }
+        
         this.allTasks = res.result;
         this.seperatingOnStatus();
+        this.loader.hide();
+
       },
       error: (err) => {
+        this.loader.hide();
         this.toast.showError('Failed to get tasks in active sprint.');
       }
     });

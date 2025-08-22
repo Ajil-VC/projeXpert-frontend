@@ -23,10 +23,12 @@ export class AdminDashboardComponent {
   ngOnInit() {
 
     this.adminSer.getDashBoardData().subscribe({
-      next: (res: { status: boolean, result: { barChartData: Array<number>, summaryCards: SummaryCard[], doughnutChart: { data: Array<number>, labels: Array<string> } } }) => {
+      next: (res) => {
 
         this.summaryCards = res.result.summaryCards;
         this.barChartData[0].data = res.result.barChartData;
+        this.top5Companies = res.result.top5Companiesdata;
+        this.largestEmployer = res.result.largestEmployer;
 
         if (this.chart) {
           this.chart.update();
@@ -43,6 +45,18 @@ export class AdminDashboardComponent {
     })
   };
 
+  top5Companies: Array<{
+    totalAmount: number,
+    subscriptionCount: number,
+    companyId: any,
+    companyName: string
+  }> = [];
+
+  largestEmployer: Array<{
+    employerCount: number,
+    email: string,
+    companyName: string
+  }> = [];
 
   summaryCards: SummaryCard[] = [
     {
@@ -113,7 +127,9 @@ export class AdminDashboardComponent {
     datasets: [
       {
         data: [0],
-        backgroundColor: []
+        backgroundColor: [],
+        borderWidth: 0,
+        borderColor: 'transparent'
       }
     ]
   };

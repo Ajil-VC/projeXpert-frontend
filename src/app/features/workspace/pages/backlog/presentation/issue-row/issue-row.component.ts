@@ -28,7 +28,12 @@ export class IssueRowComponent {
   @Output() idFromIssueRow = new EventEmitter<string>();
   @Output() seletedIssueResponse = new EventEmitter<string>();
 
-  constructor(private shared: SharedService, private eleRef: ElementRef, private backlogSer: BacklogService, private dialog: MatDialog, private toast: NotificationService) { }
+  constructor(
+    private shared: SharedService,
+    private eleRef: ElementRef,
+    private backlogSer: BacklogService,
+    private dialog: MatDialog,
+    private toast: NotificationService) { }
 
   isClicked: boolean = false;
 
@@ -56,7 +61,7 @@ export class IssueRowComponent {
   }
 
   get epicName(): string | null {
-    
+
     return this.issue.epicId ? (this.issue.epicId as Task).title : null;
   }
 
@@ -79,7 +84,14 @@ export class IssueRowComponent {
       next: (res) => {
       },
       error: (err) => {
-        console.error("Error occured while tryging to change task status.", err);
+
+        if (err['message'] === 'Subtasks should be completed before moving the task to done') {
+
+          this.issue.status = 'in-progress';
+          this.toast.showInfo('Subtasks should be completed before moving the task to done');
+          return;
+        }
+        this.toast.showError('Error occured while tryging to change task status.')
       }
     })
   }

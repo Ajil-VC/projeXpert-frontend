@@ -17,7 +17,21 @@ export class TaskCardComponent {
   endDate: any = '';
   daysLeft = '';
   ngOnChanges() {
-    this.endDate = (this.task?.sprintId !== null && typeof this.task?.sprintId !== 'string') ? this.task?.sprintId.endDate : '';
+
+    if (this.task.parentId) {
+      if (typeof this.task.parentId !== 'string') {
+
+        this.setDaysLeft(this.task.parentId)
+      }
+    } else {
+      this.setDaysLeft(this.task);
+    }
+
+  }
+
+  setDaysLeft(task: Task) {
+
+    this.endDate = (task?.sprintId !== null && typeof task?.sprintId !== 'string') ? task?.sprintId.endDate : '';
 
     const endDate = new Date(this.endDate);
     const today = new Date();
@@ -37,12 +51,17 @@ export class TaskCardComponent {
   }
 
   get sprintName(): string | null {
+    if (this.task.parentId && typeof this.task.parentId !== 'string' && this.task.parentId.sprintId !== 'string') {
+      const sprint = this.task.parentId.sprintId as Sprint;
+      return sprint?.name as string ?? null;
+    }
     const sprint = this.task?.sprintId as Sprint;
     return sprint?.name as string ?? null;
   }
 
   ngOnInit() {
     // this.task.
+    // console.log(this.task)
   }
 
 }

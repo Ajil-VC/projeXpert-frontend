@@ -18,7 +18,13 @@ export class LoaderComponent {
     effect(() => {
 
       this.isCollapsed = this.loadSer.isCollapsed();
-    
+
+    })
+  }
+
+  ngOnInit() {
+    this.loadSer.loading$.subscribe(signal => {
+      this.isLoading = signal;
     })
   }
 

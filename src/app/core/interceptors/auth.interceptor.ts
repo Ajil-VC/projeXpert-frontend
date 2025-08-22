@@ -5,6 +5,7 @@ import { catchError, of, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../features/auth/data/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../data/notification.service';
+import { LoaderService } from '../data/loader.service';
 
 
 
@@ -24,6 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const authService = inject(AuthService);
+  const loader = inject(LoaderService);
 
   return next(cloneReq).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -63,6 +65,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           const msg1 = 'Please subscribe to a plan to perform this operation';
           const msg2 = 'Dont have permission to perform this operation';
           const msg3 = 'Please subscribe to a plan to add more members';
+          loader.hide();
 
           if (error.error['message'] === msg3) {
 
@@ -95,6 +98,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           });
         }
       } else if (error.status === 404 || error.status === 400) {
+
         userFriendlyMessage = error.error?.message || 'Something went wrong. Please try again.';
         notificationService.showError(userFriendlyMessage);
       } else if (error.status === 409) {

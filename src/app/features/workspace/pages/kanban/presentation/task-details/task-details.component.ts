@@ -1,5 +1,5 @@
-import { Component, Inject, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
@@ -8,13 +8,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { SharedService } from '../../../../../../shared/services/shared.service';
-import { User } from '../../../../../../core/domain/entities/user.model';
 import { Team } from '../../../../../../core/domain/entities/team.model';
 import { SearchPipe } from '../../../../../../core/pipes/search.pipe';
 import { KanbanService } from '../../data/kanban.service';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { CommentSectionComponent } from "../../../../components/comment-section/comment-section.component";
 import { AuthService } from '../../../../../auth/data/auth.service';
+import { MatIcon } from '@angular/material/icon';
+import { NotificationService } from '../../../../../../core/data/notification.service';
+import { LoaderComponent } from '../../../../../../core/presentation/loader/loader.component';
+import { LoaderService } from '../../../../../../core/data/loader.service';
+import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
+import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-task-details',
@@ -32,26 +37,37 @@ import { AuthService } from '../../../../../auth/data/auth.service';
     ReactiveFormsModule,
     MatFormFieldModule,
     SearchPipe,
-    CommentSectionComponent
+    CommentSectionComponent,
+    MatIcon,
+    LoaderComponent
   ],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.css'
 })
 export class TaskDetailsComponent {
 
-  @ViewChild('form') form: NgForm | undefined;
+  @ViewChild('form') form!: NgForm;
 
   task!: Task;
+  subTasks: Task[] = [];
   userRole!: string;
   teamMembers: Team[] = [];
   isSaved: boolean = false;
+  newSubtaskTitle: string = '';
+  showSubtasks: boolean = false;
+  taskTitle: string = `Edit task`;
+  isLoading: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { task: Task, userRole: string, daysLeft: string },
     private shared: SharedService,
     private kanbanSer: KanbanService,
-    private authSer: AuthService
+    private authSer: AuthService,
+    private cd: ChangeDetectorRef,
+    private toast: NotificationService,
+    private loader: LoaderService,
+    private dialog: MatDialog
   ) {
     this.task = this.data.task;
     this.userRole = this.data.userRole;
@@ -71,6 +87,9 @@ export class TaskDetailsComponent {
   imagePreviews: string[] = [];
   droppedFiles: File[] = [];
 
+  activeSubtaskIndex: number | null = null;
+  searchTerm: string = '';
+
   ngOnInit() {
 
     this.setDaysLeft();
@@ -89,12 +108,35 @@ export class TaskDetailsComponent {
       next: () => this.dialogRef.close(null)
     })
 
+    this.kanbanSer.getSubtasks(this.task._id).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.subTasks = res.result;
+        }
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt retrieve the data.');
+      }
+    })
+
 
   }
+
+  ngAfterViewInit() {
+    this.cd.detectChanges();
+  }
+
 
   get sprintName(): string | null {
     const sprint = this.task?.sprintId as Sprint;
     return sprint?.name as string ?? null;
+  }
+
+  get parentName(): string {
+    if (typeof this.task.parentId !== 'string') {
+      return this.task.parentId.title
+    }
+    return '';
   }
 
   setDaysLeft() {
@@ -132,7 +174,6 @@ export class TaskDetailsComponent {
   onSave() {
 
     if (this.isSaved) return;
-    this.isSaved = true;
     const formData = new FormData();
 
     if (!this.form || this.form.invalid) {
@@ -156,17 +197,33 @@ export class TaskDetailsComponent {
       formData.append('attachments', file);
     });
 
+    this.kanbanSer.updateIssueStatus(this.task._id, this.form.value.status).pipe(
 
-    this.kanbanSer.updateTaskDetails(formData).subscribe({
-      next: (res) => {
+      switchMap(res => {
+
+        if (res.status) {
+          this.isSaved = true;
+          return this.kanbanSer.updateTaskDetails(formData);
+        }
+        return EMPTY
+      })
+    ).subscribe({
+      next: (res: { status: boolean, result: Task }) => {
+
         this.data.task = res.result;
         this.dialogRef.close(this.data.task);
         return;
       },
       error: (err) => {
-        console.error('error occured while updating task details.', err);
+        this.toast.showError('Couldnt update task details.');
       }
     })
+
+  }
+
+  onStatusChange(subtask: Task) {
+
+    this.kanbanSer.updateIssueStatus(subtask._id, subtask.status).subscribe()
 
   }
 
@@ -231,9 +288,172 @@ export class TaskDetailsComponent {
     });
   }
 
+  setTaskTitle() {
+    if (!this.showComments && !this.showSubtasks) {
+      this.taskTitle = `Edit task`;
+    } else if (this.showComments) {
+      this.taskTitle = `Comments on ${this.task.title}`;
+    } else if (this.showSubtasks) {
+      this.taskTitle = `Subtasks of ${this.task.title}`;
+    }
+  }
+
+  userEmail(subtask: Task) {
+    if (typeof subtask.assignedTo !== 'string') {
+      return subtask?.assignedTo?.email || '';
+    }
+    return '';
+  }
 
   toggleComments() {
     this.showComments = !this.showComments;
+    if (this.showComments) {
+
+      this.showSubtasks = false;
+    }
+    this.setTaskTitle();
+    this.cd.detectChanges();
+  }
+
+
+  toggleSubtasksView() {
+    this.showSubtasks = !this.showSubtasks;
+    if (this.showSubtasks) {
+
+      this.showComments = false;
+    }
+    this.setTaskTitle();
+    this.cd.detectChanges();
+  }
+  removeSubtask(subtask: Task) {
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Remove Task',
+        message: `Are you sure you want to delete "${subtask.title}"?`,
+        confirmButton: 'Remove',
+        cancelButton: 'Cancel'
+      }
+    });
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.kanbanSer.removeSubtask(subtask._id).subscribe({
+          next: (res) => {
+            if (res.status) {
+              const index = this.subTasks.findIndex(task => task._id === subtask._id);
+              this.subTasks.splice(index, 1);
+              this.toast.showSuccess('Task removed succesfully.');
+            }
+          },
+          error: (err) => {
+            this.toast.showError('Couldnt remove the task.');
+          }
+        })
+
+      }
+    });
+
+  }
+  addSubtask() {
+    this.loader.show();
+    this.kanbanSer.createSubTask(this.newSubtaskTitle, this.task._id).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.newSubtaskTitle = '';
+          this.toast.showSuccess('Task Added successfully.');
+          this.subTasks.unshift(res.result);
+          this.loader.hide();
+        }
+      },
+      error: (err) => {
+        this.loader.hide();
+        this.toast.showError('Couldnt create subtask.');
+      }
+    })
+  }
+
+  setActiveInput(index: number) {
+    this.activeSubtaskIndex = index;
+    this.searchTerm = '';
+  }
+
+  onInputChange(event: Event) {
+    this.searchTerm = (event.target as HTMLInputElement).value;
+  }
+
+  updateAssignee(subtask: Task, index: number, email: string) {
+
+    if (this.searchTerm.trim() === '') {
+      this.toast.showWarning('Please select an email from the list.');
+      return;
+    }
+
+    const user = this.teamMembers.find(user => user.email == email);
+
+    let userId = 'null';
+    let message = `Are you sure you want to assign ${email} to "${subtask.title}"?`;
+    let title = 'Assign task';
+    let confirmButton = 'Assign';
+
+
+    if (user && user.email === email) {
+      userId = user._id;
+    } else if (!user) {
+
+      message = `Are you sure you want to remove the assignee from task ${subtask.title}?`;
+      title = 'No user found!';
+      confirmButton = 'Remove assignee';
+
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title,
+        message,
+        confirmButton,
+        cancelButton: 'Cancel'
+      }
+    });
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.loader.show();
+        this.kanbanSer.assignIssue(subtask._id, userId).subscribe({
+          next: (res) => {
+            if (res.status) {
+              const index = this.subTasks.findIndex(task => task._id === res.data._id);
+              this.subTasks[index] = res.data;
+              this.toast.showSuccess(res.message);
+              this.loader.hide();
+            }
+          },
+          error: (err) => {
+            this.loader.hide();
+            this.toast.showError('Please try again, Couldnt assign user to the particular task.');
+          }
+        })
+
+        this.subTasks[index].assignedTo = this.searchTerm;
+        this.searchTerm = '';
+        this.activeSubtaskIndex = null;
+
+      }
+    });
+
+  }
+
+  assignUserToSubtask(user: Team, index: number, input: HTMLInputElement) {
+    this.subTasks[index].assignedTo = user._id;
+    input.value = user.email;
+    this.searchTerm = '';
+    this.activeSubtaskIndex = null;
   }
 
 }

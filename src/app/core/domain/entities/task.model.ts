@@ -37,7 +37,7 @@ export interface Task {
     progress?: number;
 
     sprintId: string | Sprint;     // Logical grouping for sprints
-    parentId: string;     // for subtasks
+    parentId: string | Task;     // for subtasks
     projectId: string;
     createdAt: Date;
     updatedAt: Date;

@@ -8,7 +8,6 @@ export class LoaderService {
 
   constructor() { }
 
-
   private _loadSignal = signal(false);
   readonly isCollapsed = this._loadSignal;
   changeValue(value: boolean) {

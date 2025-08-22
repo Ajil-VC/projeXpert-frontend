@@ -56,7 +56,8 @@ export class BacklogComponent {
   }
 
   refreshBacklogView() {
-    this.isLoading = true;
+
+    this.loader.show();
 
     forkJoin({
       tasksRes: this.shared.getTasksInProject(),
@@ -76,10 +77,11 @@ export class BacklogComponent {
           this.sprintIds = this.sprints.map(sprint => sprint._id as string);
         }
 
-        this.isLoading = false;
+        this.loader.hide();
       },
       error: (err) => {
-        this.isLoading = false;
+        
+        this.loader.hide();
         this.toast.showError('Failed to refresh backlog data');
       }
     });

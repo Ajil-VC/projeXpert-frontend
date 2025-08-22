@@ -20,6 +20,7 @@ import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/head
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
+import { LoaderService } from '../../../../core/data/loader.service';
 
 
 
@@ -88,7 +89,8 @@ export class GroupCallComponent {
     public dialog: MatDialog,
     private callService: GroupcallService,
     private toast: NotificationService,
-    private router: Router
+    private router: Router,
+    private loader: LoaderService
   ) { }
 
   ngOnInit(): void {
@@ -96,14 +98,15 @@ export class GroupCallComponent {
   }
 
   private loadMeetings(): void {
-    this.isLoading = true;
+
+    this.loader.show();
 
     this.callService.upcomingMeetings().subscribe({
       next: (res) => {
         if (res.status) {
           this.meetings = res.data;
           this.filteredMeetings = [...this.meetings];
-          this.isLoading = false;
+          this.loader.hide();
         }
 
       },
@@ -245,18 +248,19 @@ export class GroupCallComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.isLoading = true;
+        
+        this.loader.show();
         this.callService.removeMeeting(meeting._id).subscribe({
           next: (res) => {
 
             const indexOfMeet = this.meetings.findIndex(ele => ele._id === meeting._id);
             this.meetings.splice(indexOfMeet, 1);
             this.filterMeetings();
-            this.isLoading = false;
+            this.loader.hide();
           },
           error: (err) => {
             this.toast.showError('Couldnt remove the meeting.');
-            this.isLoading = false;
+            this.loader.hide();
           }
         });
       }

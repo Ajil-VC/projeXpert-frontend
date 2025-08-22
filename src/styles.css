@@ -9,7 +9,7 @@
 
     --secondary-color: #3f4948;
     --primary-color: #0e3727;
-    --logo-color: #889392;  
+    --logo-color: #889392;
     --primarydark-color: #101414;
 
     --text-color: #333;
@@ -20,6 +20,7 @@
     --darkish-gray: #202020;
     --danger-red: #dc3545;
     --border-color: #30363d;
+    --heavy-dark: rgba(0, 0, 0, 0.4);
 
 
     --radius: 8px;

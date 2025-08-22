@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivityItem, ScheduleItem, SummaryCard } from '../../domain/dashboard.domain';
-import { AuthService } from '../../../../../auth/data/auth.service';
+import { ScheduleItem, SummaryCard } from '../../domain/dashboard.domain';
 import { DashboardService } from '../../data/dashboard.service';
 import { NotificationService } from '../../../../../../core/data/notification.service';
 import { SharedService } from '../../../../../../shared/services/shared.service';
@@ -9,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { Activity } from '../../../../../../core/domain/entities/activity.model';
 import { User } from '../../../../../../core/domain/entities/user.model';
+import { LoaderService } from '../../../../../../core/data/loader.service';
 
 
 @Component({
@@ -93,7 +93,11 @@ export class DashboardComponent {
     }
   ];
 
-  constructor(private shared: SharedService, private authService: AuthService, private dashboardSer: DashboardService, private toast: NotificationService) { }
+  constructor(
+    private shared: SharedService,
+    private loader: LoaderService,
+    private dashboardSer: DashboardService,
+    private toast: NotificationService) { }
 
   private destroy$ = new Subject<void>();
 
@@ -138,14 +142,16 @@ export class DashboardComponent {
   }
 
   getData() {
-
+    this.loader.show();
     this.dashboardSer.getProjectStats().subscribe({
       next: (res) => {
 
         this.refreshDashboardView(res);
+        this.loader.hide();
 
       },
       error: (err) => {
+        this.loader.hide();
         this.toast.showError('Couldnt initialize dashboard.');
       }
     });
@@ -154,9 +160,11 @@ export class DashboardComponent {
       next: (res) => {
 
         this.activityItems = res.activities;
+        this.loader.hide();
 
       },
       error: (err) => {
+        this.loader.hide();
         this.toast.showError('Couldnt retrieve the activities');
       }
     })
