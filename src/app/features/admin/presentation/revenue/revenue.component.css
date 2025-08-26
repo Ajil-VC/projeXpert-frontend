@@ -1,0 +1,95 @@
+.revenue-report {
+    padding: 1rem;
+}
+
+.filters {
+    margin-bottom: 1rem;
+}
+
+.filters button {
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: #e5e7eb;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.filters button.active {
+    background: #4F46E5;
+    color: white;
+}
+
+.total-revenue {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.total-revenue h3 span {
+    color: var(--dark-gray);
+    font-weight: lighter;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.report-area {
+    width: 100%;
+    height: 55vh;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
+}
+
+.report-area .graph {
+    height: 100%;
+}
+
+.section {
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--darkish-gray);
+}
+
+.section .left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+.multi-select-area {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.multi-select {
+    display: flex;
+    gap: 10px;
+    color: white;
+    /* space between buttons */
+}
+
+.multi-select input {
+    display: none;
+    /* hide checkbox */
+}
+
+.multi-select span {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #007bff;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.multi-select span.active {
+    background: #007bff;
+}

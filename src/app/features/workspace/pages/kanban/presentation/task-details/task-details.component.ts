@@ -100,7 +100,7 @@ export class TaskDetailsComponent {
 
       },
       error: (err) => {
-        console.log('Error while getting team members.', err);
+        this.toast.showError('Error while getting team members.');
       }
     });
 
@@ -383,11 +383,12 @@ export class TaskDetailsComponent {
 
   onInputChange(event: Event) {
     this.searchTerm = (event.target as HTMLInputElement).value;
+
   }
 
   updateAssignee(subtask: Task, index: number, email: string) {
 
-    if (this.searchTerm.trim() === '') {
+    if (email.trim() === '') {
       this.toast.showWarning('Please select an email from the list.');
       return;
     }
@@ -450,6 +451,7 @@ export class TaskDetailsComponent {
   }
 
   assignUserToSubtask(user: Team, index: number, input: HTMLInputElement) {
+
     this.subTasks[index].assignedTo = user._id;
     input.value = user.email;
     this.searchTerm = '';

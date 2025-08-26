@@ -1,0 +1,46 @@
+<div class="revenue-report">
+
+    <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
+        (buttonClicked)="handlebuttonClick($event)"></app-content-header>
+
+
+
+
+
+
+    <!-- Chart -->
+    <div class="report-area">
+
+        <div class="section left">
+            <div class="graph" style="display: block;">
+                <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line">
+                </canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="total-revenue">
+                <h3><span>Total Revenue:</span> {{ totalRevenue | currency:'INR' }}</h3>
+
+                <h3><span>Total Purchase count:</span> {{ purchaseCount }}</h3>
+            </div>
+
+
+
+            <div class="multi-select-area">
+                <h4>Filter by plans</h4>
+                <div class="multi-select">
+                    <label *ngFor="let option of options">
+                        <input type="checkbox" [checked]="isSelected(option._id)" (change)="toggleOption(option)" />
+                        <span [class.active]="isSelected(option._id)">{{ option.name}}</span>
+                    </label>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+</div>

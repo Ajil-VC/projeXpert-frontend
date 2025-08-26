@@ -5,10 +5,10 @@
             <p class="header-subtitle">{{headerConfig.subtitle}}</p>
 
             <!-- Search and Filter Section -->
-            <div class="controls-section">
+            <div class="controls-section" *ngIf="!headerConfig.hideSearchBar">
                 <div class="search-container">
                     <input type="text" class="search-input" placeholder="{{headerConfig.placeHolder}}"
-                        (input)="onSearch($event)">
+                        [formControl]="searchControl">
                     <div class="search-icon">🔍</div>
                 </div>
             </div>
@@ -22,8 +22,6 @@
                 <i class="icon-plus"></i>
                 {{getButton('main')?.label}}
             </button>
-
-
 
             <div class="filter-actions">
                 <div class="status-filters" *ngIf="getButton('filter')">
@@ -39,6 +37,42 @@
                         (click)="onButtonClick('filter','archived')">
                         Archived
                     </button>
+                </div>
+
+                <div class="datePicker" *ngIf="custom">
+                    <div class="field">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" [(ngModel)]="startDateValue" id="startDate" class="date-input" />
+                    </div>
+
+                    <div class="field">
+                        <label for="endDate">End Date</label>
+                        <input type="date" [(ngModel)]="endDateValue" id="endDate" class="date-input" />
+                    </div>
+                </div>
+
+
+                <div class="filtering-area" *ngIf="getButton('radio')">
+
+                    <div class="status-filters">
+
+                        <button class="filter-btn" *ngIf="!custom" [class.active]="filter==='year'"
+                            (click)="onButtonClick('radio','year')">
+                            Yearly
+                        </button>
+                        <button class="filter-btn" *ngIf="!custom" [class.active]="filter==='month'"
+                            (click)="onButtonClick('radio','month')">
+                            Monthly
+                        </button>
+                        <button class="filter-btn" [class.active]="filter==='custom'"
+                            (click)="onButtonClick('radio','custom')">
+                            Custom
+                        </button>
+
+                    </div>
+
+                    <button *ngIf="custom" (click)="onButtonClick('radio','date')">Apply</button>
+
                 </div>
 
                 <div class="view-toggle" *ngIf="getButton('view')">

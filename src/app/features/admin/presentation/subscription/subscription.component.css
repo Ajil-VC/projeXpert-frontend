@@ -1,13 +1,8 @@
-:host {
-  display: block;
-  padding: 1rem;
-  background-color: #121212;
-  color: #e0e0e0;
-  font-family: 'Segoe UI', sans-serif;
-}
-
 .table-container {
-  overflow-x: auto;
+
+  padding: 24px;
+  margin: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .subscription-table {
@@ -15,6 +10,7 @@
   border-collapse: collapse;
   margin-top: 1rem;
   background-color: #1e1e1e;
+  color: white;
   border: 1px solid #2c2c2c;
   border-radius: 8px;
   overflow: hidden;
@@ -55,4 +51,14 @@
 .subscription-table td.past_due {
   color: #ffa726;
   font-weight: bold;
+}
+
+.company{
+  display: flex;
+  flex-direction: column;
+}
+.company .email{
+  font-weight: lighter;
+  color: var(--dark-gray);
+  font-size: small;
 }

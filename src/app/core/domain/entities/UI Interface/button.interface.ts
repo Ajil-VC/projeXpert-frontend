@@ -1,3 +1,4 @@
+import { Button, ReportFilter } from "./headerTypes";
 
 interface StatusAction {
     statusFilters: {
@@ -11,12 +12,18 @@ interface ViewModeAction {
     viewMode?: 'grid' | 'list'
 }
 
+interface TimeFilter {
+    filter: ReportFilter;
+    startDate?: Date;
+    endDate?: Date;
+}
+
 export interface ButtonType {
 
     triggeredFor?: string;
     label?: string;
-    type: 'main' | 'view' | 'filter';
-    action?: StatusAction | ViewModeAction;
+    type: Button;
+    action?: StatusAction | ViewModeAction | TimeFilter;
     icon?: string;
     color?: string;
 }

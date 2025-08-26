@@ -1,4 +1,9 @@
 <div class="table-container">
+
+    <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
+        (buttonClicked)="handlebuttonClick($event)"></app-content-header>
+
+
     <table class="subscription-table">
         <thead>
             <tr>
@@ -6,20 +11,28 @@
                 <th>Stripe Customer ID</th>
                 <th>Subscription ID</th>
                 <th>Plan</th>
-
+                <th>Amount</th>
                 <th>Billing Cycle</th>
                 <th>Current Period End</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let company of subscribedCompanies">
-                <td>{{ company.name || company.companyId }}</td>
+                <td class="company">
+                    <span>{{ company.company.name }}</span>
+                    <span class="email">{{company.company.email}}</span>
+                </td>
                 <td>{{ company.stripeCustomerId }}</td>
                 <td>{{ company.stripeSubscriptionId }}</td>
                 <td class="plan">{{ company.plan?.name }}</td>
+                <td>{{ company.plan?.price }}</td>
                 <td>{{ company.plan?.billingCycle }}</td>
                 <td>{{ isExpired(company?.currentPeriodEnd) }}</td>
             </tr>
         </tbody>
     </table>
+
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+        (pageChanged)="onPageChange($event)">></app-pagination>
+
 </div>

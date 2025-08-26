@@ -36,6 +36,7 @@ import { TeamManagementComponent } from './features/workspace/pages/team-managem
 import { CreatePlanComponent } from './features/admin/presentation/create-plan/create-plan.component';
 import { GroupCallComponent } from './features/workspace/pages/group-call/group-call.component';
 import { RoomComponent } from './features/workspace/pages/group-call/room/room.component';
+import { RevenueComponent } from './features/admin/presentation/revenue/revenue.component';
 
 export const routes: Routes = [
 
@@ -77,6 +78,7 @@ export const routes: Routes = [
             { path: 'dashboard', component: AdminDashboardComponent, resolve: { companyData: adminDataResolver } },
             { path: 'companies', component: CompanyComponent, resolve: { companyData: adminDataResolver } },
             { path: 'settings', component: SettingsComponent, data: { systemRole: 'platform-admin' } },
+            { path: 'revenue', component: RevenueComponent },
             { path: 'create-plan', component: CreatePlanComponent },
             { path: 'subscription', component: SubscriptionDetailComponent }
         ]

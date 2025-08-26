@@ -264,7 +264,7 @@ export class KanbanComponent {
 
   taskDetails(event: Event, task: Task): void {
     event.stopPropagation();
-
+    
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',
       data: {

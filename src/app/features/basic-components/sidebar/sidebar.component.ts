@@ -115,8 +115,9 @@ export class SidebarComponent {
     { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false },
     // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'create-plan', icon: '	fa-tools', label: 'Create plan', route: '/admin/create-plan', active: false },
-    { id: 'subscription', icon: 'fa-coins', label: 'Subscription', route: '/admin/subscription', active: false },
-    { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/admin/settings', active: false }
+    { id: 'revenue', icon: 'fa-solid fa-chart-line', label: 'Revenue report', route: '/admin/revenue', active: false },
+    { id: 'subscription', icon: 'fa-coins', label: 'Subscriptions', route: '/admin/subscription', active: false },
+    { id: 'profile', icon: 'fa-cog', label: 'Profile settings', route: '/admin/settings', active: false }
   ];
 
   isCollapsed = false;

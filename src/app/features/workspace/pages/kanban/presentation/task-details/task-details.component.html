@@ -8,7 +8,7 @@
     </span>
 
     <div *ngIf="task.type === 'subtask'">
-        <span class="value">Parent:  </span>
+        <span class="value">Parent: </span>
         <span class="label">{{ parentName}}</span>
     </div>
 
@@ -81,7 +81,7 @@
             </div>
 
             <!-- Sprint -->
-            <div class="detail-row">
+            <div class="detail-row" *ngIf="sprintName">
                 <span class="label">Sprint:</span>
                 <span class="value">{{ sprintName}}</span>
             </div>
@@ -105,7 +105,7 @@
             </div>
 
             <!-- End Date -->
-            <div class="detail-row">
+            <div class="detail-row" *ngIf="endDate">
                 <span class="label">End Date:</span>
                 <span class="value">{{ endDate | date: 'mediumDate' }}</span>
             </div>
@@ -177,14 +177,14 @@
 
                 <div class="assignee-area">
                     <input #assigneeInput type="email" id="assignee-{{i}}" (focus)="setActiveInput(i)"
-                        [value]="userEmail(subtask)" (input)="onInputChange($event)" class="subtask-assignee"
-                        placeholder="Assign email" />
+                        [value]="userEmail(subtask)" (input)="onInputChange($event)"
+                        class="subtask-assignee" placeholder="Assign email" />
                     <button (click)="updateAssignee(subtask,i,assigneeInput.value)">update</button>
                 </div>
 
                 <div class="members-list" *ngIf="activeSubtaskIndex === i && searchTerm.trim().length > 0">
                     <div class="member-row"
-                        *ngFor="let user of teamMembers | search:searchTerm:['email','name']; let i = index;"
+                        *ngFor="let user of teamMembers | search:searchTerm:['email','name']"
                         (click)="assignUserToSubtask(user, i, assigneeInput)">
                         <span>{{ user.email }}</span>
                         <span>{{user.role}}</span>

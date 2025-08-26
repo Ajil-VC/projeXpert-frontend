@@ -69,8 +69,16 @@ export class AdminService {
     return this.http.put(`${environment.apiAdminUrl}change-company-status`, { companyId, status });
   }
 
-  getSubscriptionDetails(): Observable<any> {
-    return this.http.get(`${environment.apiAdminUrl}get-subscriptions`);
+  getSubscriptionDetails(searchTerm: string, sort: 1 | -1, page: number): Observable<{
+    status: boolean, result: { subscriptions: any, totalPage: number }
+  }> {
+    return this.http.get<{
+      status: boolean,
+      result: {
+        subscriptions: any,
+        totalPage: number
+      }
+    }>(`${environment.apiAdminUrl}get-subscriptions?searchTerm=${searchTerm}&sort=${sort}&page=${page}`);
   }
 
   createSubscriptionPlan(
@@ -97,5 +105,11 @@ export class AdminService {
   changePlanStatus(planId: string): Observable<any> {
     return this.http.patch(`${environment.apiAdminUrl}change-plan-status`, { planId });
   }
+
+  getRevenueReport(filter: 'month' | 'year' | 'date', plans: Array<string>, startDate?: Date, endDate?: Date): Observable<any> {
+    return this.http.get(`${environment.apiAdminUrl}revenue?filter=${filter}&startDate=${startDate}&endDate=${endDate}&plans=${plans}`);
+  }
+
+
 
 }

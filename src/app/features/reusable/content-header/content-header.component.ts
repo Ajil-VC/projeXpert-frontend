@@ -1,12 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HeaderConfig } from '../../../core/domain/entities/UI Interface/header.interface';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonType } from '../../../core/domain/entities/UI Interface/button.interface';
+import { debounceTime, distinctUntilChanged, startWith, Subject, takeUntil } from 'rxjs';
+import { Button, ReportFilter, SelectedFilter } from '../../../core/domain/entities/UI Interface/headerTypes';
+import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { NotificationService } from '../../../core/data/notification.service';
 
 @Component({
   selector: 'app-content-header',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule,
+    MatDatepickerModule,
+  ],
   templateUrl: './content-header.component.html',
   styleUrl: './content-header.component.css'
 })
@@ -15,15 +23,22 @@ export class ContentHeaderComponent {
   @Output() searchQuery = new EventEmitter();
   @Output() buttonClicked = new EventEmitter<ButtonType>();
   clickedBtn!: ButtonType;
+  searchControl = new FormControl('');
+  custom: boolean = false;
+  private destroy$ = new Subject<void>();
+  hideSearchBar: boolean = false;
+
   @Input() headerConfig: HeaderConfig = {
     title: 'Loading...',
     subtitle: 'Loading...',
     searchQuery: '',
+    hideSearchBar: false,
     placeHolder: 'Loading...'
   };
 
 
   viewMode: 'grid' | 'list' = 'grid';
+  filter: ReportFilter = 'year';
 
   statusFilters = {
     active: true,
@@ -31,10 +46,18 @@ export class ContentHeaderComponent {
     completed: false
   };
 
-  onSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
-    this.searchQuery.emit(value);
+  constructor(private toast: NotificationService) { }
+
+  startDateValue: string = '';
+  endDateValue: string = '';
+
+  // Handle date selection
+  onStartDateChange(date: any) {
+    this.startDateValue = date ? date.toLocaleDateString() : '';
+  }
+
+  onEndDateChange(date: any) {
+    this.endDateValue = date ? date.toLocaleDateString() : '';
   }
 
   getButton(type: string) {
@@ -45,7 +68,19 @@ export class ContentHeaderComponent {
     return isBtn;
   }
 
-  onButtonClick(type: 'main' | 'view' | 'filter', selected?: 'active' | 'archived' | 'completed' | 'grid' | 'list') {
+  searchTerm$ = this.searchControl.valueChanges.pipe(
+    startWith(''),
+    debounceTime(300),
+    distinctUntilChanged(),
+    takeUntil(this.destroy$)
+  ).subscribe(searchTerm => {
+    const term = searchTerm?.toLowerCase().trim();
+    this.searchQuery.emit(term);
+
+  })
+
+
+  onButtonClick(type: Button, selected?: SelectedFilter) {
 
     if (type === 'main') {
       this.clickedBtn = {
@@ -81,6 +116,54 @@ export class ContentHeaderComponent {
         }
 
       }
+    } else if (type === 'radio') {
+
+      if (selected === 'year' || selected === 'month' || selected === 'custom' || selected === 'date') {
+
+        if (selected === 'custom') {
+          this.custom = !this.custom;
+          this.filter = selected;
+
+          if (this.custom) {
+            return;
+          }
+        } else if (selected === 'date') {
+
+          const startDate = new Date(this.startDateValue);
+          const endDate = new Date(this.endDateValue);
+
+          if (startDate > endDate) {
+            this.toast.showError('Please give proper start date and end date.');
+            return;
+          }
+
+
+          this.filter = selected;
+          this.clickedBtn = {
+            triggeredFor: this.headerConfig.title,
+            type: 'radio',
+            action: {
+              filter: selected,
+              startDate: startDate,
+              endDate: endDate
+            }
+          }
+
+        } else if (selected === 'month' || selected === 'year') {
+
+          this.filter = selected;
+          this.clickedBtn = {
+            triggeredFor: this.headerConfig.title,
+            type: 'radio',
+            action: {
+              filter: selected
+            }
+          }
+
+        }
+
+      }
+
     } else {
       return;
     }
@@ -89,5 +172,9 @@ export class ContentHeaderComponent {
   }
 
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }

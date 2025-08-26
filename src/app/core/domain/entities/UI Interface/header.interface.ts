@@ -6,6 +6,7 @@ export interface HeaderConfig {
     subtitle: string;
     searchQuery: string;
     placeHolder: string;
+    hideSearchBar?: boolean;
 
     buttons?: ButtonType[];
 }
