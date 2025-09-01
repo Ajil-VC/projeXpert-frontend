@@ -68,6 +68,9 @@
 
 /* epic-detail */
 .epic-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     flex-grow: 1;
     font-size: 14px;
     border-radius: 2px;
@@ -80,6 +83,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     background-color: #00875a;
+}
+.epic-detail div{
+    background-color: var(--primary-color);
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
 }
 
 /* Flex Spacer */

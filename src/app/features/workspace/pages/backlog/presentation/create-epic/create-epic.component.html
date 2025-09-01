@@ -46,6 +46,18 @@
 
             </mat-form-field>
 
+            <!-- Status -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                    <!-- (selectionChange)="onStatusChange(subtask)" -->
+                    <mat-option value="todo">To Do</mat-option>
+                    <mat-option value="in-progress">In Progress</mat-option>
+                    <mat-option value="done">Done</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
         </mat-dialog-content>
 
         <mat-dialog-actions align="end" class="modal-actions">

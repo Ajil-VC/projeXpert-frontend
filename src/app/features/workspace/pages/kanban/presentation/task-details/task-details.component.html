@@ -15,7 +15,7 @@
 </div>
 
 <mat-dialog-content class="edit-task-modal">
-    <form #form="ngForm" class="edit-task-form" *ngIf="!showComments && !showSubtasks">
+    <form #form="ngForm" class="edit-task-form" *ngIf="!showComments && !showSubtasks && !isHistoryActive">
 
         <!-- Task Title -->
         <mat-form-field appearance="fill" class="full-width">
@@ -177,14 +177,13 @@
 
                 <div class="assignee-area">
                     <input #assigneeInput type="email" id="assignee-{{i}}" (focus)="setActiveInput(i)"
-                        [value]="userEmail(subtask)" (input)="onInputChange($event)"
-                        class="subtask-assignee" placeholder="Assign email" />
+                        [value]="userEmail(subtask)" (input)="onInputChange($event)" class="subtask-assignee"
+                        placeholder="Assign email" />
                     <button (click)="updateAssignee(subtask,i,assigneeInput.value)">update</button>
                 </div>
 
                 <div class="members-list" *ngIf="activeSubtaskIndex === i && searchTerm.trim().length > 0">
-                    <div class="member-row"
-                        *ngFor="let user of teamMembers | search:searchTerm:['email','name']"
+                    <div class="member-row" *ngFor="let user of teamMembers | search:searchTerm:['email','name']"
                         (click)="assignUserToSubtask(user, i, assigneeInput)">
                         <span>{{ user.email }}</span>
                         <span>{{user.role}}</span>
@@ -207,6 +206,19 @@
 
     </div>
 
+    <div *ngIf="isHistoryActive" class="history">
+
+        <ul>
+            <li *ngFor="let item of history">
+                <span class="email">{{item.updatedBy.email}}</span>
+                <span>{{gethistoryDescription(item)}}</span>
+                <span class="action-time">{{item.createdAt | date:'medium'}}</span>
+            </li>
+        </ul>
+
+    </div>
+
+
     <div *ngIf="showComments">
         <app-comment-section [task]="task"></app-comment-section>
     </div>
@@ -214,9 +226,12 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" class="buttons">
+
+    <button mat-button class="secondary" (click)="showHistory()">History</button>
+
     <button mat-button class="secondary" (click)="toggleComments()">{{ showComments ? 'Hide' : 'Show' }}
         Comments</button>
     <button mat-button class="secondary" (click)="onCancel()">Cancel</button>
-    <button mat-button color="primary" *ngIf="!showSubtasks && !showComments" (click)="onSave()"
+    <button mat-button color="primary" *ngIf="!showSubtasks && !showComments && !isHistoryActive" (click)="onSave()"
         [disabled]="!form || form.invalid">Save</button>
 </mat-dialog-actions>

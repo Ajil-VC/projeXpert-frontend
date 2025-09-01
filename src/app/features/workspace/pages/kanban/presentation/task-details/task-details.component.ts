@@ -19,7 +19,8 @@ import { NotificationService } from '../../../../../../core/data/notification.se
 import { LoaderComponent } from '../../../../../../core/presentation/loader/loader.component';
 import { LoaderService } from '../../../../../../core/data/loader.service';
 import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
-import { EMPTY, switchMap } from 'rxjs';
+import { catchError, EMPTY, iif, map, of, switchMap, tap } from 'rxjs';
+import { TaskHistory } from '../../../../../../core/domain/entities/taskhistory.model';
 
 @Component({
   selector: 'app-task-details',
@@ -83,6 +84,8 @@ export class TaskDetailsComponent {
   assigningUserId: string = '';
 
   showComments: boolean = false;
+  isHistoryActive: Boolean = false;
+  history: TaskHistory[] = [];
 
   imagePreviews: string[] = [];
   droppedFiles: File[] = [];
@@ -117,7 +120,7 @@ export class TaskDetailsComponent {
       error: (err) => {
         this.toast.showError('Couldnt retrieve the data.');
       }
-    })
+    });
 
 
   }
@@ -197,27 +200,46 @@ export class TaskDetailsComponent {
       formData.append('attachments', file);
     });
 
-    this.kanbanSer.updateIssueStatus(this.task._id, this.form.value.status).pipe(
-
+    iif(
+      () => !!this.assigningUserId,
+      this.kanbanSer.assignIssue(this.task._id, this.assigningUserId),
+      of({ status: true })
+    ).pipe(
       switchMap(res => {
 
         if (res.status) {
           this.isSaved = true;
-          return this.kanbanSer.updateTaskDetails(formData);
+          if (this.assigningUserId && 'data' in res) {
+            this.shared.taskUpdateSubject.next(res.data);
+            this.toast.showSuccess('Reassigned the task successfully.');
+          }
+
+          return this.kanbanSer.updateIssueStatus(this.task._id, this.form.value.status).pipe(
+            map(() => false),
+            catchError(err => {
+              return of(true);
+            }),
+            switchMap((skipStatus: boolean) => this.kanbanSer.updateTaskDetails(formData, skipStatus))
+          )
         }
         return EMPTY
       })
     ).subscribe({
       next: (res: { status: boolean, result: Task }) => {
 
-        this.data.task = res.result;
-        this.dialogRef.close(this.data.task);
+        if (res.status) {
+          this.data.task = res.result;
+          this.dialogRef.close(this.data.task);
+          this.toast.showSuccess('Task updated successfully');
+        }
+
         return;
       },
       error: (err) => {
-        this.toast.showError('Couldnt update task details.');
+        this.dialogRef.close();
       }
-    })
+    });
+
 
   }
 
@@ -289,12 +311,14 @@ export class TaskDetailsComponent {
   }
 
   setTaskTitle() {
-    if (!this.showComments && !this.showSubtasks) {
+    if (!this.showComments && !this.showSubtasks && !this.isHistoryActive) {
       this.taskTitle = `Edit task`;
     } else if (this.showComments) {
       this.taskTitle = `Comments on ${this.task.title}`;
     } else if (this.showSubtasks) {
       this.taskTitle = `Subtasks of ${this.task.title}`;
+    } else if (this.isHistoryActive) {
+      this.taskTitle = `HIstory of ${this.task.title}`
     }
   }
 
@@ -308,7 +332,7 @@ export class TaskDetailsComponent {
   toggleComments() {
     this.showComments = !this.showComments;
     if (this.showComments) {
-
+      this.isHistoryActive = false;
       this.showSubtasks = false;
     }
     this.setTaskTitle();
@@ -319,7 +343,7 @@ export class TaskDetailsComponent {
   toggleSubtasksView() {
     this.showSubtasks = !this.showSubtasks;
     if (this.showSubtasks) {
-
+      this.isHistoryActive = false;
       this.showComments = false;
     }
     this.setTaskTitle();
@@ -456,6 +480,54 @@ export class TaskDetailsComponent {
     input.value = user.email;
     this.searchTerm = '';
     this.activeSubtaskIndex = null;
+  }
+
+
+  gethistoryDescription(history: TaskHistory) {
+
+    if (history.actionType === "ASSIGN") {
+
+      let assignedTo = history.details?.assignedTo?.email ?
+        `Assigned the task to ${history.details?.assignedTo?.email}` : `Removed assignee`;
+
+      return assignedTo;
+    } else if (history.actionType === "STATUS_CHANGE") {
+      return `Changed the status from ${history.details.oldStatus} to ${history.details.newStatus}`;
+    } else if (history.actionType === "DELETE_SUBTASK") {
+      return `Deleted subtask ${history.details.subtaskTitle}`;
+    } else if (history.actionType === "CREATE_SUBTASK") {
+      return `Created a new subtask called ${history.details.subtaskTitle}`;
+    } else if (history.actionType === "UPDATED") {
+      return `Updated the task`;
+    }
+
+    return '';
+  }
+  showHistory() {
+
+    if (this.isHistoryActive) {
+      this.isHistoryActive = false;
+      this.setTaskTitle();
+      this.cd.detectChanges();
+      return;
+    }
+    this.kanbanSer.getTaskHistory(this.task._id).subscribe({
+      next: (res) => {
+
+        this.history = res.result;
+        this.isHistoryActive = !this.isHistoryActive;
+        if (this.isHistoryActive) {
+          this.showSubtasks = false;
+          this.showComments = false;
+        }
+        this.setTaskTitle();
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt retrieve the history.');
+      }
+    })
+
   }
 
 }

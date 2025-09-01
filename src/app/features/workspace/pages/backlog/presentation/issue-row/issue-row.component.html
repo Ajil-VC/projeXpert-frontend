@@ -19,8 +19,9 @@
     <div class="flex-spacer"></div>
 
     <!-- Epic details -->
-    <div class="epic-detail" *ngIf="epicName !==null">
-        {{epicName}}
+    <div class="epic-detail" *ngIf="epic !==null">
+        {{epic.title}}
+        <div *ngIf="epic.status === 'done'">D</div>
     </div>
 
     <!-- Spacer -->

@@ -7,12 +7,19 @@
 <div class="sidebar" [class.displayEpic]="isHidden">
 
     <div class="epic-header">
-        <h2>Epic</h2>
+        <div>
+            <h2>Epic</h2>
+            <select name="epic-view" [(ngModel)]="epicView"  id="epic-toggler">
+                <option value="active" selected>Active</option>
+                <option value="compelted">Completed</option>
+            </select>
+        </div>
         <button class="close-button" (click)="hideEpics()">×</button>
     </div>
 
     <div class="epic-list">
-        <div *ngFor="let epic of epics" class="epic-item" [class.selected]="epic === selectedEpic">
+        <div *ngFor="let epic of epics | activeEpic:epicView" class="epic-item"
+            [class.selected]="epic === selectedEpic">
 
             <div class="epic-item-header">
                 <div class="epic-item-namepart">

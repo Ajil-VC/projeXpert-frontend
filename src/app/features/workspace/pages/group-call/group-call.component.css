@@ -5,7 +5,34 @@
     /* background-color: red; */
 }
 
+.datetime-text {
+    color: white;
+}
 
+.time-area {
+    width: 100%;
+}
+
+.days {
+    
+    width: 100%;
+
+}
+
+.days ul {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+
+}
+
+.days li {
+    font-size: smaller;
+    padding: 0 5px;
+    border-radius: 5px;
+    background-color: wheat;
+    color: black
+}
 
 .create-room-btn {
     background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);

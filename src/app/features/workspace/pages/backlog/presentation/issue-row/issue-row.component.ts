@@ -55,14 +55,25 @@ export class IssueRowComponent {
         this.toast.showError("Failed to fetch team members");
       }
     });
+
+    this.shared.taskUpdate$.subscribe({
+      next: (res) => {
+
+        if (res._id === this.issue._id) {
+          this.issue = res;
+        } else if (typeof this.issue.epicId !== 'string' && this.issue.epicId?._id === res._id) {
+          this.issue.epicId = res;
+        }
+
+      }
+    })
   }
   getTypeClass(): string {
     return `type-${this.issue.type.toLowerCase()}`;
   }
 
-  get epicName(): string | null {
-
-    return this.issue.epicId ? (this.issue.epicId as Task).title : null;
+  get epic(): Task | null {
+    return this.issue.epicId ? (this.issue.epicId as Task) : null;
   }
 
   getStatusClass(): string {
@@ -90,6 +101,8 @@ export class IssueRowComponent {
           this.issue.status = 'in-progress';
           this.toast.showInfo('Subtasks should be completed before moving the task to done');
           return;
+        } else if (err['message'] === 'Task is not in active sprint.') {
+          this.issue.status = 'todo';
         }
         this.toast.showError('Error occured while tryging to change task status.')
       }
@@ -158,7 +171,7 @@ export class IssueRowComponent {
 
   taskDetails(event: Event, task: Task): void {
     event.stopPropagation();
-    
+
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',
       data: {

@@ -64,9 +64,18 @@
                         <span class="datetime-icon">📅</span>
                         <span class="datetime-text">{{ formatDate(meeting.meetingDate) }}</span>
                     </div>
-                    <div class="datetime-item">
-                        <span class="datetime-icon">⏰</span>
-                        <span class="datetime-text">{{ formatTime(meeting.meetingTime) }}</span>
+
+                    <div class="time-area">
+                        <div class="datetime-item">
+                            <span class="datetime-icon">⏰</span>
+                            <span class="datetime-text">{{ formatTime(meeting.meetingTime) }}</span>
+                        </div>
+
+                        <div class="days">
+                            <ul>
+                                <li *ngFor="let day of meeting.days">{{day}}</li>
+                            </ul>
+                        </div>
                     </div>
 
                 </div>
@@ -96,6 +105,7 @@
                 </div>
             </div>
 
+
             <!-- Card Footer -->
             <div class="card-footer">
                 <button class="join-btn" (click)="joinMeeting(meeting)">
@@ -105,6 +115,8 @@
             </div>
         </div>
     </div>
-
-    <!-- <app-pagination></app-pagination> -->
+<!-- 
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+        (pageChanged)="onPageChange($event)">></app-pagination> -->
+    
 </div>

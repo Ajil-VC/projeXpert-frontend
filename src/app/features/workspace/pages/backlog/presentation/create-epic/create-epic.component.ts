@@ -7,12 +7,14 @@ import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/for
 import { MatInputModule } from '@angular/material/input';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { AuthService } from '../../../../../auth/data/auth.service';
+import { MatOption, MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-create-epic',
   imports: [ReactiveFormsModule, FormsModule,
     CommonModule, MatDialogContent, MatFormField, MatLabel,
-    MatDatepickerModule, MatDialogActions, MatError, MatInputModule],
+    MatDatepickerModule, MatDialogActions, MatError, MatInputModule, MatSelectModule, MatOptionModule],
   templateUrl: './create-epic.component.html',
   styleUrl: './create-epic.component.css'
 })
@@ -26,19 +28,20 @@ export class CreateEpicComponent {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<CreateEpicComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { issue: Task },
-    private authSer : AuthService
+    private authSer: AuthService
   ) {
 
     this.epicForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
       startDate: ['', Validators.required],
-      endDate: ['', Validators.required]
+      endDate: ['', Validators.required],
+      status: [data.issue?.status || 'todo', Validators.required]
     });
 
     const epic = this.data.issue;
     if (epic) {
-      
+
       const startDate = epic.startDate ? new Date(epic.startDate) : '';
       const minEnd = startDate ? new Date(startDate) : '';
 
@@ -74,13 +77,14 @@ export class CreateEpicComponent {
     });
 
     this.authSer.logout$.subscribe({
-      next : ()=> this.dialogRef.close(null)
+      next: () => this.dialogRef.close(null)
     })
 
   }
 
   onSave(): void {
     if (this.epicForm.valid) {
+
       this.dialogRef.close(this.epicForm.value);
     }
   }

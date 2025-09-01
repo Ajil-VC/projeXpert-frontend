@@ -14,13 +14,13 @@ export class BacklogService {
 
   constructor(private http: HttpClient, private layoutSer: LayoutService, private toast: NotificationService) { }
 
-  createOrUpdateEpic(title: string, description: string, startDate: string, endDate: string, epic: Task | null): Observable<any> {
+  createOrUpdateEpic(title: string, description: string, startDate: string, endDate: string, status: string, epic: Task | null): Observable<any> {
 
     if (!epic) {
       const projectId = this.layoutSer.getProjectId();
       return this.http.post(`${environment.apiUserUrl}create-epic`, { title, description, startDate, endDate, projectId });
     } else {
-      return this.http.put(`${environment.apiUserUrl}update-epic`, { title, description, startDate, endDate, epicId: epic._id });
+      return this.http.put(`${environment.apiUserUrl}update-epic`, { title, description, startDate, endDate, status, epicId: epic._id });
     }
   }
 

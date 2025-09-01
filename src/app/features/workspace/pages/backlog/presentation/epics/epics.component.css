@@ -12,6 +12,17 @@
     display: none;
 }
 
+.epic-header div{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+#epic-toggler {
+    background-color: var(--dark-gray);
+    color: white;
+    border: none;
+}
+
 .epic-label {
     font-weight: 600;
     margin-right: 5px;

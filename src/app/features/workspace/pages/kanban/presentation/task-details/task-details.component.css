@@ -262,6 +262,33 @@ button[mat-button].secondary:hover {
 }
 
 
+.history {
+
+    padding-left: 15px;
+    min-height: 200px;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.history li {
+    margin-bottom: 5px;
+}
+
+.history .email {
+    color: var(--dark-gray);
+    margin-right: 5px;
+}
+
+.action-time {
+    color: #bdbdbd;
+    font-size: small;
+    font-weight: lighter;
+    margin-left: 5px;
+    padding: 0 3px;
+    background-color: var(--primary-color);
+}
+
+
 @media (max-width: 600px) {
 
     .detail-row {

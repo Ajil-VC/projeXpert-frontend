@@ -7,12 +7,15 @@ import { BacklogService } from '../../data/backlog.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateEpicComponent } from '../create-epic/create-epic.component';
 import { NotificationService } from '../../../../../../core/data/notification.service';
+import { ActiveEpicPipe } from './active-epic.pipe';
+import { SharedService } from '../../../../../../shared/services/shared.service';
 
 @Component({
   selector: 'app-epics',
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ActiveEpicPipe
   ],
   templateUrl: './epics.component.html',
   styleUrl: './epics.component.css'
@@ -29,7 +32,9 @@ export class EpicsComponent {
   expandedEpics: Set<string> = new Set();
   checkedEpics: Set<string> = new Set();
 
-  constructor(private backlogSer: BacklogService, private dialog: MatDialog, private toast: NotificationService) { }
+  epicView: 'active' | 'compelted' = 'active';
+
+  constructor(private backlogSer: BacklogService, private dialog: MatDialog, private toast: NotificationService, private sharedSer: SharedService) { }
 
   toggleEpicDetails(epic: Task): void {
     const epicId = epic._id;
@@ -51,7 +56,6 @@ export class EpicsComponent {
     this.isHidden = !this.isHidden;
 
   }
-
 
 
   addEpicToList(res: Task) {
@@ -81,9 +85,9 @@ export class EpicsComponent {
     });
 
     dialogRef.afterClosed().subscribe({
-      next: (result: { title: string, description: string, startDate: string, endDate: string }) => {
+      next: (result: { title: string, description: string, startDate: string, endDate: string, status: string }) => {
         if (!result?.title) return;
-        this.backlogSer.createOrUpdateEpic(result.title, result.description, result.startDate, result.endDate, epic)
+        this.backlogSer.createOrUpdateEpic(result.title, result.description, result.startDate, result.endDate, result.status, epic)
           .subscribe({
             next: (res) => {
               if (res.status) {
@@ -93,6 +97,8 @@ export class EpicsComponent {
                   const ind = this.epics.findIndex(ep => ep._id === res.result._id);
                   if (ind !== -1) {
                     this.epics[ind] = res.result;
+                    this.epics = [...this.epics];
+                    this.sharedSer.taskUpdateSubject.next(res.result);
                   }
 
                 }

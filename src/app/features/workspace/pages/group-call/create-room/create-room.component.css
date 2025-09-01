@@ -43,6 +43,14 @@ mat-slide-toggle {
   align-items: center;
 }
 
+.recurring-area{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dropdown{
+  min-width: 200px;
+}
 .recurring{
   display:flex;
   align-items: center;

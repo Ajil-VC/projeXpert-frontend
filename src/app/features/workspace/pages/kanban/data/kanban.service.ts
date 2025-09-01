@@ -11,9 +11,9 @@ export class KanbanService {
 
   constructor(private http: HttpClient) { }
 
-  updateTaskDetails(formData: FormData): Observable<any> {
+  updateTaskDetails(formData: FormData, skipStatus?: boolean): Observable<any> {
 
-    return this.http.put(`${environment.apiUserUrl}update-task-details`, formData);
+    return this.http.put(`${environment.apiUserUrl}update-task-details?skipStatus=${skipStatus}`, formData);
   }
 
   createSubTask(title: string, parentId: string): Observable<{ status: boolean, result: Task }> {
@@ -52,6 +52,10 @@ export class KanbanService {
 
   updateIssueStatus(taskId: string, status: string): Observable<{ status: boolean, message: string, result: Task }> {
     return this.http.put<{ status: boolean, message: string, result: Task }>(`${environment.apiUserUrl}change-taskstatus`, { taskId, status });
+  }
+
+  getTaskHistory(taskId: string): Observable<any> {
+    return this.http.get(`${environment.apiUserUrl}task-history?taskId=${taskId}`);
   }
 
 }

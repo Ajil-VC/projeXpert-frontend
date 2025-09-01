@@ -50,7 +50,8 @@
                 </div>
             </div>
             <!-- recurring -->
-            <div class="form-group flex-1">
+            <div class="form-group flex-1 recurring-area">
+
                 <div class="recurring">
                     <label for="recurring" class="form-label">
                         Recurring
@@ -58,6 +59,17 @@
                     <mat-slide-toggle formControlName="recurring" [class.error]="isFieldInvalid('recurring')">
                     </mat-slide-toggle>
                 </div>
+
+                <div>
+                    <label for="recurring" class="form-label">
+                        Select days
+                    </label>
+                    <select name="" id="" multiple formControlName="day" class="form-input dropdown">
+   
+                        <option *ngFor="let day of days" [value]="day">{{day}}</option>
+                    </select>
+                </div>
+
             </div>
 
 

@@ -30,6 +30,8 @@ export class CreateRoomComponent {
   filteredUsers: Team[] = [];
   searchQuery = '';
   showUserDropdown = false;
+  days: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thirsday', 'Friday', 'Saturday'];
+  isDays: boolean = true;
 
   constructor(
     public dialogRef: MatDialogRef<CreateRoomComponent>,
@@ -59,10 +61,13 @@ export class CreateRoomComponent {
     this.roomForm.get('recurring')?.valueChanges.subscribe(isRecurring => {
       const meetingDateControl = this.roomForm.get('meetingDate');
       this.isRecurring = isRecurring;
+      const recurringControl = this.roomForm.get('day');
       if (isRecurring) {
         meetingDateControl?.clearValidators();
+        recurringControl?.enable();
       } else {
         meetingDateControl?.setValidators([Validators.required]);
+        recurringControl?.disable();
       }
 
       meetingDateControl?.updateValueAndValidity();
@@ -75,6 +80,7 @@ export class CreateRoomComponent {
       meetingDate: ['', Validators.required],
       meetingTime: ['', Validators.required],
       recurring: [false],
+      day: [{ value: [], disabled: this.isDays }],
       description: ['', [Validators.maxLength(500)]],
       members: [[], Validators.required] // Array of selected user IDs
     });
@@ -103,6 +109,7 @@ export class CreateRoomComponent {
     const field = this.roomForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
+
 
   getFieldError(fieldName: string): string {
     const field = this.roomForm.get(fieldName);
@@ -237,6 +244,7 @@ export class CreateRoomComponent {
   }
 
   onSubmit(): void {
+
     if (this.roomForm.valid && this.isValidDateTime()) {
       this.isSubmitting = true;
 
@@ -247,6 +255,7 @@ export class CreateRoomComponent {
         meetingDate: this.roomForm.get('meetingDate')?.value,
         meetingTime: this.roomForm.get('meetingTime')?.value,
         recurring: this.roomForm.get('recurring')?.value || false,
+        days : this.roomForm.get('day')?.value || [],
         description: this.roomForm.get('description')?.value || '',
         members: this.selectedMembers.map(mem => mem._id),
         roomId: ROOM_ID,

@@ -28,7 +28,8 @@
 }
 
 .label {
-    font-weight: 600;
+    font-weight: 400;
+    font-size: small;
     color: #5e5e5e;
     width: 40%;
 }

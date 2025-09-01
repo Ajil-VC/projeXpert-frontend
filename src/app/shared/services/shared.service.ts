@@ -29,6 +29,8 @@ export class SharedService {
 
   public tasksSubject = new Subject<Task>();
   public taskSub$ = this.tasksSubject.asObservable();
+  public taskUpdateSubject = new Subject<Task>();
+  public taskUpdate$ = this.taskUpdateSubject.asObservable();
 
   getTasksInProject(): Observable<any> {
     const projectId = localStorage.getItem('projectId');
