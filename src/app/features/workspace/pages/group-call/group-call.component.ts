@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ import { ContentHeaderComponent } from '../../../reusable/content-header/content
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../../core/data/loader.service';
+import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
 
 
 
@@ -39,8 +40,8 @@ import { LoaderService } from '../../../../core/data/loader.service';
     MatDatepickerModule,
     MatNativeDateModule,
     LoaderComponent,
-    ContentHeaderComponent
-
+    ContentHeaderComponent,
+    PaginationComponent
   ],
   templateUrl: './group-call.component.html',
   styleUrl: './group-call.component.css',
@@ -66,7 +67,8 @@ export class GroupCallComponent {
 
   handleSearchEvent(event: string) {
     this.searchQuery = event.toLowerCase();
-    this.filterMeetings();
+    this.currentPage = 1;
+    this.loadMeetings(1, this.searchQuery)
   }
   handlebuttonClick(btn: ButtonType) {
     if (btn.triggeredFor === this.headerConfig.title) {
@@ -80,10 +82,12 @@ export class GroupCallComponent {
   @Output() createRoomClicked = new EventEmitter<void>();
 
   meetings: Meeting[] = [];
-  filteredMeetings: Meeting[] = [];
   searchQuery = '';
   selectedFilter = 'all';
   isLoading = false;
+
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   constructor(
     public dialog: MatDialog,
@@ -97,15 +101,15 @@ export class GroupCallComponent {
     this.loadMeetings();
   }
 
-  private loadMeetings(): void {
+  private loadMeetings(page: number = 1, searchTerm: string = ''): void {
 
     this.loader.show();
 
-    this.callService.upcomingMeetings().subscribe({
+    this.callService.upcomingMeetings(page, searchTerm).subscribe({
       next: (res) => {
         if (res.status) {
-          this.meetings = res.data;
-          this.filteredMeetings = [...this.meetings];
+          this.meetings = res.meetings;
+          this.totalPages = res.totalPages;
           this.loader.hide();
         }
 
@@ -117,6 +121,12 @@ export class GroupCallComponent {
 
   }
 
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadMeetings(this.currentPage, this.searchQuery);
+  }
+
+
   onCreateRoom(): void {
     const dialogRef = this.dialog.open(CreateRoomComponent, {
       width: '1000px',
@@ -124,33 +134,11 @@ export class GroupCallComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-
         this.meetings.push(result);
-        this.filterMeetings();
-
       }
     });
   }
 
-
-  private filterMeetings(): void {
-    let filtered = [...this.meetings];
-
-    if (this.searchQuery.trim() !== '') {
-      filtered = filtered.filter(meeting =>
-        meeting.roomName.toLowerCase().includes(this.searchQuery) ||
-        meeting.description.toLowerCase().includes(this.searchQuery) ||
-        meeting.createdBy.email.toLowerCase().includes(this.searchQuery) ||
-        meeting.members.some(member =>
-          member.name.toLowerCase().includes(this.searchQuery) ||
-          member.email.toLowerCase().includes(this.searchQuery)
-        )
-      );
-    }
-
-    this.filteredMeetings = filtered;
-
-  }
 
   formatDate(dateString: Date | undefined): string {
     if (!dateString) {
@@ -248,14 +236,14 @@ export class GroupCallComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
+
         this.loader.show();
         this.callService.removeMeeting(meeting._id).subscribe({
           next: (res) => {
 
             const indexOfMeet = this.meetings.findIndex(ele => ele._id === meeting._id);
             this.meetings.splice(indexOfMeet, 1);
-            this.filterMeetings();
+
             this.loader.hide();
           },
           error: (err) => {

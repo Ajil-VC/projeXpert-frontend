@@ -10,7 +10,7 @@
     <!-- Meetings Grid -->
     <div class="meetings-grid" *ngIf="!isLoading">
         <!-- No meetings message -->
-        <div class="no-meetings" *ngIf="filteredMeetings.length === 0 && !isLoading">
+        <div class="no-meetings" *ngIf="meetings.length === 0 && !isLoading">
             <div class="no-meetings-icon">📭</div>
             <h3>No meetings found</h3>
             <p *ngIf="searchQuery.trim() !== ''">
@@ -25,7 +25,7 @@
         </div>
 
         <!-- Meeting Cards -->
-        <div class="meeting-card" *ngFor="let meeting of filteredMeetings">
+        <div class="meeting-card" *ngFor="let meeting of meetings">
             <!-- Card Header -->
             <div class="card-header">
 
@@ -115,8 +115,8 @@
             </div>
         </div>
     </div>
-<!-- 
+
     <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
-        (pageChanged)="onPageChange($event)">></app-pagination> -->
-    
+        (pageChanged)="onPageChange($event)">></app-pagination>
+
 </div>

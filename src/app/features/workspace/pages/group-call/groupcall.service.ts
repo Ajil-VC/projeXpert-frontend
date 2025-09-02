@@ -21,9 +21,9 @@ export class GroupcallService {
     return this.http.post(`${environment.apiUserUrl}create-room`, FormData);
   }
 
-  upcomingMeetings(): Observable<{ status: boolean, data: Array<Meeting> }> {
+  upcomingMeetings(pageNum: number = 1, searchTerm: string = ''): Observable<{ status: boolean, meetings: Array<Meeting>, totalPages: number }> {
 
-    return this.http.get<{ status: boolean, data: Array<Meeting> }>(`${environment.apiUserUrl}get-upcoming-meetings`);
+    return this.http.get<{ status: boolean, meetings: Array<Meeting>, totalPages: number }>(`${environment.apiUserUrl}get-upcoming-meetings?page_num=${pageNum}&searchTerm=${searchTerm}`);
   }
 
   removeMeeting(meetId: string): Observable<any> {
