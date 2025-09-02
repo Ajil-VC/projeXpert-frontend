@@ -9,16 +9,20 @@ import { EditCompanyModalComponent } from './edit-company-modal/edit-company-mod
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
+import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
+import { AdminService } from '../../data/admin.service';
+import { NotificationService } from '../../../../core/data/notification.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-company',
-  imports: [CommonModule, FormsModule, ContentHeaderComponent],
+  imports: [CommonModule, FormsModule, ContentHeaderComponent, PaginationComponent],
   templateUrl: './company.component.html',
   styleUrl: './company.component.css'
 })
 export class CompanyComponent {
 
-
+  private $destroy = new Subject<void>();
   headerConfig: HeaderConfig = {
 
     title: 'Companies',
@@ -35,7 +39,7 @@ export class CompanyComponent {
   handleSearchEvent(event: string) {
 
     this.searchTerm = event;
-    this.fileteredCompanies();
+    this.loadCompanyData(1, this.searchTerm);
 
   }
   handlebuttonClick(btn: ButtonType) {
@@ -54,6 +58,8 @@ export class CompanyComponent {
     }
   }
 
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   viewMode: 'grid' | 'list' = 'grid';
   isLoading = false;
@@ -63,28 +69,39 @@ export class CompanyComponent {
   sortDirection = 'asc';
   searchTerm: string = '';
 
-  constructor(private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute, private adminSer: AdminService, private toast: NotificationService,
     public dialog: MatDialog) { }
 
   ngOnInit() {
 
     const companyData = this.route.snapshot.data['companyData'];
+
+    this.loadCompanyData();
+
     if (companyData.status) {
       this.companyDataRetrieved = companyData.result as Array<{ companyDetails: Company, companyId: string, users: Array<User> }> | [];
-      this.fileteredCompanies();
     }
 
   }
 
-  fileteredCompanies() {
+  onPageChange(event: any) {
+    this.currentPage = event;
+    this.loadCompanyData(event);
+  }
 
-    this.companyData = this.companyDataRetrieved;
-    if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      this.companyData = this.companyDataRetrieved.filter(company =>
-        company.companyDetails.name.toLowerCase().includes(term)
-      );
-    }
+  loadCompanyData(page: number = 1, searchTerm: string = '') {
+
+    this.adminSer.getCompleteCompanyDetails(page, searchTerm).pipe(takeUntil(this.$destroy))
+      .subscribe({
+        next: (res) => {
+
+          this.companyData = res.companyData;
+          this.totalPages = res.totalPages;
+        },
+        error: (err) => {
+          this.toast.showError('Couldnt retrieve data.');
+        }
+      })
   }
 
   openCompany(company: any) { }
@@ -99,9 +116,8 @@ export class CompanyComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-
         //UUpdate data here.
-        console.log(result);
+
       }
     });
 
@@ -110,4 +126,9 @@ export class CompanyComponent {
   deleteCompany(event: any, company: any) { }
 
   setSortField(name: any) { }
+
+  ngOnDestroy() {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
 }

@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { SubscriptionPlan } from '../../../core/domain/entities/subscription.model';
 import { SummaryCard } from '../../workspace/pages/dashboard/domain/dashboard.domain';
+import { Company } from '../../../core/domain/entities/company.model';
+import { User } from '../../../core/domain/entities/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -98,8 +99,8 @@ export class AdminService {
     return this.http.delete(`${environment.apiAdminUrl}delete-plan?plan_id=${planId}`);
   }
 
-  getAvailablePlans(pageNum: number): Observable<any> {
-    return this.http.get(`${environment.apiAdminUrl}get-plans?page_num=${pageNum}`);
+  getAvailablePlans(pageNum: number, searchTerm: string = ''): Observable<any> {
+    return this.http.get(`${environment.apiAdminUrl}get-plans?page_num=${pageNum}&searchTerm=${searchTerm}`);
   }
 
   changePlanStatus(planId: string): Observable<any> {
@@ -110,6 +111,27 @@ export class AdminService {
     return this.http.get(`${environment.apiAdminUrl}revenue?filter=${filter}&startDate=${startDate}&endDate=${endDate}&plans=${plans}`);
   }
 
-
+  getCompleteCompanyDetails(pageNum: number = 1, searchTerm: string = ''): Observable<{
+    message: string,
+    companyData: Array<{
+      companyDetails: Company,
+      users: Array<User>,
+      companyId: string
+    }>,
+    totalPages: number,
+    status: boolean
+  }> {
+    return this.http.get<{
+      message: string,
+      companyData: Array<{
+        companyDetails: Company,
+        users: Array<User>,
+        companyId: string
+      }>,
+      totalPages: number,
+      status: boolean
+    }>(`${environment.apiAdminUrl}admin-init?page_num=${pageNum}&searchTerm=${searchTerm}`);
+  }
 
 }
+

@@ -8,7 +8,6 @@ import { MatOption } from '@angular/material/select';
 import { MatDialogActions } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SubscriptionPlan } from '../../../../../core/domain/entities/subscription.model';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../../../auth/data/auth.service';
 

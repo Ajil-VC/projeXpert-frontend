@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminService } from '../../data/admin.service';
 import { NotificationService } from '../../../../core/data/notification.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.model';
 import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
@@ -11,10 +10,11 @@ import { PlanCreationModalComponent } from './plan-creation-modal/plan-creation-
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
+import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
 
 @Component({
   selector: 'app-create-plan',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ContentHeaderComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ContentHeaderComponent, PaginationComponent],
   templateUrl: './create-plan.component.html',
   styleUrl: './create-plan.component.css'
 })
@@ -37,10 +37,13 @@ export class CreatePlanComponent {
 
   }
 
+  currentPage: number = 1;
+  totalPages: number = 1;
+
   handleSearchEvent(event: string) {
 
     this.searchTerm = event;
-    this.applyFilters();
+    this.loadSubscriptions(1)
 
   }
   handlebuttonClick(btn: ButtonType) {
@@ -61,7 +64,6 @@ export class CreatePlanComponent {
 
 
   subscriptions: SubscriptionPlan[] = [];
-  filteredSubscriptions: SubscriptionPlan[] = [];
 
   searchTerm = '';
   sortField: keyof SubscriptionPlan = 'name';
@@ -69,8 +71,6 @@ export class CreatePlanComponent {
   isLoading = false;
   viewMode = 'grid';
 
-  currentPage = 1;
-  totalPages = 1;
 
   constructor(
     private service: AdminService,
@@ -84,13 +84,13 @@ export class CreatePlanComponent {
 
   loadSubscriptions(page: number): void {
     this.isLoading = true;
-    this.service.getAvailablePlans(page).subscribe({
+    this.service.getAvailablePlans(page, this.searchTerm).subscribe({
       next: (res) => {
 
         this.isLoading = false;
         this.subscriptions = res.result.plans || [];
-        this.totalPages = res.result.totalPages || 1;
-        this.applyFilters();
+        this.totalPages = res.result.totalPage || 1;
+
       },
       error: (err) => {
         this.isLoading = false;
@@ -99,33 +99,7 @@ export class CreatePlanComponent {
     });
   }
 
-  applyFilters(): void {
-    let filtered = [...this.subscriptions];
 
-    if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(plan =>
-        plan.name.toLowerCase().includes(term)
-      );
-    }
-
-    this.filteredSubscriptions = filtered;
-  }
-
-  search(event: any): void {
-    this.searchTerm = event.target.value;
-    this.applyFilters();
-  }
-
-  setSortField(field: keyof SubscriptionPlan): void {
-    if (this.sortField === field) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortField = field;
-      this.sortDirection = 'asc';
-    }
-    this.applyFilters();
-  }
 
   onPageChange(page: number): void {
     this.currentPage = page;
@@ -135,14 +109,7 @@ export class CreatePlanComponent {
 
   onToggleChange(event: any, plan: SubscriptionPlan) {
     event.stopPropagation();
-    this.service.changePlanStatus(plan._id).subscribe({
-      next: (res) => {
-        console.log(res)
-      },
-      error: (err) => {
-        this.toast.showError('Couldnt change the status');
-      }
-    })
+    this.service.changePlanStatus(plan._id).subscribe();
   }
 
 
@@ -170,7 +137,7 @@ export class CreatePlanComponent {
             if (!res.status) throw new Error('Projects couldnt retrieve after updation');
 
             this.subscriptions.push(res.result);
-            this.applyFilters();
+
           },
           error: (err) => {
             console.error('Error occured while updating project.', err);

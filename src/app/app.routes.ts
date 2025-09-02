@@ -75,7 +75,7 @@ export const routes: Routes = [
     {
         path: 'admin', component: LayoutComponent, data: { systemRole: 'platform-admin' }, canActivate: [verifyAdminGuard], resolve: { adminData: adminResolver },
         children: [
-            { path: 'dashboard', component: AdminDashboardComponent, resolve: { companyData: adminDataResolver } },
+            { path: 'dashboard', component: AdminDashboardComponent },
             { path: 'companies', component: CompanyComponent, resolve: { companyData: adminDataResolver } },
             { path: 'settings', component: SettingsComponent, data: { systemRole: 'platform-admin' } },
             { path: 'revenue', component: RevenueComponent },
