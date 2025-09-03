@@ -13,12 +13,12 @@ export class EditProjectService implements EditProjectUseCase {
 
   removeMember(userId: string, projectId: string): Observable<any> {
 
-    return this.http.patch(`${environment.apiUserUrl}remove-member`, { userId, projectId });
+    return this.http.patch(`${environment.apiUserUrl}member`, { userId, projectId });
   }
 
   addMember(email: string, projectId: string, workSpaceId: string): Observable<any> {
 
-    return this.http.post(`${environment.apiUserUrl}add-member`, { email, projectId, workSpaceId });
+    return this.http.post(`${environment.apiUserUrl}member`, { email, projectId, workSpaceId });
 
   }
 

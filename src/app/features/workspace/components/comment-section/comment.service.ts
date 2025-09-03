@@ -13,12 +13,12 @@ export class CommentService {
 
   getCommentsForTask(taskId: string): Observable<any> {
 
-    return this.http.get(`${environment.apiUserUrl}get-comments?task_id=${taskId}`);
+    return this.http.get(`${environment.apiUserUrl}comments?task_id=${taskId}`);
   }
 
   addComment(comment: Comment): Observable<any> {
     const projectId = localStorage.getItem('projectId');
-    return this.http.post(`${environment.apiUserUrl}add-comment`, { taskId: comment.taskId, content: comment.content, projectId });
+    return this.http.post(`${environment.apiUserUrl}comments`, { taskId: comment.taskId, content: comment.content, projectId });
   }
 
 }

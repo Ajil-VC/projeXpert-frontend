@@ -93,6 +93,7 @@ export class EpicsComponent {
               if (res.status) {
                 if (!epic) {
                   this.epics.push(res.result);
+                  this.epics = [...this.epics];
                 } else {
                   const ind = this.epics.findIndex(ep => ep._id === res.result._id);
                   if (ind !== -1) {

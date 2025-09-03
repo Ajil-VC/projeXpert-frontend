@@ -121,8 +121,10 @@ export class HeaderComponent {
     this.layoutSer.prSubject.subscribe({
       next: (res: unknown) => {
         const project = res as Project;
-        this.availableProjects.push(project);
-        this.cdr.detectChanges();
+        if (project.workSpace === this.authService.getWorkSpace()?._id) {
+          this.availableProjects.push(project);
+          this.cdr.detectChanges();
+        }
       },
       error: (err) => {
         console.error('Error occurred while updating projects list', err);

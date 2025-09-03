@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../features/auth/data/auth.service';
-import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,25 +30,25 @@ export class LayoutService {
 
   //The bottom method is not shared one. It will be just used to create workspace.
   createWorkspace(workspaceName: string): Observable<any> {
-    return this.http.post(`${environment.apiUserUrl}create-workspace`, { workspaceName });
+    return this.http.post(`${environment.apiUserUrl}workspace`, { workspaceName });
   }
 
   selectWorkspace(workspaceId: string): Observable<any> {
-    return this.http.get(`${environment.apiUserUrl}get-workspace?workspace_id=${workspaceId}`);
+    return this.http.get(`${environment.apiUserUrl}workspace?workspace_id=${workspaceId}`);
   }
 
 
   getNotifications(systemRole: string) {
 
     if (systemRole === 'company-user') {
-      return this.http.get(`${environment.apiUserUrl}get-notifications`);
+      return this.http.get(`${environment.apiUserUrl}notifications`);
 
     } else {
-      return this.http.get(`${environment.apiAdminUrl}get-notifications`);
+      return this.http.get(`${environment.apiAdminUrl}notifications`);
     }
   }
 
   makeNotificationsAsRead(notificaionId: string | null = null, removeAll: boolean = false) {
-    return this.http.patch(`${environment.apiUserUrl}update-notificaions`, { notificaionId, removeAll });
+    return this.http.patch(`${environment.apiUserUrl}notifications`, { notificaionId, removeAll });
   }
 }

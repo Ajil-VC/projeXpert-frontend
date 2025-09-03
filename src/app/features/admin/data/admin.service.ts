@@ -79,7 +79,7 @@ export class AdminService {
         subscriptions: any,
         totalPage: number
       }
-    }>(`${environment.apiAdminUrl}get-subscriptions?searchTerm=${searchTerm}&sort=${sort}&page=${page}`);
+    }>(`${environment.apiAdminUrl}subscriptions?searchTerm=${searchTerm}&sort=${sort}&page=${page}`);
   }
 
   createSubscriptionPlan(
@@ -92,19 +92,19 @@ export class AdminService {
     maxMembers: number,
     canUseVideoCall: string
   ): Observable<any> {
-    return this.http.post(`${environment.apiAdminUrl}create-plan`, { billingCycle, description, name, price, maxWorkspace, maxProjects, maxMembers, canUseVideoCall });
+    return this.http.post(`${environment.apiAdminUrl}plans`, { billingCycle, description, name, price, maxWorkspace, maxProjects, maxMembers, canUseVideoCall });
   }
 
   deletePlan(planId: string): Observable<any> {
-    return this.http.delete(`${environment.apiAdminUrl}delete-plan?plan_id=${planId}`);
+    return this.http.delete(`${environment.apiAdminUrl}plans?plan_id=${planId}`);
   }
 
   getAvailablePlans(pageNum: number, searchTerm: string = ''): Observable<any> {
-    return this.http.get(`${environment.apiAdminUrl}get-plans?page_num=${pageNum}&searchTerm=${searchTerm}`);
+    return this.http.get(`${environment.apiAdminUrl}plans?page_num=${pageNum}&searchTerm=${searchTerm}`);
   }
 
   changePlanStatus(planId: string): Observable<any> {
-    return this.http.patch(`${environment.apiAdminUrl}change-plan-status`, { planId });
+    return this.http.patch(`${environment.apiAdminUrl}plans`, { planId });
   }
 
   getRevenueReport(filter: 'month' | 'year' | 'date', plans: Array<string>, startDate?: Date, endDate?: Date): Observable<any> {

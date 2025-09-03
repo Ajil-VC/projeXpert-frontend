@@ -13,6 +13,7 @@ import { AuthService } from '../../../../../auth/data/auth.service';
 import { ContentHeaderComponent } from '../../../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../../../core/domain/entities/UI Interface/button.interface';
+import { NotificationService } from '../../../../../../core/data/notification.service';
 
 @Component({
   selector: 'app-projectinfo',
@@ -87,7 +88,8 @@ export class ProjectinfoComponent {
     private router: Router,
     public dialog: MatDialog,
     private shared: SharedService,
-    private auth: AuthService
+    private auth: AuthService,
+    private toast: NotificationService
 
   ) { }
 
@@ -237,7 +239,7 @@ export class ProjectinfoComponent {
             const updated = [...this.projects];
             updated[ind] = res.data;
             this.projects = updated;
-
+            this.toast.showSuccess('Project updated sucessfully');
             this.applyFilters();
           },
           error: (err) => {

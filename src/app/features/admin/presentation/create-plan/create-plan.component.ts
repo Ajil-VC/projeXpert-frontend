@@ -170,13 +170,9 @@ export class CreatePlanComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-        this.service.deletePlan(plan._id).subscribe({
-          next: () => {
-          },
-          error: (err) => {
-            this.toast.showError('Error deleting plan');
-          }
-        });
+        this.service.deletePlan(plan._id).subscribe();
+        const planIndex = this.subscriptions.findIndex(result => result._id === plan._id);
+        this.subscriptions.splice(planIndex, 1);
 
       }
     });

@@ -20,10 +20,7 @@ export class ProjectDataService {
   public delProject = new Subject<Project>();
   public delProject$ = this.delProject.asObservable();
 
-  // setProjects(projects: Array<Project> | null): void {
 
-  //   this.projects = projects;
-  // }
   getProjectData(page: number = 1, filter: {
     active: boolean,
     archived: boolean,
@@ -43,13 +40,13 @@ export class ProjectDataService {
     };
 
     const workSpaceId = this.service.getWorkSpace()?._id;
-    return this.http.put<{ status: boolean, data: Project }>(`${environment.apiUserUrl}update-project`, { projectData, workSpaceId });
+    return this.http.put<{ status: boolean, data: Project }>(`${environment.apiUserUrl}project`, { projectData, workSpaceId });
 
   }
 
   deleteProject(projectId: string): Observable<any> {
     const currWorkSpaceId = this.service.getWorkSpace()?._id;
-    return this.http.delete(`${environment.apiUserUrl}delete-project/${projectId}/${currWorkSpaceId}`);
+    return this.http.delete(`${environment.apiUserUrl}project/${projectId}/${currWorkSpaceId}`);
   }
 
   removeProject(project: Project) {

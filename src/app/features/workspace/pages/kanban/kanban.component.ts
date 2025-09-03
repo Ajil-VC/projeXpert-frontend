@@ -144,9 +144,10 @@ export class KanbanComponent {
         if (!res.status) {
           this.allTasks = [];
           this.seperatingOnStatus();
+          this.loader.hide();
           return;
         }
-        
+
         this.allTasks = res.result;
         this.seperatingOnStatus();
         this.loader.hide();
@@ -264,7 +265,7 @@ export class KanbanComponent {
 
   taskDetails(event: Event, task: Task): void {
     event.stopPropagation();
-    
+
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',
       data: {

@@ -12,9 +12,9 @@ export class SettingsService {
 
   updateProfile(formData: FormData, isAdmin: boolean = false): Observable<any> {
     if (!isAdmin) {
-      return this.http.put(`${environment.apiUserUrl}update-profile`, formData);
+      return this.http.put(`${environment.apiUserUrl}profile`, formData);
     }
-    return this.http.put(`${environment.apiAdminUrl}update-profile`, formData);
+    return this.http.put(`${environment.apiAdminUrl}profile`, formData);
   }
 
 }

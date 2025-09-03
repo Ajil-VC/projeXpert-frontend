@@ -18,15 +18,15 @@ export class BacklogService {
 
     if (!epic) {
       const projectId = this.layoutSer.getProjectId();
-      return this.http.post(`${environment.apiUserUrl}create-epic`, { title, description, startDate, endDate, projectId });
+      return this.http.post(`${environment.apiUserUrl}epic`, { title, description, startDate, endDate, projectId });
     } else {
-      return this.http.put(`${environment.apiUserUrl}update-epic`, { title, description, startDate, endDate, status, epicId: epic._id });
+      return this.http.put(`${environment.apiUserUrl}epic`, { title, description, startDate, endDate, status, epicId: epic._id });
     }
   }
 
 
   createIssue(projectId: string, issueType: string, issueName: string, taskGroup: string, epicId: string = ''): Observable<any> {
-    return this.http.post(`${environment.apiUserUrl}create-issue`, { projectId, issueType, issueName, taskGroup, epicId });
+    return this.http.post(`${environment.apiUserUrl}issue`, { projectId, issueType, issueName, taskGroup, epicId });
   }
 
   //This subject will be used to retrieve sprint data on the creation from backlog
@@ -48,7 +48,7 @@ export class BacklogService {
         observer.complete();
       });
     }
-    return this.http.get<{ status: boolean, result: Sprint[] }>(`${environment.apiUserUrl}get-sprints/${projectId}`);
+    return this.http.get<{ status: boolean, result: Sprint[] }>(`${environment.apiUserUrl}sprints/${projectId}`);
   }
 
   public addIssueSubject = new Subject<Task>();
@@ -63,12 +63,12 @@ export class BacklogService {
 
 
   assignIssue(issueId: string, assigneeId: string): Observable<any> {
-    return this.http.patch(`${environment.apiUserUrl}assign-issue`, { issueId, assigneeId });
+    return this.http.patch(`${environment.apiUserUrl}issue`, { issueId, assigneeId });
   }
 
   createSprint(issueIds: Array<string>): Observable<any> {
     const projectId = localStorage.getItem('projectId');
-    return this.http.post(`${environment.apiUserUrl}create-sprint`, { projectId, issueIds });
+    return this.http.post(`${environment.apiUserUrl}sprints`, { projectId, issueIds });
   }
 
   dragDropUpdation(prevContainerId: string, containerId: string, movedTaskId: string): Observable<any> {
@@ -81,7 +81,7 @@ export class BacklogService {
 
   startSprint(sprintId: string, sprintName: string, duration: number, startDate: Date): Observable<any> {
     const projectId = this.layoutSer.getProjectId();
-    return this.http.put(`${environment.apiUserUrl}start-sprint`, { sprintId, sprintName, duration, startDate, projectId });
+    return this.http.put(`${environment.apiUserUrl}sprints`, { sprintId, sprintName, duration, startDate, projectId });
   }
 
 }
