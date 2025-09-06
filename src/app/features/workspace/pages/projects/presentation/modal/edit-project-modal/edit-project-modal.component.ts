@@ -18,6 +18,8 @@ import { NotificationService } from '../../../../../../../core/data/notification
 import { SharedService } from '../../../../../../../shared/services/shared.service';
 import { ProjectService } from '../../../data/project.service';
 import { AuthService } from '../../../../../../auth/data/auth.service';
+import { TeamManagementService } from '../../../../team-management/team-management.service';
+import { Roles } from '../../../../../../../core/domain/entities/roles.model';
 
 @Component({
   selector: 'app-edit-project-modal',
@@ -50,8 +52,11 @@ export class EditProjectModalComponent {
   newMemberEmailControl = new FormControl('', [Validators.email]);
 
   newMemberEmail = '';
+  selectedRole: string | null = null;
   projectData!: projectView;
   isLoading: boolean = false;
+
+  roles: Roles[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EditProjectModalComponent>,
@@ -59,7 +64,8 @@ export class EditProjectModalComponent {
     private editProjectSer: EditProjectUseCase,
     private toast: NotificationService,
     private shared: SharedService,
-    private authSer: AuthService
+    private authSer: AuthService,
+    private team: TeamManagementService
   ) {
 
     this.setupProjectDataForView(this.data);
@@ -69,7 +75,17 @@ export class EditProjectModalComponent {
   ngOnInit() {
     this.authSer.logout$.subscribe({
       next: () => this.dialogRef.close(null)
+    });
+
+    this.team.getRoles().subscribe({
+      next: (res) => {
+        this.roles = res.result;
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt retrieve the roles.');
+      }
     })
+
   }
 
 
@@ -80,17 +96,19 @@ export class EditProjectModalComponent {
       name: data?.name as string || '',
       status: data?.status || '',
       priority: data?.priority || '',
-      members: [] as { _id: string, email: string; role: 'user' | 'admin' }[]
+      members: [] as { _id: string, email: string; role: Roles }[]
     };
     const d = data?.members as unknown;
     const mems = d as Array<User> || [];
 
     initData.members = mems.map(ele => {
+
       return {
         _id: ele._id,
         email: ele.email,
-        role: (ele.role === 'admin' || ele.role === 'user') ? ele.role as 'admin' | 'user' : 'user'
+        role: ele.role as Roles
       };
+
     }).reverse();
 
     this.projectData = initData;
@@ -114,17 +132,25 @@ export class EditProjectModalComponent {
 
   addMember() {
 
-    const confirmAdd = window.confirm('Please ensure the email');
+    if (!this.newMemberEmail) {
+      this.toast.showWarning('Please provide a email.');
+      return;
+    } else if (!this.selectedRole) {
+      this.toast.showWarning('Select a role');
+      return;
+    }
 
-    if (this.newMemberEmail && confirmAdd) {
+    const confirmAdd = window.confirm('Please ensure the email');
+    if (this.newMemberEmail && confirmAdd && this.selectedRole) {
       this.isLoading = true;
 
       this.editProjectSer.addMember(
         this.newMemberEmail,
         this.data._id as string,
-        this.data.workSpace as string
+        this.data.workSpace as string,
+        this.selectedRole
       ).subscribe({
-        next: (res: { status: boolean, message: string, updatedProjectData: Project }) => {
+        next: (res) => {
 
           if (!res.status) {
             this.toast.showError('User couldnt add to the project.');
@@ -154,7 +180,7 @@ export class EditProjectModalComponent {
     const confirmDelete = await window.confirm('Are you sure you want to remove this member?');
     if (confirmDelete) {
 
-      const updatedMembers: { _id: string, email: string; role: 'user' | 'admin' }[] = [...this.projectData.members as { _id: string, email: string; role: 'user' | 'admin' }[]];
+      const updatedMembers: { _id: string, email: string; role: Roles }[] = [...this.projectData.members as { _id: string, email: string; role: Roles }[]];
       updatedMembers.splice(index, 1);
 
       if (!this.projectData._id) throw new Error('Project Id not exist');

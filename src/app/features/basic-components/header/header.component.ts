@@ -17,6 +17,7 @@ import { SocketService } from '../../../shared/services/socket.service';
 import { Notification } from '../../../core/domain/entities/notification.model';
 import { NotificationService } from '../../../core/data/notification.service';
 import { ProjectDataService } from '../../../shared/services/project-data.service';
+import { PermissionsService } from '../../../shared/utils/permissions.service';
 
 @Component({
   selector: 'app-header',
@@ -49,6 +50,7 @@ export class HeaderComponent {
   isAdmin: boolean = false;
 
   canCreateWorkspace: boolean = false;
+  canCreateProject: boolean = false;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -60,14 +62,16 @@ export class HeaderComponent {
     private dialog: MatDialog,
     private socketSer: SocketService,
     private toast: NotificationService,
-    private projectSer: ProjectDataService
+    private projectSer: ProjectDataService,
+    private permission: PermissionsService
   ) {
 
-    this.isAdmin = this.authService.isAdmin();
-    if (this.isAdmin) {
+    if (this.permission.has(['create_workspace'])) {
       this.canCreateWorkspace = true;
     }
-
+    if (this.permission.has(['create_project'])) {
+      this.canCreateProject = true;
+    }
   }
 
   get notificationCount(): number {
@@ -272,11 +276,11 @@ export class HeaderComponent {
     });
 
 
-    if (this.authService.isAdmin()) {
+    if (this.permission.has(['view_sprint'])) {
       this.backlogSer.getSprints(projectId as string).subscribe({
         next: (res: { status: boolean, result: Sprint[] }) => {
           if (!res.status) {
-            console.error('Error occured while getting sprints');
+            this.toast.showError('Couldnt retrieve sprints.');
             return;
           }
 
@@ -286,7 +290,7 @@ export class HeaderComponent {
 
         },
         error: (err) => {
-          console.error('Error occured while getting sprints', err);
+          this.toast.showError('Couldnt retrieve sprints.');
         }
       });
     }

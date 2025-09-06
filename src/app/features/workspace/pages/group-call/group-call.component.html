@@ -19,7 +19,7 @@
             <p *ngIf="searchQuery.trim() === ''">
                 You don't have any meetings scheduled yet.
             </p>
-            <button class="create-room-btn secondary" (click)="onCreateRoom()">
+            <button class="create-room-btn secondary" *ngIf="restrictMeetingCreation" (click)="onCreateRoom()">
                 Create Your First Meeting
             </button>
         </div>

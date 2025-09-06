@@ -8,7 +8,7 @@
         <mat-label>Filter by Role</mat-label>
         <mat-select [formControl]="roleControl">
             <mat-option value="">All</mat-option>
-            <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role._id">{{ role.name }}</mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -20,6 +20,8 @@
             <mat-option value="blocked">Blocked</mat-option>
         </mat-select>
     </mat-form-field>
+
+    <button (click)="createNewRole()">Create new Role</button>
 </div>
 
 <table mat-table [dataSource]="users" class="user-table mat-elevation-z2" matSort>
@@ -59,8 +61,9 @@
         <th mat-header-cell *matHeaderCellDef> Role </th>
         <td mat-cell *matCellDef="let user">
             <mat-form-field appearance="fill" class="role-select">
-                <mat-select [(value)]="user.role" (selectionChange)="updateRole(user, $event.value)">
-                    <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+                <mat-select [(ngModel)]="user.role" [compareWith]="compareRoles"
+                    (selectionChange)="updateRole(user, $event.value)">
+                    <mat-option *ngFor="let role of roles" [value]="role">{{ role.name }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </td>
@@ -70,8 +73,8 @@
     <ng-container matColumnDef="block">
         <th mat-header-cell *matHeaderCellDef> Status </th>
         <td mat-cell *matCellDef="let user">
-            <mat-slide-toggle [checked]="user?.restrict" (change)="toggleBlock(user, $event.checked)" color="accent"
-                [matTooltip]="user?.restrict == true ?  'Blocked' : 'Active'" matTooltipPosition="above">
+            <mat-slide-toggle [checked]="user?.isBlocked" (change)="toggleBlock(user, $event.checked)" color="accent"
+                [matTooltip]="user?.isBlocked == true ?  'Blocked' : 'Active'" matTooltipPosition="above">
             </mat-slide-toggle>
         </td>
     </ng-container>
@@ -84,8 +87,8 @@
 </table>
 
 <div *ngIf="users.length === 0" class="no-results">
-  <p>🔍 No results found</p>
-  <small>Try changing filters or search query.</small>
+    <p>🔍 No results found</p>
+    <small>Try changing filters or search query.</small>
 </div>
 
 

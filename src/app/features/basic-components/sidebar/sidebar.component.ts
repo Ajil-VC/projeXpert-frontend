@@ -9,13 +9,16 @@ import { NotificationService } from '../../../core/data/notification.service';
 import { ProjectDataService } from '../../../shared/services/project-data.service';
 
 import { LoaderService } from '../../../core/data/loader.service';
+import { PermissionsService } from '../../../shared/utils/permissions.service';
+import { Permissions } from '../../../core/domain/entities/roles.model';
 
 interface MenuItem {
   id: string,
   icon: string,
   label: string,
   route: string,
-  active: boolean
+  active: boolean,
+  required?: Permissions[]
 }
 
 
@@ -41,7 +44,8 @@ export class SidebarComponent {
     private shared: SharedService,
     private toast: NotificationService,
     private projSer: ProjectDataService,
-    private loadSer: LoaderService
+    private loadSer: LoaderService,
+    private permission: PermissionsService
   ) {
 
   }
@@ -52,7 +56,8 @@ export class SidebarComponent {
 
   ngOnInit() {
 
-    this.menuItems = this.isPlatformAdmin() ? this.adminMenuItems : this.userMenuItems;
+    this.menuItems = this.isPlatformAdmin() ? this.adminMenuItems :
+      this.userMenuItems.filter(item => !item.required || this.permission.hasAny(item.required))
 
     if (!this.isPlatformAdmin()) {
 
@@ -83,37 +88,35 @@ export class SidebarComponent {
         }
       })
 
-      this.authSer.user$.subscribe({
-        next: (res: User | null) => {
-          if (res) {
+      // this.authSer.user$.subscribe({
+      //   next: (res: User | null) => {
+      //     if (res) {
 
-            if (res.role !== 'admin') {
-              this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog' && item.id !== 'subscription' && item.id !== 'teams'));
-            }
-          }
+      //       if (res.role !== 'admin') {
+      //         this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog' && item.id !== 'subscription' && item.id !== 'teams'));
+      //       }
+      //     }
 
-        }
-      });
+      //   }
+      // });
     }
   }
 
   userMenuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
-    { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false },
-    { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false },
-    // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
+    { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false, required: ['view_sprint', 'view_project'] },
+    { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false, required: ['view_task', 'view_project', 'view_all_task'] },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/user/meeting', active: false },
-    { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false },
-    { id: 'teams', icon: 'fa-users', label: 'Company Members', route: '/user/teams-members', active: false },
-    { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false },
+    { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false, required: ['view_project', 'invite_user'] },
+    { id: 'teams', icon: 'fa-users', label: 'Users & Roles', route: '/user/teams-members', active: false, required: ['assign_role'] },
+    { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false, required: ['manage_billing'] },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/user/settings', active: false }
   ];
 
   adminMenuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/admin/dashboard', active: false },
     { id: 'companies', icon: 'fa-building', label: 'Companies', route: '/admin/companies', active: false },
-    // { id: 'notifications', icon: 'fa-bell', label: 'Notifications', route: '/notifications', active: false },
     { id: 'create-plan', icon: '	fa-tools', label: 'Create plan', route: '/admin/create-plan', active: false },
     { id: 'revenue', icon: 'fa-solid fa-chart-line', label: 'Revenue report', route: '/admin/revenue', active: false },
     { id: 'subscription', icon: 'fa-coins', label: 'Subscriptions', route: '/admin/subscription', active: false },

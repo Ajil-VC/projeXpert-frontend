@@ -141,7 +141,7 @@ export class CreateRoomComponent {
     return displayNames[fieldName] || fieldName;
   }
 
-  // Load mock users - replace with actual API call
+
   private loadAvailableUsers(): void {
 
     this.sharedSer.getTeamMembers().subscribe({

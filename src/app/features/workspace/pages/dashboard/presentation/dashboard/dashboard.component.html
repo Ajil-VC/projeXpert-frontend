@@ -70,7 +70,7 @@
             <div class="activity-avatar">
               <div class="avatar">
                 <img *ngIf="profilePic(activity.user)" src="{{profilePic(activity.user)}}" alt="">
-                <h3 *ngIf="profilePic(activity.user)">{{activity.user.email.charAt(0).toUpperCase()}}</h3>
+                <h3 *ngIf="!profilePic(activity.user)">{{activity.user.email.charAt(0).toUpperCase()}}</h3>
 
               </div>
             </div>

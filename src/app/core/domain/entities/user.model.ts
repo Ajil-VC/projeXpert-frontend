@@ -1,3 +1,4 @@
+import { Roles } from "./roles.model";
 import { Workspace } from "./workspace.model";
 
 
@@ -12,9 +13,8 @@ export interface User {
     profilePicUrl: Attachment;
     email: string;
     plan: string;
-    role: string;
+    role: string | Roles;
     isBlocked: boolean;
-    restrict: boolean;
     defaultWorkspace: Workspace;
     workSpaces: Array<Workspace>;
     forceChangePassword?: boolean;

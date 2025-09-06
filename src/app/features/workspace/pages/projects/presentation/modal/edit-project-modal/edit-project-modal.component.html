@@ -47,6 +47,14 @@
             <button mat-mini-button color="primary" class="add-member-btn" [disabled]="emailCtrl.invalid"
                 (click)="addMember()">Add</button>
 
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Select a Role</mat-label>
+                <mat-select [(ngModel)]="selectedRole" name="role">
+                    <mat-option *ngFor="let role of roles" value="{{role._id}}">{{role.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
         </div>
 
         <!-- Current Members -->
@@ -60,8 +68,7 @@
                 </mat-slide-toggle> -->
 
                 <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select">
-                    <mat-option value="admin">Admin</mat-option>
-                    <mat-option value="user">User</mat-option>
+                    <mat-option *ngFor="let role of roles" value="{{role._id}}">{{role.name}}</mat-option>
                 </mat-select>
                 <button mat-icon-button color="warn" (click)="removeMember(i, member._id)">
                     <mat-icon>delete</mat-icon>

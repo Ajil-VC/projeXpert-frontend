@@ -15,6 +15,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
 import { combineLatest, debounceTime, distinctUntilChanged, startWith, Subject, switchMap, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateRoleModalComponent } from './create-role-modal/create-role-modal.component';
+import { Roles } from '../../../../core/domain/entities/roles.model';
 
 @Component({
   selector: 'app-team-management',
@@ -39,7 +42,7 @@ export class TeamManagementComponent {
   private destroy$ = new Subject<void>();
 
   users: User[] = [];
-  roles = ['admin', 'user'];
+  roles: Roles[] = [];
   displayedColumns = ['profile', 'name', 'email', 'role', 'block'];
 
   currentUser!: User | null;
@@ -50,7 +53,6 @@ export class TeamManagementComponent {
   role: string = '';
   status: string = '';
 
-
   searchControl = new FormControl('');
   statusControl = new FormControl('');
   roleControl = new FormControl('');
@@ -58,18 +60,33 @@ export class TeamManagementComponent {
   currentPage: number = 1;
   totalPages: number = 1;
 
-  constructor(private teamSer: TeamManagementService, private toast: NotificationService, private authService: AuthService) { }
+  constructor(
+    private teamSer: TeamManagementService,
+    private toast: NotificationService,
+    private authService: AuthService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit() {
 
     this.currentUser = this.authService.getCurrentUser()
     this.fetchUsers();
+
+    this.teamSer.getRoles().subscribe({
+      next: (res) => {
+        this.roles = res.result;
+      },
+      error: (err) => {
+        this.toast.showError('Couldnt retrieve the roles.');
+      }
+    })
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
     this.fetchUsers(page);
   }
+
 
 
   filteredResult$ = combineLatest([
@@ -105,10 +122,13 @@ export class TeamManagementComponent {
     return user.profilePicUrl.url;
   }
 
+  compareRoles(role1: any, role2: any): boolean {
+    return role1 && role2 ? role1._id === role2._id : role1 === role2;
+  }
 
   fetchUsers(page: number = 1) {
 
-    this.teamSer.getUsers(page, this.searchTerm, this.role, this.status).subscribe({
+    this.teamSer.getUsers(page, this.searchTerm, this.role).subscribe({
       next: (res) => {
 
         if (res.status) {
@@ -125,28 +145,43 @@ export class TeamManagementComponent {
 
   }
 
-  toggleBlock(user: User, event: boolean) {
-    this.updateUser(user, event)
-  }
 
   updateRole(user: User, newRole: string) {
     user.role = newRole;
     this.updateUser(user)
   }
 
-  updateUser(user: User, status: boolean | null = null) {
+  toggleBlock(user: User, event: boolean) {
+    this.updateUser(user, event);
+  }
 
-    this.teamSer.controlUser(user._id, status, user.role).subscribe({
-      next: (res) => {
-        if (res.status) {
+  updateUser(user: User, blockedStatus: boolean | null = null) {
+    if (typeof user.role !== 'string') {
 
-          user.restrict = res.result.restrict;
+      this.teamSer.updateUserRoleAndStatus(user._id, user.role._id, blockedStatus).subscribe({
+        next: (res) => {
+          if (res.status) {
+          }
+        },
+        error: (err) => {
+          this.toast.showError('Couldnt update user.');
         }
-      },
-      error: (err) => {
-        this.toast.showError('Couldnt update user.');
+      })
+    }
+  }
+
+  createNewRole() {
+
+    const dialogRef = this.dialog.open(CreateRoleModalComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.roles.push(result);
       }
-    })
+    });
   }
 
 

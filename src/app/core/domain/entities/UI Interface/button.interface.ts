@@ -26,4 +26,5 @@ export interface ButtonType {
     action?: StatusAction | ViewModeAction | TimeFilter;
     icon?: string;
     color?: string;
+    restriction?: boolean;
 }

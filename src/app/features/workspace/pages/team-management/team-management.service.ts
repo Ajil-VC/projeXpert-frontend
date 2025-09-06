@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { User } from '../../../../core/domain/entities/user.model';
+import { Roles } from '../../../../core/domain/entities/roles.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,15 @@ export class TeamManagementService {
 
   }
 
-  controlUser(userId: string, status: boolean | null, userRole: string): Observable<any> {
-    return this.http.patch(`${environment.apiUserUrl}control-user`, { userId, status, userRole });
+  updateUserRoleAndStatus(userId: string, userRole: string, blockedStatus: boolean | null = null): Observable<any> {
+    return this.http.patch(`${environment.apiUserUrl}control-user`, { userId, userRole, blockedStatus });
+  }
+
+  createRole(formData: { roleName: string, permissions: Array<string>, description: string }): Observable<{ message: string, result: Roles, status: boolean }> {
+    return this.http.post<{ message: string, result: Roles, status: boolean }>(`${environment.apiUserUrl}roles`, formData);
+  }
+
+  getRoles(): Observable<{ message: string, result: Array<Roles>, status: boolean }> {
+    return this.http.get<{ message: string, result: Array<Roles>, status: boolean }>(`${environment.apiUserUrl}roles`);
   }
 }

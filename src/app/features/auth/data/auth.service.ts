@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { LayoutService } from '../../../shared/services/layout.service';
 import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
+import { Permissions, Roles } from '../../../core/domain/entities/roles.model';
+import { PermissionsService } from '../../../shared/utils/permissions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,13 +39,9 @@ export class AuthService implements RegisterUseCase {
   setCurrentUser(user: User): void {
     this.userSubject.next(user);
     this.currentUser = user;
-    localStorage.setItem('role', user.role);
+    this.permission.setPermissions((user.role as unknown as Roles).permissions)
   }
 
-  isAdmin() {
-    const role = localStorage.getItem('role');
-    return role === 'admin';
-  }
 
   getWorkSpace(): Workspace | null {
     return this.currentWorkspace;
@@ -76,7 +74,7 @@ export class AuthService implements RegisterUseCase {
 
 
 
-  constructor(private http: HttpClient, private router: Router, private shared: SharedService) { }
+  constructor(private http: HttpClient, private router: Router, private shared: SharedService, private permission: PermissionsService) { }
 
   signup(email: string): Observable<any> {
 
@@ -124,6 +122,7 @@ export class AuthService implements RegisterUseCase {
     localStorage.removeItem('forceChangePass');
     localStorage.removeItem('role');
     localStorage.removeItem('projectId');
+    this.permission.clear();
     this.router.navigate(['/login']);
 
     this.currentUser = null;

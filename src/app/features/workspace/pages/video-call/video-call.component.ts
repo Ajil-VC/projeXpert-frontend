@@ -137,7 +137,7 @@ export class VideoCallComponent implements AfterViewInit {
           }
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error occured while getting current user', err);
       }
     });

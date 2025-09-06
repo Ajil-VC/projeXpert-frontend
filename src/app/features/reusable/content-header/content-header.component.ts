@@ -5,15 +5,13 @@ import { CommonModule } from '@angular/common';
 import { ButtonType } from '../../../core/domain/entities/UI Interface/button.interface';
 import { debounceTime, distinctUntilChanged, startWith, Subject, takeUntil } from 'rxjs';
 import { Button, ReportFilter, SelectedFilter } from '../../../core/domain/entities/UI Interface/headerTypes';
-import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
-import { MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NotificationService } from '../../../core/data/notification.service';
 
 @Component({
   selector: 'app-content-header',
   imports: [FormsModule, CommonModule, ReactiveFormsModule,
-    MatDatepickerModule,
+    MatDatepickerModule
   ],
   templateUrl: './content-header.component.html',
   styleUrl: './content-header.component.css'
@@ -66,6 +64,13 @@ export class ContentHeaderComponent {
     });
 
     return isBtn;
+  }
+  buttonHasPermission(type: string) {
+    const btn = this.headerConfig.buttons?.find((b: ButtonType) => {
+      return b.type === type;
+    });
+
+    return btn?.restriction || false;
   }
 
   searchTerm$ = this.searchControl.valueChanges.pipe(

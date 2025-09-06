@@ -18,10 +18,12 @@
 
         <div class="button-area">
 
-            <button *ngIf="getButton('main')" class="main-button" (click)="onButtonClick('main')">
-                <i class="icon-plus"></i>
-                {{getButton('main')?.label}}
-            </button>
+            <ng-container *ngIf="getButton('main')">
+                <button class="main-button" *ngIf="!buttonHasPermission('main')" (click)="onButtonClick('main')">
+                    <i class="icon-plus"></i>
+                    {{getButton('main')?.label}}
+                </button>
+            </ng-container>
 
             <div class="filter-actions">
                 <div class="status-filters" *ngIf="getButton('filter')">

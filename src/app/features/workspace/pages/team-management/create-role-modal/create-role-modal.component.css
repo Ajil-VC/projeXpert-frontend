@@ -1,0 +1,65 @@
+
+
+.role-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+
+button[mat-button],
+button[mat-mini-button] {
+    min-width: 80px;
+    font-weight: 500;
+}
+
+
+button[mat-button] {
+
+    background-color: #1976d2;
+    cursor: pointer;
+    /* Primary Blue */
+    border: none;
+
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    text-transform: capitalize;
+    transition: background-color 0.3s ease;
+    margin-left: 5px;
+}
+
+button[mat-button]:hover {
+    background-color: #125ea2;
+}
+
+button[mat-button]:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+button[mat-button].secondary {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+button[mat-button].secondary:hover {
+    background-color: #bdbdbd;
+}
+
+.no-checkbox ::ng-deep .mat-pseudo-checkbox {
+    display: none !important;
+}

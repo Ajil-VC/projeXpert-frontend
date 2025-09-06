@@ -56,7 +56,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           })
         );
       } else if (error.status === 403) {
-        console.log(error)
+
         if (error.error['issue']) {
           notificationService.showInfo(error.error['message']);
           return throwError(() => error);
@@ -77,8 +77,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return of();
           }
         }
-
-        authService.logout();
 
         if (error.error && error.error['message'] && (error.error['message'] === 'Company blocked' || error.error['message'] === 'User account is blocked.')) {
           router.navigate(['forbidden'], {

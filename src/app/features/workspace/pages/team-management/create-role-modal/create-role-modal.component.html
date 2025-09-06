@@ -1,0 +1,43 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="header">
+    <h2 mat-dialog-title>Create New Role</h2>
+</div>
+
+
+<mat-dialog-content class="role-modal">
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="role-form">
+
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Role name</mat-label>
+            <input matInput name="title" type="text" formControlName="roleName" required />
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Permissions</mat-label>
+            <mat-select formControlName="permissions" multiple [(value)]="selectedPermissions"
+                (selectionChange)="toggleAllSelection($event)">
+                <mat-option [value]="'all'" [disabled]="false" [class.bold]="isAllSelected" class="no-checkbox">
+                    {{ isAllSelected ? 'UnselectAll' : 'Select All' }}</mat-option>
+                <mat-option *ngFor="let permission of permissions" [value]="permission">{{permission.replace('_',' ')
+                    | titlecase}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="4" formControlName="description"></textarea>
+        </mat-form-field>
+
+        <mat-dialog-actions align="end" class="buttons">
+
+            <button mat-button class="secondary" (click)="onCancel()">Cancel</button>
+            <button mat-button color="primary" type="submit" [disabled]="roleForm.invalid">Save</button>
+
+        </mat-dialog-actions>
+
+    </form>
+</mat-dialog-content>

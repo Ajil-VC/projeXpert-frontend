@@ -18,6 +18,9 @@
     gap: 0.5rem;
     flex-wrap: wrap;
     align-items: flex-start;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--heavy-dark);
 
     .member-email-field {
       flex: 1;

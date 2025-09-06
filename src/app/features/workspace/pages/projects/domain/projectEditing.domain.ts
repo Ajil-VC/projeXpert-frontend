@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { Project } from "../../../../../core/domain/entities/project.model";
 
 
 @Injectable({
@@ -10,7 +11,7 @@ import { Observable } from "rxjs";
 
 export abstract class EditProjectUseCase {
 
-    abstract addMember(email: string, projectId: string, workSpaceId: string): Observable<any>;
+    abstract addMember(email: string, projectId: string, workSpaceId: string, roleId: string): Observable<{ status: boolean, message: string, updatedProjectData: Project }>;
 
     abstract removeMember(userId: string, projectId: string): Observable<any>;
 

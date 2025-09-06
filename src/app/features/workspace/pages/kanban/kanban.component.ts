@@ -19,6 +19,8 @@ import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/head
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
 import { LoaderService } from '../../../../core/data/loader.service';
+import { Roles } from '../../../../core/domain/entities/roles.model';
+import { PermissionsService } from '../../../../shared/utils/permissions.service';
 
 
 @Component({
@@ -51,6 +53,7 @@ export class KanbanComponent {
       {
         type: 'main',
         label: '+ Complete Sprint',
+        restriction: false
       },
     ]
 
@@ -67,6 +70,12 @@ export class KanbanComponent {
     }
   }
 
+  setHeaderViewPermissions() {
+    if (this.headerConfig?.buttons && this.headerConfig.buttons[0]) {
+      this.headerConfig.buttons[0].restriction = !this.permission.has(['close_sprint']);
+
+    }
+  }
 
   searchQuery = '';
 
@@ -74,7 +83,7 @@ export class KanbanComponent {
   todoTasks: Task[] = [];
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
-  userRole: string = '';
+  userRole?: Roles;
 
   isLoading: boolean = false;
 
@@ -84,8 +93,11 @@ export class KanbanComponent {
     public dialog: MatDialog,
     private authSer: AuthService,
     private toast: NotificationService,
-    private loader: LoaderService
-  ) { }
+    private loader: LoaderService,
+    private permission: PermissionsService
+  ) {
+    this.setHeaderViewPermissions();
+  }
 
 
   onDrop(event: CdkDragDrop<any[]>) {
@@ -163,10 +175,15 @@ export class KanbanComponent {
 
 
   ngOnInit() {
+
+    this.setHeaderViewPermissions();
+
     this.authSer.user$.subscribe({
       next: (res: User | null) => {
         if (res) {
-          this.userRole = res.role;
+          if (typeof res.role !== 'string') {
+            this.userRole = res.role;
+          }
         }
       }
     });

@@ -22,6 +22,7 @@ import { ButtonType } from '../../../../core/domain/entities/UI Interface/button
 import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../../core/data/loader.service';
 import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
+import { PermissionsService } from '../../../../shared/utils/permissions.service';
 
 
 
@@ -60,6 +61,7 @@ export class GroupCallComponent {
       {
         type: 'main',
         label: '+ Create New Room',
+        restriction: false
       },
     ]
 
@@ -85,6 +87,7 @@ export class GroupCallComponent {
   searchQuery = '';
   selectedFilter = 'all';
   isLoading = false;
+  restrictMeetingCreation: boolean = false;
 
   currentPage: number = 1;
   totalPages: number = 1;
@@ -94,13 +97,24 @@ export class GroupCallComponent {
     private callService: GroupcallService,
     private toast: NotificationService,
     private router: Router,
-    private loader: LoaderService
-  ) { }
+    private loader: LoaderService,
+    private permission: PermissionsService
+  ) {
+    this.setHeaderViewPermissions();
+    this.restrictMeetingCreation = this.permission.has(['create_room']);
+  }
 
   ngOnInit(): void {
     this.loadMeetings();
+    this.setHeaderViewPermissions();
   }
 
+  setHeaderViewPermissions() {
+    if (this.headerConfig?.buttons && this.headerConfig.buttons[0]) {
+      this.headerConfig.buttons[0].restriction = !this.permission.has(['create_room']);
+
+    }
+  }
   private loadMeetings(page: number = 1, searchTerm: string = ''): void {
 
     this.loader.show();
