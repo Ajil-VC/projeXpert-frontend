@@ -1,13 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
-import { MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatSelect, MatSelectModule } from '@angular/material/select';
-import { PERMISSIONS } from '../../../../../core/domain/entities/roles.model';
+import { PERMISSIONS, Roles } from '../../../../../core/domain/entities/roles.model';
 import { CommonModule } from '@angular/common';
-import { TeamManagementService } from '../team-management.service';
+import { TeamManagementService } from '../../team-management/team-management.service';
 import { NotificationService } from '../../../../../core/data/notification.service';
 import { LoaderService } from '../../../../../core/data/loader.service';
 import { LoaderComponent } from '../../../../../core/presentation/loader/loader.component';
@@ -42,9 +42,11 @@ export class CreateRoleModalComponent {
   selectedPermissions: string[] = [];
   isAllSelected = false;
   isLoading = false;
+  roleHeader: string = 'Create New Role';
 
   constructor(
     public dialogRef: MatDialogRef<CreateRoleModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { role: Roles },
     private fb: FormBuilder,
     private teamSer: TeamManagementService,
     private toast: NotificationService,
@@ -56,6 +58,7 @@ export class CreateRoleModalComponent {
   }
 
   ngOnInit() {
+
     this.authSer.logout$.subscribe({
       next: () => this.dialogRef.close(null)
     });
@@ -66,7 +69,16 @@ export class CreateRoleModalComponent {
       roleName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       permissions: [[], Validators.required],
       description: ['']
-    })
+    });
+
+    if (this.data && this.data.role) {
+      this.roleHeader = 'Edit Role';
+      this.roleForm.patchValue({
+        roleName: this.data.role.name,
+        permissions: this.data.role.permissions,
+        description: this.data.role.description
+      })
+    }
   }
 
   onCancel() {
@@ -83,16 +95,21 @@ export class CreateRoleModalComponent {
         description: this.roleForm.get('description')?.value || ''
       }
 
-      this.teamSer.createRole(formData).subscribe({
+      this.teamSer.createOrUpdateRole(formData, this.data.role).subscribe({
         next: (res) => {
+    
           if (res.status) {
             this.toast.showSuccess(res.message);
-            this.dialogRef.close(res.result);
+            this.dialogRef.close(res);
             this.loader.hide();
           }
         },
         error: (err) => {
           this.loader.hide();
+          if (err.status === 409) {
+            this.toast.showError(err.error.message);
+            return;
+          }
           this.toast.showError("Couldnt create new role.");
         }
       });

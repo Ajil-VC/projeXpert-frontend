@@ -9,7 +9,8 @@
     <div class="epic-header">
         <div>
             <h2>Epic</h2>
-            <select name="epic-view" [(ngModel)]="epicView"  id="epic-toggler">
+            <select name="epic-view" [(ngModel)]="epicView" (change)="updateCheckStatus(null, $event)"
+                id="epic-toggler">
                 <option value="active" selected>Active</option>
                 <option value="compelted">Completed</option>
             </select>

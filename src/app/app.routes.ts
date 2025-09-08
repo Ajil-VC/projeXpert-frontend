@@ -37,6 +37,7 @@ import { CreatePlanComponent } from './features/admin/presentation/create-plan/c
 import { GroupCallComponent } from './features/workspace/pages/group-call/group-call.component';
 import { RoomComponent } from './features/workspace/pages/group-call/room/room.component';
 import { RevenueComponent } from './features/admin/presentation/revenue/revenue.component';
+import { RoleManagementComponent } from './features/workspace/pages/role-management/role-management.component';
 
 export const routes: Routes = [
 
@@ -64,6 +65,7 @@ export const routes: Routes = [
             { path: 'meeting', component: GroupCallComponent },
             { path: 'room/:roomId', component: RoomComponent },
             { path: 'teams-members', component: TeamManagementComponent },
+            { path: 'roles', component: RoleManagementComponent },
             { path: 'subscription', component: SubscriptionComponent },
             { path: 'success', component: SuccessComponent },
             { path: 'cancel', component: CancelComponent }

@@ -41,6 +41,7 @@ export interface Roles {
     name: string;
     description: string;
     permissions: Array<Permissions>;
+    canMutate: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

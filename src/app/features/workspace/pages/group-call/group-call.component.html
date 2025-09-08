@@ -48,8 +48,8 @@
                         [attr.aria-label]="'Edit ' + meeting.roomName">
                         ✏️
                     </button> -->
-                    <button class="action-btn delete" (click)="deleteMeeting(meeting)"
-                        [attr.aria-label]="'Delete ' + meeting.roomName">
+                    <button class="action-btn delete" *appHaspermission="['remove_room']"
+                        (click)="deleteMeeting(meeting)" [attr.aria-label]="'Delete ' + meeting.roomName">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>

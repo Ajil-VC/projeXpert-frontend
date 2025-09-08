@@ -27,8 +27,8 @@ export class EditProjectService implements EditProjectUseCase {
 
   }
 
-  getProjectData(projectId: string): Observable<any> {
-    return this.http.get(`${environment.apiUserUrl}project?project_id=${projectId}`);
-  }
+  // getProjectData(projectId: string): Observable<any> {
+  //   return this.http.get(`${environment.apiUserUrl}project?project_id=${projectId}`);
+  // }
 
 }

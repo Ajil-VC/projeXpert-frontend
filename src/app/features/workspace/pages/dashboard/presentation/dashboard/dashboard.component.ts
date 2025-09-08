@@ -165,7 +165,6 @@ export class DashboardComponent {
       },
       error: (err) => {
         this.loader.hide();
-        this.toast.showError('Couldnt retrieve the activities');
       }
     })
 

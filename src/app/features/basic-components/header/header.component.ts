@@ -91,6 +91,13 @@ export class HeaderComponent {
     return null;
   }
 
+  get currentUserName() {
+    if (this.currentUser && this.currentUser.name) {
+      return this.currentUser.name;
+    }
+    return '!';
+  }
+
   ngOnInit() {
     //Connecting to socket
     this.socketSer.connect();
@@ -101,9 +108,6 @@ export class HeaderComponent {
         const result = res as { status: boolean, result: Array<Notification> };
         this.notifications = result.result;
 
-      },
-      error: (err) => {
-        console.error('Error occured while getting notifications.', err);
       }
     })
 
@@ -116,9 +120,6 @@ export class HeaderComponent {
           this.availableProjects = projects || [];
         }
 
-      },
-      error: (err) => {
-        console.error('Error Occured while populating user data into header.', err);
       }
     });
 
@@ -129,9 +130,6 @@ export class HeaderComponent {
           this.availableProjects.push(project);
           this.cdr.detectChanges();
         }
-      },
-      error: (err) => {
-        console.error('Error occurred while updating projects list', err);
       }
     });
 
@@ -139,9 +137,6 @@ export class HeaderComponent {
       next: (res) => {
 
         this.currentWorkspace = res;
-      },
-      error: (err) => {
-        console.error('Error Occured while populating workspace data into header.', err);
       }
     });
 
@@ -156,9 +151,6 @@ export class HeaderComponent {
 
       next: (res) => {
         this.notifications.unshift(res);
-      },
-      error: (err) => {
-        console.error('Error occured while getting notification', err);
       }
     })
 
@@ -182,9 +174,6 @@ export class HeaderComponent {
           this.notifications[ind].read = true;
           this.router.navigate([notification?.link]);
         }
-      },
-      error: (err) => {
-        console.error('Error occured while marking notifications as read.', err);
       }
     })
   }
@@ -269,9 +258,6 @@ export class HeaderComponent {
         this.layoutSer.setProjectId(res.result._id as string);
         this.shared.curProject.next(res.result);
         this.shared.fetchTeamMembers();
-      },
-      error: (err) => {
-        console.log("Error while getting project data", err);
       }
     });
 
@@ -309,7 +295,7 @@ export class HeaderComponent {
         if (result.workspaceName) {
           this.layoutSer.createWorkspace(result.workspaceName).subscribe({
             next: (res) => {
-              console.log(res)
+
               if (!res.status) {
                 this.toast.showInfo(res.message);
                 return;

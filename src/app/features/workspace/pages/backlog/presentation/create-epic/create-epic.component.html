@@ -1,6 +1,6 @@
 <div class="dialog-container">
 
-    <h2 mat-dialog-title class="modal-title">Create Epic</h2>
+    <h2 mat-dialog-title class="modal-title">{{epicHeader}}</h2>
 
     <form [formGroup]="epicForm" (ngSubmit)="onSave()">
         <mat-dialog-content class="modal-content">

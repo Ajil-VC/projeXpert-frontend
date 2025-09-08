@@ -52,7 +52,7 @@ export class ProjectinfoComponent {
 
   currentPage: number = 1;
   totalPages: number = 1;
-
+  
   statusFilters = {
     active: true,
     archived: false,

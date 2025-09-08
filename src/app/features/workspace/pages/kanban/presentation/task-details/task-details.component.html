@@ -65,7 +65,7 @@
                     *ngFor="let user of teamMembers | search:userSearchTerm:['email','name']; let i = index;"
                     (click)="assignUser(user)">
                     <span>{{ user.email }}</span>
-                    <span>{{user.role}}</span>
+                    <span>{{user.role.name}}</span>
 
                 </div>
             </div>

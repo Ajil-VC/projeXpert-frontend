@@ -36,7 +36,6 @@ export class SubscriptionComponent {
       next: (res) => {
 
         if (res.status) {
-
           this.companySubscription = res.result;
           this.isSubscribed = true;
 

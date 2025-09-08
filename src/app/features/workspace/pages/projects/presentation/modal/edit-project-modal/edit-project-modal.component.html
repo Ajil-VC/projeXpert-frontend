@@ -50,7 +50,10 @@
             <mat-form-field appearance="fill" class="full-width">
                 <mat-label>Select a Role</mat-label>
                 <mat-select [(ngModel)]="selectedRole" name="role">
-                    <mat-option *ngFor="let role of roles" value="{{role._id}}">{{role.name}}</mat-option>
+                    <mat-option value="Add user from company">Add user from company</mat-option>
+                    <ng-container *ngFor="let role of roles">
+                        <mat-option *ngIf="role.canMutate" value="{{role._id}}">{{role.name}}</mat-option>
+                    </ng-container>
                 </mat-select>
             </mat-form-field>
 
@@ -70,7 +73,7 @@
                 <mat-select [(ngModel)]="member.role" name="role-{{i}}" class="role-select">
                     <mat-option *ngFor="let role of roles" value="{{role._id}}">{{role.name}}</mat-option>
                 </mat-select>
-                <button mat-icon-button color="warn" (click)="removeMember(i, member._id)">
+                <button mat-icon-button color="warn" (click)="removeMember(i, member)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </div>

@@ -86,14 +86,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }
           });
         } else {
-          userFriendlyMessage = "You don't have permission to access this page.";
-          notificationService.showError("You don't have permission to access this page.");
-          router.navigate(['forbidden'], {
-            state: {
-              message: userFriendlyMessage,
-              code: 'PERMISSION_DENIED'
-            }
-          });
+          userFriendlyMessage = "You don't have permission to perform this action.";
+          notificationService.showError("You don't have permission to perform this action.");
+
         }
       } else if (error.status === 404 || error.status === 400) {
 
@@ -102,8 +97,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status === 409) {
         return throwError(() => error);
       } else if (error.status >= 500) {
-        userFriendlyMessage = 'Server error. Please try again later.';
-        notificationService.showError(userFriendlyMessage);
+        notificationService.showError(error.error.message);
       }
 
       return throwError(() => new Error(userFriendlyMessage));

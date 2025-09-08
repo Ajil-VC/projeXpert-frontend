@@ -49,8 +49,8 @@ export class SettingsComponent {
   }
 
   onProfilePictureError(event: any) {
-    if (this.user && this.user.profilePicUrl)
-      this.user.profilePicUrl.url = 'assets/images/avatar.jpg';
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/images/avatar.jpg';
   }
 
   toggleEditName(): void {

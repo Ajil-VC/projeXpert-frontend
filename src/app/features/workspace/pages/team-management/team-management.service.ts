@@ -33,11 +33,24 @@ export class TeamManagementService {
     return this.http.patch(`${environment.apiUserUrl}control-user`, { userId, userRole, blockedStatus });
   }
 
-  createRole(formData: { roleName: string, permissions: Array<string>, description: string }): Observable<{ message: string, result: Roles, status: boolean }> {
-    return this.http.post<{ message: string, result: Roles, status: boolean }>(`${environment.apiUserUrl}roles`, formData);
+  createOrUpdateRole(
+    formData: { roleName: string, permissions: Array<string>, description: string },
+    role: Roles | null): Observable<{ message: string, result: Roles, status: boolean }> {
+
+    if (!role) {
+
+      return this.http.post<{ message: string, result: Roles, status: boolean }>(`${environment.apiUserUrl}roles`, formData);
+    } else {
+      return this.http.put<{ message: string, result: Roles, status: boolean, updated: boolean }>(`${environment.apiUserUrl}roles`, { formData, roleId: role._id });
+    }
   }
 
   getRoles(): Observable<{ message: string, result: Array<Roles>, status: boolean }> {
     return this.http.get<{ message: string, result: Array<Roles>, status: boolean }>(`${environment.apiUserUrl}roles`);
   }
+
+  deleteRole(roleId: string): Observable<{ status: boolean, message: string }> {
+    return this.http.delete<{ status: boolean, message: string }>(`${environment.apiUserUrl}roles?roleId=${roleId}`);
+  }
+
 }

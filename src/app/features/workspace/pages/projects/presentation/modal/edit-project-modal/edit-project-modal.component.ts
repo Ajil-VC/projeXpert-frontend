@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Project } from '../../../../../../../core/domain/entities/project.model';
 import { User } from '../../../../../../../core/domain/entities/user.model';
-import { projectView } from '../../../domain/projectView.interface';
+import { projectMember, projectView } from '../../../domain/projectView.interface';
 
 import { EditProjectUseCase } from '../../../domain/projectEditing.domain';
 import { EditProjectService } from '../../../data/edit-project.service';
@@ -20,6 +20,8 @@ import { ProjectService } from '../../../data/project.service';
 import { AuthService } from '../../../../../../auth/data/auth.service';
 import { TeamManagementService } from '../../../../team-management/team-management.service';
 import { Roles } from '../../../../../../../core/domain/entities/roles.model';
+import { Team } from '../../../../../../../core/domain/entities/team.model';
+import { ConfirmDialogComponent } from '../../../../../../reusable/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-edit-project-modal',
@@ -50,7 +52,6 @@ export class EditProjectModalComponent {
 
   editProjectForm!: FormGroup;
   newMemberEmailControl = new FormControl('', [Validators.email]);
-
   newMemberEmail = '';
   selectedRole: string | null = null;
   projectData!: projectView;
@@ -65,7 +66,8 @@ export class EditProjectModalComponent {
     private toast: NotificationService,
     private shared: SharedService,
     private authSer: AuthService,
-    private team: TeamManagementService
+    private teamSer: TeamManagementService,
+    private dialog: MatDialog
   ) {
 
     this.setupProjectDataForView(this.data);
@@ -77,14 +79,14 @@ export class EditProjectModalComponent {
       next: () => this.dialogRef.close(null)
     });
 
-    this.team.getRoles().subscribe({
+    this.teamSer.getRoles().subscribe({
       next: (res) => {
         this.roles = res.result;
       },
       error: (err) => {
         this.toast.showError('Couldnt retrieve the roles.');
       }
-    })
+    });
 
   }
 
@@ -175,26 +177,37 @@ export class EditProjectModalComponent {
     }
   }
 
-  async removeMember(index: number, userId: string) {
+  async removeMember(index: number, member: projectMember) {
 
-    const confirmDelete = await window.confirm('Are you sure you want to remove this member?');
-    if (confirmDelete) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Heads Up!!!',
+        message: `Are you sure you want to remove ${member.email} from project?`,
+        confirmButton: 'Delete',
+        cancelButton: 'Cancel'
+      }
+    });
 
-      const updatedMembers: { _id: string, email: string; role: Roles }[] = [...this.projectData.members as { _id: string, email: string; role: Roles }[]];
-      updatedMembers.splice(index, 1);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
 
-      if (!this.projectData._id) throw new Error('Project Id not exist');
-      this.editProjectSer.removeMember(userId, this.projectData._id).subscribe({
-        next: (res) => {
+        const updatedMembers: { _id: string, email: string; role: Roles }[] = [...this.projectData.members as { _id: string, email: string; role: Roles }[]];
+        updatedMembers.splice(index, 1);
 
-          this.projectData.members = updatedMembers;
-        },
-        error: (err) => {
-          console.error('Error occured while removing member', err);
-        }
-      })
+        if (!this.projectData._id) throw new Error('Project Id not exist');
+        this.editProjectSer.removeMember(member._id, this.projectData._id).subscribe({
+          next: (res) => {
 
-    }
+            this.projectData.members = updatedMembers;
+          },
+          error: (err) => {
+            console.error('Error occured while removing member', err);
+          }
+        })
+      }
+    });
+
   }
 
   trackByIndex(index: number, item: any) {

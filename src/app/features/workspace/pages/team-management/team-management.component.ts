@@ -15,9 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
 import { combineLatest, debounceTime, distinctUntilChanged, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { CreateRoleModalComponent } from './create-role-modal/create-role-modal.component';
 import { Roles } from '../../../../core/domain/entities/roles.model';
+import { PermissionsService } from '../../../../shared/utils/permissions.service';
 
 @Component({
   selector: 'app-team-management',
@@ -64,7 +63,7 @@ export class TeamManagementComponent {
     private teamSer: TeamManagementService,
     private toast: NotificationService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private permission: PermissionsService
   ) { }
 
   ngOnInit() {
@@ -146,7 +145,7 @@ export class TeamManagementComponent {
   }
 
 
-  updateRole(user: User, newRole: string) {
+  updateRole(user: User, newRole: Roles) {
     user.role = newRole;
     this.updateUser(user)
   }
@@ -168,20 +167,6 @@ export class TeamManagementComponent {
         }
       })
     }
-  }
-
-  createNewRole() {
-
-    const dialogRef = this.dialog.open(CreateRoleModalComponent, {
-      width: '500px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-
-        this.roles.push(result);
-      }
-    });
   }
 
 

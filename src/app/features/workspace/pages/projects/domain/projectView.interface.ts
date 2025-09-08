@@ -1,7 +1,7 @@
 import { Roles } from "../../../../../core/domain/entities/roles.model"
 
 
-interface projectMember {
+export interface projectMember {
     _id: string,
     email: string,
     role: Roles

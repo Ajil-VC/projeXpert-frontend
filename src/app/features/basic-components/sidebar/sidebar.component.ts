@@ -88,28 +88,18 @@ export class SidebarComponent {
         }
       })
 
-      // this.authSer.user$.subscribe({
-      //   next: (res: User | null) => {
-      //     if (res) {
-
-      //       if (res.role !== 'admin') {
-      //         this.menuItems = this.menuItems.filter(item => (item.id !== 'projects' && item.id !== 'backlog' && item.id !== 'subscription' && item.id !== 'teams'));
-      //       }
-      //     }
-
-      //   }
-      // });
     }
   }
 
   userMenuItems: MenuItem[] = [
     { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard', route: '/user/dashboard', active: false },
-    { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false, required: ['view_sprint', 'view_project'] },
+    { id: 'backlog', icon: 'fa-list', label: 'Backlog', route: '/user/backlog', active: false, required: ['view_sprint'] },
     { id: 'board', icon: 'fa-columns', label: 'Board', route: '/user/board', active: false, required: ['view_task', 'view_project', 'view_all_task'] },
     { id: 'chat', icon: 'fa-comment', label: 'Chat', route: '/user/chat', active: false },
     { id: 'meeting', icon: 'fa-video', label: 'Meeting', route: '/user/meeting', active: false },
     { id: 'projects', icon: 'fa-folder', label: 'Projects', route: '/user/project-info', active: false, required: ['view_project', 'invite_user'] },
-    { id: 'teams', icon: 'fa-users', label: 'Users & Roles', route: '/user/teams-members', active: false, required: ['assign_role'] },
+    { id: 'teams', icon: 'fa-users', label: 'Users', route: '/user/teams-members', active: false, required: ['assign_role'] },
+    { id: 'roles', icon: 'fa-user-cog', label: 'Roles', route: '/user/roles', active: false, required: ['assign_role'] },
     { id: 'subscription', icon: 'fa-rocket', label: 'Subscription', route: '/user/subscription', active: false, required: ['manage_billing'] },
     { id: 'settings', icon: 'fa-cog', label: 'Settings', route: '/user/settings', active: false }
   ];

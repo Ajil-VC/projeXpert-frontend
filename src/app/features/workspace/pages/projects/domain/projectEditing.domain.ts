@@ -15,6 +15,6 @@ export abstract class EditProjectUseCase {
 
     abstract removeMember(userId: string, projectId: string): Observable<any>;
 
-    abstract getProjectData(projectId: string): Observable<any>;
+    // abstract getProjectData(projectId: string): Observable<any>;
 }
 

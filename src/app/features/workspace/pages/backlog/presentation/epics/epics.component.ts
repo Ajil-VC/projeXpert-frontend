@@ -65,8 +65,11 @@ export class EpicsComponent {
 
     console.log(epicId);
   }
-  updateCheckStatus(epicId: string, event: any) {
-    if (this.checkedEpics.has(epicId)) {
+  updateCheckStatus(epicId: string | null, event: any) {
+    if (!epicId) {
+      this.checkedEpics.clear();
+      this.expandedEpics.clear();
+    } else if (this.checkedEpics.has(epicId)) {
       this.checkedEpics.delete(epicId);
     } else {
       this.checkedEpics.add(epicId);

@@ -23,6 +23,7 @@ export class CreateEpicComponent {
   epicForm: FormGroup;
   minDate = new Date();
   minEndDate: Date | null = null;
+  epicHeader: string = 'Create Epic';
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +42,7 @@ export class CreateEpicComponent {
 
     const epic = this.data.issue;
     if (epic) {
-
+      this.epicHeader = 'Edit Epic';
       const startDate = epic.startDate ? new Date(epic.startDate) : '';
       const minEnd = startDate ? new Date(startDate) : '';
 

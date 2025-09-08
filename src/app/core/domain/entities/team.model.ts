@@ -1,3 +1,4 @@
+import { Roles } from "./roles.model";
 
 
 export interface Team {
@@ -7,7 +8,7 @@ export interface Team {
     email: string,
 
     profilePicUrl: string,
-    role: "user" | "admin",
+    role: Roles,
 
     createdAt?: Date,
     updatedAt?: Date,

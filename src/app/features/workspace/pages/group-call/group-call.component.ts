@@ -23,6 +23,7 @@ import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm
 import { LoaderService } from '../../../../core/data/loader.service';
 import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
 import { PermissionsService } from '../../../../shared/utils/permissions.service';
+import { HaspermissionDirective } from '../../../../core/directives/haspermission.directive';
 
 
 
@@ -42,7 +43,8 @@ import { PermissionsService } from '../../../../shared/utils/permissions.service
     MatNativeDateModule,
     LoaderComponent,
     ContentHeaderComponent,
-    PaginationComponent
+    PaginationComponent,
+    HaspermissionDirective
   ],
   templateUrl: './group-call.component.html',
   styleUrl: './group-call.component.css',
