@@ -96,13 +96,13 @@ export class RoleManagementComponent {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      if (res.status && res?.updated) {
+      if (res?.status && res?.updated) {
 
         const index = this.roles.findIndex(r => r._id === res.result._id);
         this.roles[index] = res.result;
         this.filteredRoles = this.roles;
 
-      } else if (res.status) {
+      } else if (res?.status) {
         this.roles.push(res.result);
         this.filteredRoles = this.roles;
       }
@@ -127,7 +127,7 @@ export class RoleManagementComponent {
       if (result) {
         this.teamSer.deleteRole(role._id).subscribe({
           next: (res) => {
-            if (res.status) {
+            if (res?.status) {
               const index = this.roles.findIndex(r => r._id === role._id);
               this.roles.splice(index, 1);
               this.filteredRoles = this.roles;
@@ -140,3 +140,4 @@ export class RoleManagementComponent {
   }
 
 }
+103.44

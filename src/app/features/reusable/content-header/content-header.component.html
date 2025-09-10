@@ -28,15 +28,15 @@
             <div class="filter-actions">
                 <div class="status-filters" *ngIf="getButton('filter')">
                     <button class="filter-btn" [class.active]="statusFilters.active"
-                        (click)="onButtonClick('filter','active')">
+                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter','active')">
                         Active
                     </button>
                     <button class="filter-btn" [class.active]="statusFilters.completed"
-                        (click)="onButtonClick('filter','completed')">
+                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter','completed')">
                         Completed
                     </button>
                     <button class="filter-btn" [class.active]="statusFilters.archived"
-                        (click)="onButtonClick('filter','archived')">
+                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter','archived')">
                         Archived
                     </button>
                 </div>
@@ -78,11 +78,11 @@
                 </div>
 
                 <div class="view-toggle" *ngIf="getButton('view')">
-                    <button class="toggle-btn" [class.active]="viewMode === 'grid'"
+                    <button class="toggle-btn" [class.active]="viewMode === 'grid'" *ngIf="!buttonHasPermission('view')"
                         (click)="onButtonClick('view','grid')">
                         <i class="fas fa-th-large"></i>
                     </button>
-                    <button class="toggle-btn" [class.active]="viewMode === 'list'"
+                    <button class="toggle-btn" [class.active]="viewMode === 'list'" *ngIf="!buttonHasPermission('view')"
                         (click)="onButtonClick('view','list')">
                         <i class="fas fa-list"></i>
                     </button>

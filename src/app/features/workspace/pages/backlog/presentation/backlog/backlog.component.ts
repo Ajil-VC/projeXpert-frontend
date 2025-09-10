@@ -12,6 +12,7 @@ import { LoaderService } from '../../../../../../core/data/loader.service';
 import { distinctUntilChanged, forkJoin, Subject, takeUntil } from 'rxjs';
 import { NotificationService } from '../../../../../../core/data/notification.service';
 import { LoaderComponent } from '../../../../../../core/presentation/loader/loader.component';
+import { PermissionsService } from '../../../../../../shared/utils/permissions.service';
 
 
 @Component({
@@ -39,7 +40,9 @@ export class BacklogComponent {
     private backlogSer: BacklogService,
     private cdRef: ChangeDetectorRef,
     private loader: LoaderService,
-    private toast: NotificationService) {
+    private toast: NotificationService,
+    private permission: PermissionsService
+  ) {
 
   }
 
@@ -56,7 +59,6 @@ export class BacklogComponent {
   }
 
   refreshBacklogView() {
-
     this.loader.show();
 
     forkJoin({
@@ -71,6 +73,7 @@ export class BacklogComponent {
 
         }
 
+
         if (sprintsRes.status) {
 
           this.sprints = sprintsRes.result;
@@ -80,7 +83,7 @@ export class BacklogComponent {
         this.loader.hide();
       },
       error: (err) => {
-        
+
         this.loader.hide();
         this.toast.showError('Failed to refresh backlog data');
       }
@@ -133,6 +136,19 @@ export class BacklogComponent {
     })
 
     this.refreshBacklogView();
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        if (res) {
+          this.epics = [];
+          this.backlogs = [];
+          this.sprints = [];
+          if (this.permission.has(['view_sprint'])) {
+            this.refreshBacklogView();
+          }
+        }
+      }
+    })
 
   }
 

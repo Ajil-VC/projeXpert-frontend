@@ -1,5 +1,6 @@
 <div class="subscription-list-container">
 
+  <app-loader [isLoading]="isLoading"></app-loader>
   <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
     (buttonClicked)="handlebuttonClick($event)"></app-content-header>
 

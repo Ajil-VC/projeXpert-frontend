@@ -14,6 +14,8 @@ import { ContentHeaderComponent } from '../../../../../reusable/content-header/c
 import { HeaderConfig } from '../../../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../../../core/domain/entities/UI Interface/button.interface';
 import { NotificationService } from '../../../../../../core/data/notification.service';
+import { Subject, takeUntil } from 'rxjs';
+import { PermissionsService } from '../../../../../../shared/utils/permissions.service';
 
 @Component({
   selector: 'app-projectinfo',
@@ -23,6 +25,8 @@ import { NotificationService } from '../../../../../../core/data/notification.se
 })
 export class ProjectinfoComponent {
 
+  private destroy$ = new Subject<void>();
+
   headerConfig: HeaderConfig = {
 
     title: 'Projects',
@@ -30,15 +34,31 @@ export class ProjectinfoComponent {
     subtitle: 'Manage all your projects from one place',
     placeHolder: 'Search projects...',
     searchQuery: '',
+    hideSearchBar: false,
     buttons: [
       {
         type: 'main',
         label: '+ Create Project',
+        restriction: false
       },
       { type: 'filter' },
       { type: 'view' }
     ]
 
+  }
+
+
+  setHeaderViewPermissions() {
+    this.headerConfig.hideSearchBar = !this.permission.has(['view_project']);
+    if (this.headerConfig?.buttons) {
+      for (let btn of this.headerConfig.buttons) {
+        if (btn.type === 'main') {
+          btn.restriction = !this.permission.has(['create_project']);
+        } else if (btn.type === 'filter' || btn.type === 'view') {
+          btn.restriction = !this.permission.has(['view_project']);
+        }
+      }
+    }
   }
 
 
@@ -52,7 +72,7 @@ export class ProjectinfoComponent {
 
   currentPage: number = 1;
   totalPages: number = 1;
-  
+
   statusFilters = {
     active: true,
     archived: false,
@@ -89,20 +109,37 @@ export class ProjectinfoComponent {
     public dialog: MatDialog,
     private shared: SharedService,
     private auth: AuthService,
-    private toast: NotificationService
+    private toast: NotificationService,
+    private permission: PermissionsService
 
-  ) { }
+  ) {
+    this.setHeaderViewPermissions();
+  }
 
   ngOnInit(): void {
-
+    this.setHeaderViewPermissions();
     this.getProjectData(1, this.statusFilters);
     this.shared.currentPro$.subscribe((project) => {
-      if (this.auth.getCurrentUser()?.role === 'admin') {
-
+      this.projects = [];
+      this.setHeaderViewPermissions();
+      this.applyFilters();
+      if (this.permission.hasAny(['view_project', 'invite_user'])) {
         this.getProjectData(1, this.statusFilters);
       }
 
+    });
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        this.setHeaderViewPermissions();
+        this.projects = [];
+        this.applyFilters();
+        if (this.permission.hasAny(['view_project', 'invite_user'])) {
+          this.getProjectData(1, this.statusFilters);
+        }
+      }
     })
+
   }
 
   onPageChange(page: number) {
@@ -115,7 +152,7 @@ export class ProjectinfoComponent {
     archived: boolean,
     completed: boolean
   }) {
-    this.projectService.getProjectData(page, filter).subscribe({
+    this.projectService.getProjectData(page, filter).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
 
         if (!res.status || !res.projects) {
@@ -280,6 +317,12 @@ export class ProjectinfoComponent {
         });
       }
     });
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

@@ -17,8 +17,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   return guardService.authenticateUser().pipe(
     map((res) => {
 
-      const result = res as { status: boolean, user: any };
-      return result.status && result.user?.systemRole === 'company-user';
+      return res.status && res.user.systemRole === 'company-user';
     }),
     catchError(() => {
       // Optional: redirect to forbidden page or login

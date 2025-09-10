@@ -12,6 +12,13 @@ import { NotificationService } from '../../core/data/notification.service';
 })
 export class SharedService {
 
+  private reloadSubject = new Subject<boolean>();
+  reload$ = this.reloadSubject.asObservable();
+
+  reloadPage() {
+    this.reloadSubject.next(true);
+  }
+
   constructor(private http: HttpClient, private toast: NotificationService) { }
 
   activeChatUserId: string = '';

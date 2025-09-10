@@ -54,10 +54,15 @@ export class SidebarComponent {
     return this.systemRole === 'platform-admin';
   }
 
-  ngOnInit() {
-
+  protected setMenubar() {
+    
     this.menuItems = this.isPlatformAdmin() ? this.adminMenuItems :
       this.userMenuItems.filter(item => !item.required || this.permission.hasAny(item.required))
+  }
+
+  ngOnInit() {
+
+    this.setMenubar();
 
     if (!this.isPlatformAdmin()) {
 
@@ -89,6 +94,16 @@ export class SidebarComponent {
       })
 
     }
+
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        if (res) {
+          this.setMenubar();
+        }
+      }
+    });
+
   }
 
   userMenuItems: MenuItem[] = [

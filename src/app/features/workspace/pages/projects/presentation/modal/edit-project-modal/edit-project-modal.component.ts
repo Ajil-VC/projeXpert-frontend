@@ -137,47 +137,51 @@ export class EditProjectModalComponent {
     if (!this.newMemberEmail) {
       this.toast.showWarning('Please provide a email.');
       return;
-    } else if (!this.selectedRole) {
-      this.toast.showWarning('Select a role');
-      return;
     }
 
-    const confirmAdd = window.confirm('Please ensure the email');
-    if (this.newMemberEmail && confirmAdd && this.selectedRole) {
-      this.isLoading = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Heads Up!!!',
+        message: `Are you sure you want to Add ${this.newMemberEmail} to project ?`,
+        confirmButton: 'Add User',
+        cancelButton: 'Cancel'
+      }
+    });
 
-      this.editProjectSer.addMember(
-        this.newMemberEmail,
-        this.data._id as string,
-        this.data.workSpace as string,
-        this.selectedRole
-      ).subscribe({
-        next: (res) => {
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isLoading = true;
 
-          if (!res.status) {
-            this.toast.showError('User couldnt add to the project.');
-            return;
+        this.editProjectSer.addMember(
+          this.newMemberEmail,
+          this.data._id as string,
+          this.data.workSpace as string,
+          this.selectedRole
+        ).subscribe({
+          next: (res) => {
+
+            if (!res.status) {
+              this.toast.showError('User couldnt add to the project.');
+              return;
+            }
+
+            this.setupProjectDataForView(res.updatedProjectData);
+            this.isLoading = false;
+            this.toast.showSuccess('User added to the project.');
+          },
+          error: (err) => {
+            this.isLoading = false;   
           }
+        })
+        this.newMemberEmail = '';
 
-          this.setupProjectDataForView(res.updatedProjectData);
-          this.isLoading = false;
-          this.toast.showSuccess('User added to the project.');
-        },
-        error: (err) => {
+      }
+    });
 
-          this.isLoading = false;
-          if (err.error.message === 'Please subscribe to a plan to add more members') {
-            this.toast.showInfo(err.error.message);
-            return;
-          }
-          this.toast.showError('User couldnt add to the project.');
-        }
-      })
-      this.newMemberEmail = '';
-    }
   }
 
-  async removeMember(index: number, member: projectMember) {
+  removeMember(index: number, member: projectMember) {
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',

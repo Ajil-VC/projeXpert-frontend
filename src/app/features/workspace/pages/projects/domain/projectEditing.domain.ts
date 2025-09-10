@@ -11,7 +11,7 @@ import { Project } from "../../../../../core/domain/entities/project.model";
 
 export abstract class EditProjectUseCase {
 
-    abstract addMember(email: string, projectId: string, workSpaceId: string, roleId: string): Observable<{ status: boolean, message: string, updatedProjectData: Project }>;
+    abstract addMember(email: string, projectId: string, workSpaceId: string, roleId: string | null): Observable<{ status: boolean, message: string, updatedProjectData: Project }>;
 
     abstract removeMember(userId: string, projectId: string): Observable<any>;
 

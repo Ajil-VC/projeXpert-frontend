@@ -11,10 +11,11 @@ import { ContentHeaderComponent } from '../../../reusable/content-header/content
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { PaginationComponent } from '../../../reusable/pagination/pagination.component';
+import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
 
 @Component({
   selector: 'app-create-plan',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ContentHeaderComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ContentHeaderComponent, PaginationComponent, LoaderComponent],
   templateUrl: './create-plan.component.html',
   styleUrl: './create-plan.component.css'
 })
@@ -122,7 +123,7 @@ export class CreatePlanComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-
+        this.isLoading = true;
         this.service.createSubscriptionPlan(
           result.billingCycle,
           result.description,
@@ -137,10 +138,12 @@ export class CreatePlanComponent {
             if (!res.status) throw new Error('Projects couldnt retrieve after updation');
 
             this.subscriptions.push(res.result);
-
+            this.toast.showSuccess('successfully created new plan.');
+            this.isLoading = false;
           },
           error: (err) => {
-            console.error('Error occured while updating project.', err);
+
+            this.isLoading = false;
           }
         })
 
@@ -170,9 +173,21 @@ export class CreatePlanComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-        this.service.deletePlan(plan._id).subscribe();
-        const planIndex = this.subscriptions.findIndex(result => result._id === plan._id);
-        this.subscriptions.splice(planIndex, 1);
+        this.isLoading = true;
+
+        this.service.deletePlan(plan._id).subscribe({
+          next: (res) => {
+            if (res.status) {
+              const planIndex = this.subscriptions.findIndex(result => result._id === plan._id);
+              this.subscriptions.splice(planIndex, 1);
+              this.toast.showSuccess(res.message);
+            }
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.isLoading = false;
+          }
+        });
 
       }
     });

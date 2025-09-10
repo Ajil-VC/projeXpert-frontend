@@ -18,4 +18,6 @@ export interface User {
     defaultWorkspace: Workspace;
     workSpaces: Array<Workspace>;
     forceChangePassword?: boolean;
+    systemRole: 'platform-admin' | 'company-user';
+    companyId: string;
 }

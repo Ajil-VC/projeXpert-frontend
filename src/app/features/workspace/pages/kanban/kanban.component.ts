@@ -71,9 +71,13 @@ export class KanbanComponent {
   }
 
   setHeaderViewPermissions() {
-    if (this.headerConfig?.buttons && this.headerConfig.buttons[0]) {
-      this.headerConfig.buttons[0].restriction = !this.permission.has(['close_sprint']);
-
+    this.headerConfig.hideSearchBar = !this.permission.hasAny(['view_task', 'view_project', 'view_all_task']);
+    if (this.headerConfig?.buttons) {
+      for (let btn of this.headerConfig.buttons) {
+        if (btn.type === 'main') {
+          btn.restriction = !this.permission.has(['close_sprint']);
+        }
+      }
     }
   }
 
@@ -149,7 +153,6 @@ export class KanbanComponent {
   refreshKanbanView() {
 
     this.loader.show();
-
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
 
@@ -194,6 +197,20 @@ export class KanbanComponent {
 
       this.refreshKanbanView();
 
+    });
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        if (res) {
+          this.setHeaderViewPermissions();
+          this.headerConfig = { ...this.headerConfig };
+          this.allTasks = [];
+          this.seperatingOnStatus();
+          if (this.permission.hasAny(['view_task', 'view_project', 'view_all_task'])) {
+            this.refreshKanbanView();
+          }
+        }
+      }
     })
 
   }
@@ -227,17 +244,25 @@ export class KanbanComponent {
 
     const sprintMap = new Map<string, SprintTaskGroup>();
     for (let task of this.allTasks) {
-      const sprint = task.sprintId as Sprint;
-      const key = sprint._id;
 
-      if (!sprintMap.has(key as string)) {
-        sprintMap.set(key as string, {
+      let sprint!: Sprint;
+      let key = '';
+
+      if (task.parentId) {
+        continue;
+      } else if (task.sprintId) {
+        sprint = task.sprintId as Sprint;
+        key = sprint._id as string;
+      }
+
+      if (!sprintMap.has(key)) {
+        sprintMap.set(key, {
           sprint: sprint,
           tasks: []
         });
       }
 
-      sprintMap.get(key as string)!.tasks.push(task);
+      sprintMap.get(key)!.tasks.push(task);
     }
 
     return Array.from(sprintMap.values());
@@ -246,33 +271,15 @@ export class KanbanComponent {
 
   completeSprint() {
     const groupedTasks = this.groupTasksBySprint()
-
     const dialogRef = this.dialog.open(SprintCompleteComponent, {
       width: '500px',
       data: { groupedTasks }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.status) {
-
-        for (let task of result.result) {
-          const ind = this.allTasks.findIndex((item: Task) => item._id == task._id);
-          if (ind !== -1) {
-            if (!task.sprintId || (task.sprintId && task.sprintId.status !== 'active')) {
-
-              this.allTasks.splice(ind, 1);
-
-            } else {
-
-              this.allTasks[ind] = task
-
-            }
-
-          }
-        }
+      if (result?.status) {
         this.toast.showSuccess('Sprint completed successfully')
-        const completedTaskIds = new Set(result.completedTasks.map((task: Task) => task._id));
-        this.allTasks = this.allTasks.filter(task => !completedTaskIds.has(task._id));
+        this.allTasks = [];
         this.seperatingOnStatus();
       }
     });

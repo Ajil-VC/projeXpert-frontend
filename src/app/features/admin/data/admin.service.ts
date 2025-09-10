@@ -95,8 +95,8 @@ export class AdminService {
     return this.http.post(`${environment.apiAdminUrl}plans`, { billingCycle, description, name, price, maxWorkspace, maxProjects, maxMembers, canUseVideoCall });
   }
 
-  deletePlan(planId: string): Observable<any> {
-    return this.http.delete(`${environment.apiAdminUrl}plans?plan_id=${planId}`);
+  deletePlan(planId: string): Observable<{ status: boolean, message: string }> {
+    return this.http.delete<{ status: boolean, message: string }>(`${environment.apiAdminUrl}plans?plan_id=${planId}`);
   }
 
   getAvailablePlans(pageNum: number, searchTerm: string = ''): Observable<any> {

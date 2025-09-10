@@ -7,10 +7,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { AuthResponse } from '../domain/auth.domain';
 import { Router } from '@angular/router';
-import { LayoutService } from '../../../shared/services/layout.service';
 import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
-import { Permissions, Roles } from '../../../core/domain/entities/roles.model';
+import { Roles } from '../../../core/domain/entities/roles.model';
 import { PermissionsService } from '../../../shared/utils/permissions.service';
 
 @Injectable({
@@ -20,6 +19,7 @@ export class AuthService implements RegisterUseCase {
 
   private logoutSubject = new Subject<void>();
   logout$ = this.logoutSubject.asObservable();
+
 
   //******************************//
   //** For Initial loading **//
@@ -39,7 +39,10 @@ export class AuthService implements RegisterUseCase {
   setCurrentUser(user: User): void {
     this.userSubject.next(user);
     this.currentUser = user;
-    this.permission.setPermissions((user.role as unknown as Roles).permissions)
+
+    if (user.systemRole !== 'platform-admin') {
+      this.permission.setPermissions((user.role as unknown as Roles).permissions)
+    }
   }
 
 
@@ -74,7 +77,12 @@ export class AuthService implements RegisterUseCase {
 
 
 
-  constructor(private http: HttpClient, private router: Router, private shared: SharedService, private permission: PermissionsService) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private shared: SharedService,
+    private permission: PermissionsService
+  ) { }
 
   signup(email: string): Observable<any> {
 

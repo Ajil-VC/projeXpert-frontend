@@ -2,16 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { AuthResponse } from '../../features/auth/domain/auth.domain';
-import { AuthService } from '../../features/auth/data/auth.service';
-import { Project } from '../domain/entities/project.model';
-import { LayoutService } from '../../shared/services/layout.service';
+import { User } from '../domain/entities/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GuardsService {
 
-  constructor(private http: HttpClient, private authService: AuthService, private layoutSer: LayoutService) { }
+  constructor(private http: HttpClient) { }
 
   getWorkSpaceData() {
 
@@ -21,21 +19,13 @@ export class GuardsService {
   }
 
 
-  // getProjectData() {
-
-  //   const workSpace = this.authService.getWorkSpace();
-  //   const workSpaceId = workSpace?._id;
-
-  //   return this.http.get<{ status: boolean, projects: Array<Project> | null }>(`${environment.apiUserUrl}init-projects?workspace_id=${workSpaceId}`);
-  // }
-
   autherizeAdmin() {
     return this.http.get(`${environment.apiAdminUrl}autherize-admin`);
   }
 
 
   authenticateUser() {
-    return this.http.get(`${environment.apiUserUrl}authenticate-user`);
+    return this.http.get<{ status: boolean, user: User }>(`${environment.apiUserUrl}authenticate-user`);
   }
 
   //Getting platform-admin related data.
@@ -43,7 +33,7 @@ export class GuardsService {
     return this.http.get(`${environment.apiAdminUrl}admin-init`);
   }
 
-  adminData(){
+  adminData() {
     return this.http.get(`${environment.apiAdminUrl}admin`);
   }
 }

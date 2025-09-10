@@ -152,6 +152,26 @@ export class HeaderComponent {
       next: (res) => {
         this.notifications.unshift(res);
       }
+    });
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        if (res) {
+
+          if (!this.permission.has(['create_project'])) {
+            this.canCreateProject = false;
+          } else if (this.permission.has(['create_project'])) {
+            this.canCreateProject = true;
+          }
+
+          if (!this.permission.has(['create_workspace'])) {
+            this.canCreateWorkspace = false;
+          } else if (this.permission.has(['create_workspace'])) {
+            this.canCreateWorkspace = true;
+          }
+
+        }
+      }
     })
 
   }
@@ -292,7 +312,7 @@ export class HeaderComponent {
 
     dialogRef.afterClosed().subscribe({
       next: (result: { workspaceName: string }) => {
-        if (result.workspaceName) {
+        if (result?.workspaceName) {
           this.layoutSer.createWorkspace(result.workspaceName).subscribe({
             next: (res) => {
 
@@ -310,6 +330,10 @@ export class HeaderComponent {
         }
       }
     });
+  }
+
+  reloadPage() {
+    this.permission.resetPermissions();
   }
 
   logout() {

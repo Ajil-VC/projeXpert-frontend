@@ -6,6 +6,7 @@ import { AuthService } from '../../features/auth/data/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../data/notification.service';
 import { LoaderService } from '../data/loader.service';
+import { PermissionsService } from '../../shared/utils/permissions.service';
 
 
 
@@ -26,6 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authService = inject(AuthService);
   const loader = inject(LoaderService);
+  const permissionService = inject(PermissionsService);
 
   return next(cloneReq).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -60,41 +62,29 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.error['issue']) {
           notificationService.showInfo(error.error['message']);
           return throwError(() => error);
-        }
-        if (error.error && error.error['message']) {
-          const msg1 = 'Please subscribe to a plan to perform this operation';
-          const msg2 = 'Dont have permission to perform this operation';
-          const msg3 = 'Please subscribe to a plan to add more members';
+        } else if (error.error && error.error['message']) {
+
           loader.hide();
+          permissionService.resetPermissions();
+          notificationService.showError(error.error['message']);
+          return of();
 
-          if (error.error['message'] === msg3) {
-
-            return throwError(() => error);
-          }
-
-          if (error.error['message'] === msg1 || error.error['message'] === msg2) {
-            notificationService.showError(error.error['message']);
-            return of();
-          }
-        }
-
-        if (error.error && error.error['message'] && (error.error['message'] === 'Company blocked' || error.error['message'] === 'User account is blocked.')) {
+        } else if (error.error && error.error['message'] && (error.error['message'] === 'Company blocked' || error.error['message'] === 'User account is blocked.')) {
           router.navigate(['forbidden'], {
             state: {
               message: `${error.error['message']}`,
               code: 'COMPANY_BLOCKED'
             }
           });
-        } else {
-          userFriendlyMessage = "You don't have permission to perform this action.";
-          notificationService.showError("You don't have permission to perform this action.");
-
         }
+
       } else if (error.status === 404 || error.status === 400) {
 
         userFriendlyMessage = error.error?.message || 'Something went wrong. Please try again.';
         notificationService.showError(userFriendlyMessage);
       } else if (error.status === 409) {
+
+        permissionService.resetPermissions();
         return throwError(() => error);
       } else if (error.status >= 500) {
         notificationService.showError(error.error.message);
