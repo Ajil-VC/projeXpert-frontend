@@ -13,8 +13,9 @@
                 <i class="fas fa-user-shield"></i>
             </div>
             <h3>No roles found</h3>
-            <p>Try adjusting your search</p>
-            <button class="btn btn-primary mt-3" (click)="createOrUpdateRole($event)">
+            <p *appHaspermission="['assign_role']">Try adjusting your search</p>
+            <button class="btn btn-primary mt-3" *appHaspermission="['assign_role']"
+                (click)="createOrUpdateRole($event)">
                 Create New Role
             </button>
         </div>

@@ -10,10 +10,13 @@ import { NotificationService } from '../../../../core/data/notification.service'
 import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
 import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
+import { PermissionsService } from '../../../../shared/utils/permissions.service';
+import { SharedService } from '../../../../shared/services/shared.service';
+import { HaspermissionDirective } from '../../../../core/directives/haspermission.directive';
 
 @Component({
   selector: 'app-role-management',
-  imports: [ContentHeaderComponent, CommonModule, LoaderComponent],
+  imports: [ContentHeaderComponent, CommonModule, LoaderComponent, HaspermissionDirective],
   templateUrl: './role-management.component.html',
   styleUrl: './role-management.component.css'
 })
@@ -25,6 +28,7 @@ export class RoleManagementComponent {
     icon: '🛡️',
     subtitle: 'Manage roles here.',
     placeHolder: 'Search roles and permissions...',
+    hideSearchBar: false,
     searchQuery: '',
     buttons: [
       {
@@ -34,6 +38,18 @@ export class RoleManagementComponent {
       { type: 'view' }
     ]
 
+  }
+  setHeaderViewPermissions() {
+    this.headerConfig.hideSearchBar = !this.permission.hasAny(['assign_role']);
+    if (this.headerConfig?.buttons) {
+      for (let btn of this.headerConfig.buttons) {
+        if (btn.type === 'main') {
+          btn.restriction = !this.permission.has(['assign_role']);
+        } else if (btn.type === 'filter' || btn.type === 'view') {
+          btn.restriction = !this.permission.has(['assign_role']);
+        }
+      }
+    }
   }
   handleSearchEvent(event: string) {
 
@@ -64,6 +80,7 @@ export class RoleManagementComponent {
     }
   }
 
+
   private escapeRegex(str: string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
@@ -74,7 +91,13 @@ export class RoleManagementComponent {
   viewMode: 'grid' | 'list' = 'grid';
   filteredRoles: Roles[] = [];
 
-  constructor(private dialog: MatDialog, private teamSer: TeamManagementService, private toast: NotificationService) { }
+  constructor(
+    private dialog: MatDialog,
+    private teamSer: TeamManagementService,
+    private toast: NotificationService,
+    private permission: PermissionsService,
+    private shared: SharedService
+  ) { }
   ngOnInit() {
     this.teamSer.getRoles().subscribe({
       next: (res) => {
@@ -83,6 +106,16 @@ export class RoleManagementComponent {
       },
       error: (err) => {
         this.toast.showError('Couldnt retrieve the roles.');
+      }
+    });
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        this.setHeaderViewPermissions();
+        if (!this.permission.has(['assign_role'])) {
+          this.roles = [];
+          this.filteredRoles = [];
+        }
       }
     })
   }
@@ -140,4 +173,3 @@ export class RoleManagementComponent {
   }
 
 }
-103.44
