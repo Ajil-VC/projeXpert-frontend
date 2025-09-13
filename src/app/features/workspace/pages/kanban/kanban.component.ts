@@ -166,7 +166,7 @@ export class KanbanComponent {
         this.allTasks = res.result;
         this.seperatingOnStatus();
         this.loader.hide();
-
+        console.log(this.allTasks)
       },
       error: (err) => {
         this.loader.hide();

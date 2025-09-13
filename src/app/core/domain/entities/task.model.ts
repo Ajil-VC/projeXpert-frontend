@@ -38,6 +38,7 @@ export interface Task {
 
     sprintId: string | Sprint;     // Logical grouping for sprints
     parentId: string | Task;     // for subtasks
+    subtasks: Task[];
     projectId: string;
     createdAt: Date;
     updatedAt: Date;
