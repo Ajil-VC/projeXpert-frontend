@@ -186,7 +186,7 @@
                     <div class="member-row" *ngFor="let user of teamMembers | search:searchTerm:['email','name']"
                         (click)="assignUserToSubtask(user, i, assigneeInput)">
                         <span>{{ user.email }}</span>
-                        <span>{{user.role}}</span>
+                        <span>{{user.role.name}}</span>
 
                     </div>
                 </div>
