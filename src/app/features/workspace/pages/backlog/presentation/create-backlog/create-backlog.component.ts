@@ -105,6 +105,16 @@ export class CreateBacklogComponent implements OnChanges {
         this.selectedEpics = res;
         this.filteredIssues();
       }
+    });
+
+    this.shared.taskSub$.subscribe({
+      next: (res) => {
+        if (!res.sprintId) {
+          const ind = this.backlogs.findIndex(ep => ep._id === res._id);
+          this.backlogs.splice(ind, 1);
+          this.filteredIssues();
+        }
+      }
     })
   }
 
@@ -118,14 +128,6 @@ export class CreateBacklogComponent implements OnChanges {
     };
 
     if (this.selectedEpics.size === 0) {
-      // this.filteredBacklogs = this.backlogs.filter(issue => {
-      //   if (!issue.epicId) {
-      //     issue.assignedTo = issue.assignedTo as Team;
-      //     this.issueCount++;
-      //     return true;
-      //   }
-      //   return false
-      // });
 
       this.filteredBacklogs = this.backlogs.map(issue => {
         issue.assignedTo = issue.assignedTo as Team;

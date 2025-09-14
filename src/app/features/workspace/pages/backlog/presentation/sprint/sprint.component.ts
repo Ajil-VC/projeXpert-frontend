@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
-import { Sprint, SprintTaskGroup } from '../../../../../../core/domain/entities/sprint.model';
+import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { IssueRowComponent } from "../issue-row/issue-row.component";
-import { Team } from '../../../../../../core/domain/entities/team.model';
 import { BacklogService } from '../../data/backlog.service';
 import { CommonModule } from '@angular/common';
 
@@ -12,9 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SprintDialogComponent } from '../sprint-dialog/sprint-dialog.component';
 import { Router } from '@angular/router';
 import { SharedService } from '../../../../../../shared/services/shared.service';
-import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
 import { NotificationService } from '../../../../../../core/data/notification.service';
-import { SprintCompleteComponent } from '../../../kanban/presentation/sprint-complete/sprint-complete.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
@@ -63,6 +60,12 @@ export class SprintComponent implements OnChanges {
 
       const prevContainerId = event.previousContainer.id;
       const movedTaskId = event.item.data?._id;
+      const taskWithPrevContainerId = { ...event.item.data };
+      if (prevContainerId === 'backlog-drop-list') {
+        taskWithPrevContainerId.sprintId = null;
+      } else {
+        taskWithPrevContainerId.sprintId = prevContainerId.split('-')[1];
+      }
 
       this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
         next: (res: { status: boolean, message: string, result: Task }) => {
@@ -75,8 +78,7 @@ export class SprintComponent implements OnChanges {
               event.currentIndex
             );
 
-
-            this.shared.tasksSubject.next(event.item.data);
+            this.shared.tasksSubject.next(taskWithPrevContainerId);
 
             //Here im updating the backlog array in parent to let the backlog component know about it.
             if (prevContainerId === "backlog-drop-list") {
