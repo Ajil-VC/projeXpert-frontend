@@ -49,6 +49,8 @@ export class CreateBacklogComponent implements OnChanges {
 
       const prevContainerId = event.previousContainer.id;
       const movedTaskId = event.item.data?._id;
+      const taskWithPrevContainerId = { ...event.item.data };
+      taskWithPrevContainerId.sprintId = prevContainerId.split('-')[1];
 
       this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
         next: (res: { status: boolean, message: string, result: Task }) => {
@@ -71,8 +73,8 @@ export class CreateBacklogComponent implements OnChanges {
             }
 
             this.filteredIssues();
+            this.shared.tasksSubject.next(taskWithPrevContainerId);
 
-            this.shared.tasksSubject.next(event.item.data);
           }
         },
         error: (err) => {

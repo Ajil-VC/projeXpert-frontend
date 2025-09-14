@@ -166,7 +166,6 @@ export class KanbanComponent {
         this.allTasks = res.result;
         this.seperatingOnStatus();
         this.loader.hide();
-        console.log(this.allTasks)
       },
       error: (err) => {
         this.loader.hide();
@@ -287,30 +286,13 @@ export class KanbanComponent {
   }
 
 
-  taskDetails(event: Event, task: Task): void {
-    event.stopPropagation();
+  handleTaskUpdationEvent(task: Task) {
 
-    const dialogRef = this.dialog.open(TaskDetailsComponent, {
-      width: '500px',
-      data: {
-        task: { ...task },
-        userRole: this.userRole
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-
-        const index = this.allTasks.findIndex(task => task._id === result._id);
-        if (index !== -1) {
-          this.allTasks[index] = result;
-          this.toast.showSuccess(`Successfully updated the task ${result.title}`);
-          this.seperatingOnStatus();
-        }
-
-      }
-    });
-
+    const index = this.allTasks.findIndex(t => t._id === task._id);
+    if (index !== -1) {
+      this.allTasks[index] = task;
+      this.seperatingOnStatus();
+    }
   }
 
 }

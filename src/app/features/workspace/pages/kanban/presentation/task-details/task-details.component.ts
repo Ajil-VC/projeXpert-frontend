@@ -51,7 +51,6 @@ export class TaskDetailsComponent {
 
   task!: Task;
   subTasks: Task[] = [];
-  userRole!: string;
   teamMembers: Team[] = [];
   isSaved: boolean = false;
   newSubtaskTitle: string = '';
@@ -61,7 +60,7 @@ export class TaskDetailsComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { task: Task, userRole: string, daysLeft: string },
+    @Inject(MAT_DIALOG_DATA) public data: { task: Task, daysLeft: string, subtaskView: boolean, subtasks: Task[] },
     private shared: SharedService,
     private kanbanSer: KanbanService,
     private authSer: AuthService,
@@ -71,7 +70,10 @@ export class TaskDetailsComponent {
     private dialog: MatDialog
   ) {
     this.task = this.data.task;
-    this.userRole = this.data.userRole;
+    this.subTasks = this.data.subtasks;
+    if (this.data.subtaskView) {
+      this.toggleSubtasksView();
+    }
   }
 
   email: string = '';
@@ -110,18 +112,6 @@ export class TaskDetailsComponent {
     this.authSer.logout$.subscribe({
       next: () => this.dialogRef.close(null)
     })
-
-    this.kanbanSer.getSubtasks(this.task._id).subscribe({
-      next: (res) => {
-        if (res.status) {
-          this.subTasks = res.result;
-        }
-      },
-      error: (err) => {
-        this.toast.showError('Couldnt retrieve the data.');
-      }
-    });
-
 
   }
 
@@ -245,8 +235,18 @@ export class TaskDetailsComponent {
 
   onStatusChange(subtask: Task) {
 
-    this.kanbanSer.updateIssueStatus(subtask._id, subtask.status).subscribe()
+    this.kanbanSer.updateIssueStatus(subtask._id, subtask.status).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.dialogRef.close();
+        }
+      }
+    })
 
+  }
+
+  canShowSubtaskMenu() {
+    return (this.task.type !== 'subtask' && !this.data.subtaskView);
   }
 
   assignUser(user: Team) {
@@ -334,6 +334,8 @@ export class TaskDetailsComponent {
     if (this.showComments) {
       this.isHistoryActive = false;
       this.showSubtasks = false;
+    } else if (!this.showComments && this.data.subtaskView) {
+      this.showSubtasks = true;
     }
     this.setTaskTitle();
     this.cd.detectChanges();
@@ -347,7 +349,9 @@ export class TaskDetailsComponent {
       this.showComments = false;
     }
     this.setTaskTitle();
-    this.cd.detectChanges();
+    if (!this.data.subtaskView) {
+      this.cd.detectChanges();
+    }
   }
   removeSubtask(subtask: Task) {
 
@@ -487,11 +491,19 @@ export class TaskDetailsComponent {
 
     if (history.actionType === "ASSIGN") {
 
+      let task = 'task';
+      if (history.details?.subtaskTitle) {
+        task = `subtask ${history.details.subtaskTitle}`;
+      }
+
       let assignedTo = history.details?.assignedTo?.email ?
-        `Assigned the task to ${history.details?.assignedTo?.email}` : `Removed assignee`;
+        `Assigned the ${task} to ${history.details?.assignedTo?.email}` : `Removed assignee`;
 
       return assignedTo;
     } else if (history.actionType === "STATUS_CHANGE") {
+      if (history.details?.subtaskTitle) {
+        return `Changed the status of subtask ${history.details.subtaskTitle} from ${history.details.oldStatus} to ${history.details.newStatus}`;
+      }
       return `Changed the status from ${history.details.oldStatus} to ${history.details.newStatus}`;
     } else if (history.actionType === "DELETE_SUBTASK") {
       return `Deleted subtask ${history.details.subtaskTitle}`;
@@ -505,7 +517,11 @@ export class TaskDetailsComponent {
   }
   showHistory() {
 
-    if (this.isHistoryActive) {
+    if (this.isHistoryActive && this.data.subtaskView) {
+      this.showSubtasks = true;
+      this.isHistoryActive = false;
+      return;
+    } else if (this.isHistoryActive) {
       this.isHistoryActive = false;
       this.setTaskTitle();
       this.cd.detectChanges();

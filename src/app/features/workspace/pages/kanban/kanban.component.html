@@ -14,7 +14,7 @@
             </div>
             <div class="board-tasks">
                 <app-task-card *ngFor="let task of todoTasks | search :searchQuery: ['title']" [task]="task" cdkDrag
-                    [cdkDragData]="task" (click)="taskDetails($event, task)"></app-task-card>
+                    [cdkDragData]="task" (taskUpdation)="handleTaskUpdationEvent($event)"></app-task-card>
             </div>
         </div>
 
@@ -27,7 +27,7 @@
 
             <div class="board-tasks">
                 <app-task-card *ngFor="let task of inProgressTasks | search :searchQuery: ['title']" cdkDrag
-                    [cdkDragData]="task" [task]="task" (click)="taskDetails($event, task)"></app-task-card>
+                    [cdkDragData]="task" [task]="task" (taskUpdation)="handleTaskUpdationEvent($event)"></app-task-card>
             </div>
         </div>
 
@@ -39,7 +39,7 @@
 
             <div class="board-tasks">
                 <app-task-card *ngFor="let task of doneTasks | search :searchQuery: ['title']" cdkDrag
-                    [cdkDragData]="task" [task]="task" (click)="taskDetails($event, task)"></app-task-card>
+                    [cdkDragData]="task" [task]="task" (taskUpdation)="handleTaskUpdationEvent($event)"></app-task-card>
             </div>
         </div>
 

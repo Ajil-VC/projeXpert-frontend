@@ -1,25 +1,33 @@
 <div class="task-card">
 
+  <div (click)="taskDetails()">
 
-  <div class="detail-row">
-    <span class="label">Task Name:</span>
-    <span class="value">{{ task.title }}</span>
-  </div>
-  <div class="detail-row">
-    <span class="label">Sprint Name:</span>
-    <span class="value">{{sprintName}}</span>
-  </div>
+    <div class="detail-row">
+      <span class="label">Task Name:</span>
+      <span class="value">{{ task.title }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Sprint Name:</span>
+      <span class="value">{{sprintName}}</span>
+    </div>
 
 
-  <div class="task-details">
-    <span class="tag" [class.task]="task.type === 'task'" [class.bug]="task.type === 'bug'"
-      [class.story]="task.type === 'story'">{{ task.type }}</span>
-    <span class="ticket">{{ daysLeft }}</span>
+    <div class="task-details">
+      <span class="tag" [class.task]="task.type === 'task'" [class.bug]="task.type === 'bug'"
+        [class.story]="task.type === 'story'">{{ task.type }}</span>
+      <span class="ticket">{{ daysLeft }}</span>
+    </div>
   </div>
   <div class="task-meta">
-    <span>{{ endDate | date }} </span>
-    <span class="flag" [class.red]="task.priority === 'critical'" [class.orange]="task.priority === 'high'"
-      [class.yellow]="task.priority === 'medium'" [class.green]="task.priority === 'low'" *ngIf="task.priority"></span>
-    <span *ngIf="task.status === 'done'">✔</span>
+    <div>
+      <span>{{ endDate | date }} </span>
+      <span class="flag" [class.red]="task.priority === 'critical'" [class.orange]="task.priority === 'high'"
+        [class.yellow]="task.priority === 'medium'" [class.green]="task.priority === 'low'"
+        *ngIf="task.priority"></span>
+      <span *ngIf="task.status === 'done'">✔</span>
+    </div>
+
+    <i class="fas fa-sitemap" *ngIf="task.subtasks?.length && task.subtasks.length  > 0"
+      (click)="taskDetails(true)"></i>
   </div>
 </div>

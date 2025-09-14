@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskDetailsComponent } from '../task-details/task-details.component';
 
 @Component({
   selector: 'app-task-card',
@@ -13,6 +15,7 @@ import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 export class TaskCardComponent {
 
   @Input() task!: Task;
+  @Output() taskUpdation = new EventEmitter<Task>();
 
   endDate: any = '';
   daysLeft = '';
@@ -28,6 +31,9 @@ export class TaskCardComponent {
     }
 
   }
+
+
+  constructor(private dialog: MatDialog) { }
 
   setDaysLeft(task: Task) {
 
@@ -59,9 +65,34 @@ export class TaskCardComponent {
     return sprint?.name as string ?? null;
   }
 
+
   ngOnInit() {
     // this.task.
     // console.log(this.task)
+  }
+
+
+
+  taskDetails(subtaskView: boolean = false): void {
+
+    const dialogRef = this.dialog.open(TaskDetailsComponent, {
+      width: '500px',
+      data: {
+        task: { ...this.task },
+        subtaskView,
+        subtasks: this.task.subtasks
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.task = result;
+        this.taskUpdation.emit(this.task);
+
+      }
+    });
+
   }
 
 }

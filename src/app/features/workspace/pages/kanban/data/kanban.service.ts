@@ -25,10 +25,6 @@ export class KanbanService {
     return this.http.delete<{ status: boolean }>(`${environment.apiUserUrl}task/${subtaskId}`);
   }
 
-  getSubtasks(parentId: string): Observable<{ status: boolean, result: Task[] }> {
-    return this.http.get<{ status: boolean, result: Task[] }>(`${environment.apiUserUrl}subtask/${parentId}`);
-  }
-
   getAvailableSprints(): Observable<any> {
     const projectId = localStorage.getItem('projectId');
     return this.http.get(`${environment.apiUserUrl}sprints/${projectId}`);

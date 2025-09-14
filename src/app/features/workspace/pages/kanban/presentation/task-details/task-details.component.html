@@ -2,7 +2,7 @@
 
 <div class="task-header">
     <h2 mat-dialog-title>{{taskTitle}}</h2>
-    <span (click)="toggleSubtasksView()" *ngIf="task.type!== 'subtask'">
+    <span (click)="toggleSubtasksView()" *ngIf="canShowSubtaskMenu()">
         <i class="fas fa-indent"></i>
         Sub tasks({{subTasks.length}})
     </span>

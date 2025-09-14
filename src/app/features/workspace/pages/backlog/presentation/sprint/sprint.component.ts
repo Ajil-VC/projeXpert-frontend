@@ -99,9 +99,6 @@ export class SprintComponent implements OnChanges {
 
             this.filteredIssues();
           }
-        },
-        error: (err) => {
-          this.toast.showError('Something went wrong while updating moved task.');
         }
       })
 
@@ -157,10 +154,11 @@ export class SprintComponent implements OnChanges {
 
     this.shared.taskSub$.subscribe({
       next: (res: Task) => {
-        if (res.sprintId === this.sprint._id) {
 
+        if (res.sprintId === this.sprint._id) {
           const ind = this.issues.findIndex(ep => ep._id === res._id);
           this.issues.splice(ind, 1);
+          this.filteredIssues();
         }
       }
     })

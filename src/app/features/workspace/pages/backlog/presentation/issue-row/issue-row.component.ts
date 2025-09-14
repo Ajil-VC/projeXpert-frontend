@@ -169,15 +169,14 @@ export class IssueRowComponent {
 
 
 
-  taskDetails(event: Event, task: Task): void {
-    event.stopPropagation();
+  taskDetails(): void {
 
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',
       data: {
-        task: { ...task },
-        userRole: 'admin',
-        daysLeft: this.daysLeft
+        task: { ...this.issue },
+        daysLeft: this.daysLeft,
+        subtasks: this.issue.subtasks
       }
     });
 
