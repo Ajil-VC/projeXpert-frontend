@@ -8,6 +8,7 @@ import { BacklogService } from '../../data/backlog.service';
 import { TaskDetailsComponent } from '../../../kanban/presentation/task-details/task-details.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../../../../core/data/notification.service';
+import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 
 @Component({
   selector: 'app-issue-row',
@@ -56,6 +57,7 @@ export class IssueRowComponent {
       }
     });
 
+
     this.shared.taskUpdate$.subscribe({
       next: (res) => {
 
@@ -72,6 +74,14 @@ export class IssueRowComponent {
     return `type-${this.issue.type.toLowerCase()}`;
   }
 
+  get canShowStatusDropdown() {
+    if (!this.issue.sprintId) return false;
+    const sprint = this.issue.sprintId as Sprint;
+    if (sprint.status === 'active') {
+      return true;
+    }
+    return false;
+  }
   get epic(): Task | null {
     return this.issue.epicId ? (this.issue.epicId as Task) : null;
   }

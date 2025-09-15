@@ -28,7 +28,7 @@
     <!-- <div class="flex-spacer"></div> -->
 
     <!-- Status Dropdown -->
-    <div class="status-container">
+    <div class="status-container" *ngIf="canShowStatusDropdown">
         <select [(ngModel)]="issue.status" class="status-select " [ngClass]="getStatusClass()"
             (change)="onStatusChange(issue.status)">
             <option class="{{defaultStatus}}" value="todo">To Do</option>
