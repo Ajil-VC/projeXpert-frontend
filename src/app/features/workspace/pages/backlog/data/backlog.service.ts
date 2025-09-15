@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
-import { Task } from '../../../../../core/domain/entities/task.model';
+import { StoryPoint, Task } from '../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../core/domain/entities/sprint.model';
 import { LayoutService } from '../../../../../shared/services/layout.service';
 import { NotificationService } from '../../../../../core/data/notification.service';
@@ -82,6 +82,10 @@ export class BacklogService {
   startSprint(sprintId: string, sprintName: string, duration: number, startDate: Date): Observable<any> {
     const projectId = this.layoutSer.getProjectId();
     return this.http.put(`${environment.apiUserUrl}sprints`, { sprintId, sprintName, duration, startDate, projectId });
+  }
+
+  updateStoryPoint(storyPoints: number, taskId: string): Observable<{ status: boolean, message: string, result: Task }> {
+    return this.http.put<{ status: boolean, message: string, result: Task }>(`${environment.apiUserUrl}story-points`, { storyPoints, taskId });
   }
 
 }

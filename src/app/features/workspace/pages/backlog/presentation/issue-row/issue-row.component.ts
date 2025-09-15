@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Task } from '../../../../../../core/domain/entities/task.model';
+import { StoryPoint, Task } from '../../../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { Team } from '../../../../../../core/domain/entities/team.model';
 import { BacklogService } from '../../data/backlog.service';
@@ -42,6 +42,7 @@ export class IssueRowComponent {
   searchText = '';
   teamMembers: Team[] = [];
 
+  fibo: StoryPoint[] = [0, 1, 2, 3, 5, 8, 13, 21];
   defaultStatus: string = 'status-default';
 
   ngOnInit() {
@@ -70,6 +71,7 @@ export class IssueRowComponent {
       }
     })
   }
+
   getTypeClass(): string {
     return `type-${this.issue.type.toLowerCase()}`;
   }
@@ -179,13 +181,14 @@ export class IssueRowComponent {
 
 
 
-  taskDetails(): void {
+  taskDetails(subtaskView: boolean = false): void {
 
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',
       data: {
         task: { ...this.issue },
         daysLeft: this.daysLeft,
+        subtaskView,
         subtasks: this.issue.subtasks
       }
     });
@@ -199,5 +202,18 @@ export class IssueRowComponent {
     });
 
   }
+
+  updateStoryPoint(event: Event) {
+    const selected = Number((event.target as HTMLSelectElement).value);
+    this.backlogSer.updateStoryPoint(selected, this.issue._id).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.issue.storyPoints = selected as StoryPoint;
+        }
+      }
+    })
+
+  }
+
 
 }

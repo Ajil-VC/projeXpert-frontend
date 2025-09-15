@@ -33,6 +33,15 @@
     margin-right: 12px;
 }
 
+.issue-details {
+    display: flex;
+    align-items: center;
+}
+
+.issue-details i {
+    margin-left: 10px;
+}
+
 .type-task {
     background-color: #4fade6;
     color: white;
@@ -57,13 +66,19 @@
 
 /* Issue Title */
 .issue-title {
+
     flex-grow: 1;
+    min-width: 80px;
     max-width: 120px;
     font-size: 14px;
     color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
 }
 
 /* epic-detail */
@@ -84,7 +99,8 @@
     text-overflow: ellipsis;
     background-color: #00875a;
 }
-.epic-detail div{
+
+.epic-detail div {
     background-color: var(--primary-color);
     width: 18px;
     height: 18px;
@@ -273,4 +289,22 @@
 
 .role {
     color: gray;
+}
+
+
+
+
+.point-input {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    appearance: none;
+    margin-right: 8px;
+
+    background: white;
+    cursor: pointer;
 }

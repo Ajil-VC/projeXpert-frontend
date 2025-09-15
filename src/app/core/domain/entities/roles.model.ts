@@ -30,6 +30,7 @@ export const PERMISSIONS = [
     "invite_user",
     "remove_user",
     "assign_role",
+    "set_storyPoint",
 
     "manage_billing"
 ] as const;

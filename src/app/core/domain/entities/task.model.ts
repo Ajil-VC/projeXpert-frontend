@@ -19,6 +19,8 @@ export interface Attachment {
     url: string;
 }
 
+export type StoryPoint = 0 | 1 | 2 | 3 | 5 | 8 | 13 | 21;
+
 export interface Task {
 
     _id: string;
@@ -32,6 +34,8 @@ export interface Task {
     epicId: string | Task;       // Refers to a parent epic if any
     startDate?: Date; // Only for epics (epic timeframe)
     endDate?: Date;   // Only for epics
+
+    storyPoints: StoryPoint;
 
     createdBy?: string | User;
     progress?: number;

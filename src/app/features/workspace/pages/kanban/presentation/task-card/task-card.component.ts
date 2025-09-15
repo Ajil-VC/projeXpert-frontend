@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Task } from '../../../../../../core/domain/entities/task.model';
+import { StoryPoint, Task } from '../../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskDetailsComponent } from '../task-details/task-details.component';
+import { BacklogService } from '../../../backlog/data/backlog.service';
 
 @Component({
   selector: 'app-task-card',
@@ -16,6 +17,9 @@ export class TaskCardComponent {
 
   @Input() task!: Task;
   @Output() taskUpdation = new EventEmitter<Task>();
+
+
+  fibo: StoryPoint[] = [0, 1, 2, 3, 5, 8, 13, 21];
 
   endDate: any = '';
   daysLeft = '';
@@ -33,7 +37,7 @@ export class TaskCardComponent {
   }
 
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private _backlogSer: BacklogService) { }
 
   setDaysLeft(task: Task) {
 
@@ -92,6 +96,19 @@ export class TaskCardComponent {
 
       }
     });
+
+  }
+
+
+  updateStoryPoint(event: Event) {
+    const selected = Number((event.target as HTMLSelectElement).value);
+    this._backlogSer.updateStoryPoint(selected, this.task._id).subscribe({
+      next: (res) => {
+        if (res.status) {
+          this.task.storyPoints = selected as StoryPoint;
+        }
+      }
+    })
 
   }
 

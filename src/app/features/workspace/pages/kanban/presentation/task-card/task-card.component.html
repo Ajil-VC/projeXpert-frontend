@@ -17,17 +17,28 @@
         [class.story]="task.type === 'story'">{{ task.type }}</span>
       <span class="ticket">{{ daysLeft }}</span>
     </div>
+
   </div>
+
   <div class="task-meta">
+
     <div>
       <span>{{ endDate | date }} </span>
       <span class="flag" [class.red]="task.priority === 'critical'" [class.orange]="task.priority === 'high'"
         [class.yellow]="task.priority === 'medium'" [class.green]="task.priority === 'low'"
         *ngIf="task.priority"></span>
       <span *ngIf="task.status === 'done'">✔</span>
+
+      <select class="point-input" [(ngModel)]="task.storyPoints" (change)="updateStoryPoint($event)">
+        <option *ngFor="let p of fibo" [value]="p">{{ p }}</option>
+      </select>
+
     </div>
+
 
     <i class="fas fa-sitemap" *ngIf="task.subtasks?.length && task.subtasks.length  > 0"
       (click)="taskDetails(true)"></i>
+
   </div>
+
 </div>

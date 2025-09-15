@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from "./presentation/task-card/task-card.component";
-import { Task } from '../../../../core/domain/entities/task.model';
+import { StoryPoint, Task } from '../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../shared/services/shared.service';
 import { CdkDrag, CdkDragDrop, CdkDropList, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { BacklogService } from '../backlog/data/backlog.service';

@@ -4,14 +4,21 @@
         <input (change)="updateSelectionStatus(issue._id)" type="checkbox" />
     </label>
 
-    <!-- Issue Type Badge -->
-    <div class="issue-type" [ngClass]="getTypeClass()" (click)="taskDetails()">
-        {{ issue.type }}
-    </div>
+    <div class="issue-details">
 
-    <!-- Issue Title -->
-    <div class="issue-title">
-        {{ issue.title }}
+        <!-- Issue Type Badge -->
+        <div class="issue-type" [ngClass]="getTypeClass()" (click)="taskDetails()">
+            {{ issue.type }}
+        </div>
+
+        <!-- Issue Title -->
+        <div class="issue-title">
+            {{ issue.title }}
+        </div>
+
+        <i class="fas fa-sitemap" *ngIf="issue.subtasks?.length && issue.subtasks.length  > 0"
+            (click)="taskDetails(true)"></i>
+
     </div>
 
 
@@ -36,6 +43,12 @@
             <option class="{{defaultStatus}}" value="done">Done</option>
         </select>
     </div>
+
+
+    <select class="point-input" [(ngModel)]="issue.storyPoints" (change)="updateStoryPoint($event)">
+        <option *ngFor="let p of fibo" [value]="p">{{ p }}</option>
+    </select>
+
 
     <div class="assignee-container" [ngClass]="getAssigneeLabel(issue) ==='!' ?'danger' : ''">
         <span>{{getAssigneeLabel(issue)}}</span>

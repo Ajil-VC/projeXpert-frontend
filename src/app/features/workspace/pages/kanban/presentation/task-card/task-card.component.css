@@ -121,3 +121,19 @@
     border-radius: 50%;
     display: inline-block;
 }
+
+
+.point-input {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    appearance: none;
+    margin-right: 8px;
+
+    background: white;
+    cursor: pointer;
+}
