@@ -143,6 +143,15 @@ export class TaskDetailsComponent {
     return '';
   }
 
+  get isSprintCompleted(): boolean {
+    if (this.task.sprintId && typeof this.task.sprintId !== 'string') {
+      if (this.task.sprintId.status === 'completed') {
+        return true;
+      }
+    }
+    return false;
+  }
+
   setDaysLeft() {
     if (this.task && typeof this.task.assignedTo !== 'string') {
       this.email = this.task.assignedTo?.email || 'Not Assigned';

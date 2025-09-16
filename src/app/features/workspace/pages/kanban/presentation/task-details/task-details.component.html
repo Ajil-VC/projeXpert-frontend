@@ -165,21 +165,29 @@
             <div class="subtask" *ngFor="let subtask of subTasks; let i = index">
                 <div class="subtask-header">
                     <span class="subtask-name">{{subtask.title}}</span>
-                    <button class="delete-btn" (click)="removeSubtask(subtask)">
+                    <button class="delete-btn" *ngIf="!isSprintCompleted" (click)="removeSubtask(subtask)">
                         <mat-icon>delete</mat-icon></button>
                 </div>
 
                 <select [(ngModel)]="subtask.status" class="subtask-status" (change)="onStatusChange(subtask)">
-                    <option value="todo">To Do</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="done">Done</option>
+                    <ng-container *ngIf="!isSprintCompleted; else showSelected">
+                        <option value="todo">To Do</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </ng-container>
+
+                    <ng-template #showSelected>
+                        <option [value]="subtask.status">{{ subtask.status }}</option>
+                    </ng-template>
+
                 </select>
 
                 <div class="assignee-area">
-                    <input #assigneeInput type="email" id="assignee-{{i}}" (focus)="setActiveInput(i)"
-                        [value]="userEmail(subtask)" (input)="onInputChange($event)" class="subtask-assignee"
-                        placeholder="Assign email" />
-                    <button (click)="updateAssignee(subtask,i,assigneeInput.value)">update</button>
+                    <input #assigneeInput [disabled]="isSprintCompleted" type="email" id="assignee-{{i}}"
+                        (focus)="setActiveInput(i)" [value]="userEmail(subtask)" (input)="onInputChange($event)"
+                        class="subtask-assignee" placeholder="Assign email" />
+                    <button *ngIf="!isSprintCompleted"
+                        (click)="updateAssignee(subtask,i,assigneeInput.value)">update</button>
                 </div>
 
                 <div class="members-list" *ngIf="activeSubtaskIndex === i && searchTerm.trim().length > 0">
@@ -196,7 +204,7 @@
         </div>
 
 
-        <div class="new-subtask-row">
+        <div class="new-subtask-row" *ngIf="!isSprintCompleted">
             <mat-form-field class="subtask-input">
                 <mat-label>New Subtask</mat-label>
                 <input matInput [(ngModel)]="newSubtaskTitle" name="newSubtaskTitle" />
