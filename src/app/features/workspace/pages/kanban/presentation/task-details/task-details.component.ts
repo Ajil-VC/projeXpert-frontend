@@ -79,19 +79,6 @@ export class TaskDetailsComponent {
     }
   }
 
-  private _albums = [
-    {
-      src: 'https://picsum.photos/600/400',
-      thumb: 'https://picsum.photos/100/67',
-      caption: 'Image 1'
-    },
-    {
-      src: 'https://picsum.photos/600/401',
-      thumb: 'https://picsum.photos/100/68',
-      caption: 'Image 2'
-    }
-  ];
-
   email: string = '';
   endDate: any = '';
   daysLeft = '';

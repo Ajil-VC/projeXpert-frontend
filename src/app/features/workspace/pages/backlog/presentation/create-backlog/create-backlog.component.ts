@@ -10,6 +10,8 @@ import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { DragDropModule, CdkDragDrop, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotificationService } from '../../../../../../core/data/notification.service';
 import { SharedService } from '../../../../../../shared/services/shared.service';
+import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-backlog',
@@ -39,7 +41,7 @@ export class CreateBacklogComponent implements OnChanges {
   issueCreationButton: string = 'backlog';
   isBacklog: boolean = false;
 
-  constructor(private backlogSer: BacklogService, private toast: NotificationService, private shared: SharedService) { }
+  constructor(private backlogSer: BacklogService, private toast: NotificationService, private shared: SharedService, private dialog: MatDialog) { }
 
   onDrop(event: CdkDragDrop<Task[]>) {
 
@@ -47,40 +49,57 @@ export class CreateBacklogComponent implements OnChanges {
       moveItemInArray(this.filteredBacklogs, event.previousIndex, event.currentIndex);
     } else {
 
-      const prevContainerId = event.previousContainer.id;
-      const movedTaskId = event.item.data?._id;
-      const taskWithPrevContainerId = { ...event.item.data };
-      taskWithPrevContainerId.sprintId = prevContainerId.split('-')[1];
-
-      this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
-        next: (res: { status: boolean, message: string, result: Task }) => {
-
-          if (res.status) {
-            transferArrayItem(
-              event.previousContainer.data,
-              this.backlogs,
-              event.previousIndex,
-              event.currentIndex
-            );
-
-            const foundTask = this.filteredBacklogs.find(task => task._id === res.result._id);
-            if (foundTask) {
-              foundTask.sprintId = res.result.sprintId;
-            }
-            const foundInBacklog = this.backlogs.find(task => task._id === res.result._id);
-            if (foundInBacklog) {
-              foundInBacklog.sprintId = res.result.sprintId;
-            }
-
-            this.filteredIssues();
-            this.shared.tasksSubject.next(taskWithPrevContainerId);
-
-          }
-        },
-        error: (err) => {
-          this.toast.showError('Something went wrong while moving tasks.');
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Change Task Scope',
+          message: "Are you sure you want to change this task’s scope?",
+          confirmButton: 'Yes',
+          cancelButton: 'Cancel'
         }
-      })
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+
+          const prevContainerId = event.previousContainer.id;
+          const movedTaskId = event.item.data?._id;
+          const taskWithPrevContainerId = { ...event.item.data };
+          taskWithPrevContainerId.sprintId = prevContainerId.split('-')[1];
+
+          this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
+            next: (res: { status: boolean, message: string, result: Task }) => {
+
+              if (res.status) {
+                transferArrayItem(
+                  event.previousContainer.data,
+                  this.backlogs,
+                  event.previousIndex,
+                  event.currentIndex
+                );
+
+                const foundTask = this.filteredBacklogs.find(task => task._id === res.result._id);
+                if (foundTask) {
+                  foundTask.sprintId = res.result.sprintId;
+                }
+                const foundInBacklog = this.backlogs.find(task => task._id === res.result._id);
+                if (foundInBacklog) {
+                  foundInBacklog.sprintId = res.result.sprintId;
+                }
+
+                this.filteredIssues();
+                this.shared.tasksSubject.next(taskWithPrevContainerId);
+
+              }
+            },
+            error: (err) => {
+              this.toast.showError('Something went wrong while moving tasks.');
+            }
+          })
+
+        }
+      });
+
     }
 
   }

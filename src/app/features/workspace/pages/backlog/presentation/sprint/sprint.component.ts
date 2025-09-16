@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { NotificationService } from '../../../../../../core/data/notification.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-sprint',
@@ -58,51 +59,68 @@ export class SprintComponent implements OnChanges {
       moveItemInArray(this.filteredIssuesShallow, event.previousIndex, event.currentIndex);
     } else {
 
-      const prevContainerId = event.previousContainer.id;
-      const movedTaskId = event.item.data?._id;
-      const taskWithPrevContainerId = { ...event.item.data };
-      if (prevContainerId === 'backlog-drop-list') {
-        taskWithPrevContainerId.sprintId = null;
-      } else {
-        taskWithPrevContainerId.sprintId = prevContainerId.split('-')[1];
-      }
-
-      this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
-        next: (res: { status: boolean, message: string, result: Task }) => {
-
-          if (res.status) {
-            transferArrayItem(
-              event.previousContainer.data,
-              this.issues,
-              event.previousIndex,
-              event.currentIndex
-            );
-
-            this.shared.tasksSubject.next(taskWithPrevContainerId);
-
-            //Here im updating the backlog array in parent to let the backlog component know about it.
-            if (prevContainerId === "backlog-drop-list") {
-
-              this.itemDropped.emit(event.item.data)
-
-            }
-
-            const foundTask = this.filteredIssuesShallow.find(task => task._id === res.result._id);
-            if (foundTask) {
-              foundTask.sprintId = res.result.sprintId;
-              this.filteredIssuesShallow = [...this.filteredIssuesShallow];
-
-            }
-            const foundInBacklog = this.issues.find(task => task._id === res.result._id);
-            if (foundInBacklog) {
-              foundInBacklog.sprintId = res.result.sprintId;
-
-            }
-
-            this.filteredIssues();
-          }
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Change Task Scope',
+          message: "Are you sure you want to change this task’s scope?",
+          confirmButton: 'Yes',
+          cancelButton: 'Cancel'
         }
-      })
+      });
+
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+
+          const prevContainerId = event.previousContainer.id;
+          const movedTaskId = event.item.data?._id;
+          const taskWithPrevContainerId = { ...event.item.data };
+          if (prevContainerId === 'backlog-drop-list') {
+            taskWithPrevContainerId.sprintId = null;
+          } else {
+            taskWithPrevContainerId.sprintId = prevContainerId.split('-')[1];
+          }
+
+          this.backlogSer.dragDropUpdation(prevContainerId, event.container.id, movedTaskId).subscribe({
+            next: (res: { status: boolean, message: string, result: Task }) => {
+
+              if (res.status) {
+                transferArrayItem(
+                  event.previousContainer.data,
+                  this.issues,
+                  event.previousIndex,
+                  event.currentIndex
+                );
+
+                this.shared.tasksSubject.next(taskWithPrevContainerId);
+
+                //Here im updating the backlog array in parent to let the backlog component know about it.
+                if (prevContainerId === "backlog-drop-list") {
+
+                  this.itemDropped.emit(event.item.data)
+
+                }
+
+                const foundTask = this.filteredIssuesShallow.find(task => task._id === res.result._id);
+                if (foundTask) {
+                  foundTask.sprintId = res.result.sprintId;
+                  this.filteredIssuesShallow = [...this.filteredIssuesShallow];
+
+                }
+                const foundInBacklog = this.issues.find(task => task._id === res.result._id);
+                if (foundInBacklog) {
+                  foundInBacklog.sprintId = res.result.sprintId;
+
+                }
+
+                this.filteredIssues();
+              }
+            }
+          })
+
+        }
+      });
 
     }
   }
