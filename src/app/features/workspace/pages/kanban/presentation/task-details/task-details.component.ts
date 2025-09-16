@@ -111,6 +111,14 @@ export class TaskDetailsComponent {
 
     this.authSer.logout$.subscribe({
       next: () => this.dialogRef.close(null)
+    });
+
+    this.shared.reload$.subscribe({
+      next: (res) => {
+        if (res) {
+          this.dialogRef.close();
+        }
+      }
     })
 
   }

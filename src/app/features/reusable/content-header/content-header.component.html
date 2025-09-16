@@ -25,18 +25,26 @@
                 </button>
             </ng-container>
 
+            <div class="dropdown" *ngIf="getButton('dropdown')">
+                <select (change)="onSelection($event)">
+                    <option value="active" selected>Active sprtint</option>
+                    <option *ngFor="let op of dropDownData" value="{{op.value}}">{{op.name}}</option>
+                </select>
+            </div>
+
             <div class="filter-actions">
                 <div class="status-filters" *ngIf="getButton('filter')">
                     <button class="filter-btn" [class.active]="statusFilters.active"
-                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter','active')">
+                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter',{selected : 'active'})">
                         Active
                     </button>
                     <button class="filter-btn" [class.active]="statusFilters.completed"
-                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter','completed')">
+                        *ngIf="!buttonHasPermission('filter')"
+                        (click)="onButtonClick('filter',{selected : 'completed'})">
                         Completed
                     </button>
                     <button class="filter-btn" [class.active]="statusFilters.archived"
-                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter','archived')">
+                        *ngIf="!buttonHasPermission('filter')" (click)="onButtonClick('filter',{selected:'archived'})">
                         Archived
                     </button>
                 </div>
@@ -59,31 +67,31 @@
                     <div class="status-filters">
 
                         <button class="filter-btn" *ngIf="!custom" [class.active]="filter==='year'"
-                            (click)="onButtonClick('radio','year')">
+                            (click)="onButtonClick('radio',{selected:'year'})">
                             Yearly
                         </button>
                         <button class="filter-btn" *ngIf="!custom" [class.active]="filter==='month'"
-                            (click)="onButtonClick('radio','month')">
+                            (click)="onButtonClick('radio',{selected:'month'})">
                             Monthly
                         </button>
                         <button class="filter-btn" [class.active]="filter==='custom'"
-                            (click)="onButtonClick('radio','custom')">
+                            (click)="onButtonClick('radio',{selected:'custom'})">
                             Custom
                         </button>
 
                     </div>
 
-                    <button *ngIf="custom" (click)="onButtonClick('radio','date')">Apply</button>
+                    <button *ngIf="custom" (click)="onButtonClick('radio',{selected:'date'})">Apply</button>
 
                 </div>
 
                 <div class="view-toggle" *ngIf="getButton('view')">
                     <button class="toggle-btn" [class.active]="viewMode === 'grid'" *ngIf="!buttonHasPermission('view')"
-                        (click)="onButtonClick('view','grid')">
+                        (click)="onButtonClick('view',{selected:'grid'})">
                         <i class="fas fa-th-large"></i>
                     </button>
                     <button class="toggle-btn" [class.active]="viewMode === 'list'" *ngIf="!buttonHasPermission('view')"
-                        (click)="onButtonClick('view','list')">
+                        (click)="onButtonClick('view',{selected :'list'})">
                         <i class="fas fa-list"></i>
                     </button>
                 </div>

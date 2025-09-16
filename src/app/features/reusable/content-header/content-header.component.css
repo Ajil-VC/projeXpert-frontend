@@ -168,7 +168,7 @@
     box-shadow: 0 4px 12px var(--primary-color);
 }
 
-.filtering-area{
+.filtering-area {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -273,6 +273,46 @@
 .main-button.secondary:hover {
     background: var(--primary-color);
     transform: translateY(-2px);
+}
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 220px;
+}
+
+select {
+    width: 100%;
+    padding: 8px 16px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 16px;
+    color: white;
+    appearance: none;
+    background: var(--darkish-gray);
+    /* Removes default arrow */
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 6px var(--primary-color);
+}
+
+/* Custom arrow */
+.dropdown::after {
+    content: "▼";
+    font-size: 14px;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    pointer-events: none;
 }
 
 

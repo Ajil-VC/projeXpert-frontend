@@ -16,7 +16,7 @@ import { Sprint, SprintTaskGroup } from '../../../../core/domain/entities/sprint
 import { NotificationService } from '../../../../core/data/notification.service';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
-import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
+import { ButtonType, DropDown } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
 import { LoaderService } from '../../../../core/data/loader.service';
 import { Roles } from '../../../../core/domain/entities/roles.model';
@@ -42,6 +42,7 @@ import { PermissionsService } from '../../../../shared/utils/permissions.service
 export class KanbanComponent {
 
 
+  dropDownData: DropDown[] = [];
   headerConfig: HeaderConfig = {
 
     title: 'Board',
@@ -55,6 +56,10 @@ export class KanbanComponent {
         label: '+ Complete Sprint',
         restriction: false
       },
+      {
+        type: 'dropdown',
+        dropDownData: []
+      }
     ]
 
   }
@@ -66,6 +71,17 @@ export class KanbanComponent {
     if (btn.triggeredFor === this.headerConfig.title) {
       if (btn.type === 'main') {
         this.completeSprint();
+      } else if (btn.type === 'dropdown') {
+        if (btn.selectedOption) {
+
+          if (btn.selectedOption === 'active') {
+
+            this.refreshKanbanView();
+          } else {
+
+            this.getTasksInSelectedSprint(btn.selectedOption);
+          }
+        }
       }
     }
   }
@@ -76,6 +92,9 @@ export class KanbanComponent {
       for (let btn of this.headerConfig.buttons) {
         if (btn.type === 'main') {
           btn.restriction = !this.permission.has(['close_sprint']);
+        } else if (btn.type === 'dropdown') {
+          btn.restriction = !this.permission.has(['view_all_task']);
+          btn.dropDownData = this.dropDownData;
         }
       }
     }
@@ -149,10 +168,30 @@ export class KanbanComponent {
     }
   }
 
-
+  getTasksInSelectedSprint(sprintId: string) {
+    this.loader.show();
+    this.shared.getTasksInSelectedSprint(sprintId).subscribe({
+      next: (res) => {
+        this.allTasks = res.result;
+        this.seperatingOnStatus();
+        this.loader.hide();
+      }
+    })
+  }
   refreshKanbanView() {
 
     this.loader.show();
+    this.shared.completedSprintData().subscribe({
+      next: (res) => {
+        if (res.status && res.result) {
+          this.dropDownData = res.result?.map(s => {
+            return { name: s.name as string, value: s._id as string }
+          });
+          this.setHeaderViewPermissions();
+        }
+      }
+    });
+
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
 

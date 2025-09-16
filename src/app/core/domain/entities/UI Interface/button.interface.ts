@@ -18,6 +18,13 @@ interface TimeFilter {
     endDate?: Date;
 }
 
+export interface DropDown {
+
+    name: string;
+    value: string;
+
+}
+
 export interface ButtonType {
 
     triggeredFor?: string;
@@ -26,5 +33,7 @@ export interface ButtonType {
     action?: StatusAction | ViewModeAction | TimeFilter;
     icon?: string;
     color?: string;
+    dropDownData?: DropDown[];
+    selectedOption?: string;
     restriction?: boolean;
 }

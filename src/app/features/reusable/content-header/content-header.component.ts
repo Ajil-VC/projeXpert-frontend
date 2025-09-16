@@ -8,6 +8,12 @@ import { Button, ReportFilter, SelectedFilter } from '../../../core/domain/entit
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NotificationService } from '../../../core/data/notification.service';
 
+
+interface params {
+  selected?: SelectedFilter,
+  selectedOption?: string
+}
+
 @Component({
   selector: 'app-content-header',
   imports: [FormsModule, CommonModule, ReactiveFormsModule,
@@ -84,8 +90,20 @@ export class ContentHeaderComponent {
 
   })
 
+  get dropDownData() {
+    const btn = this.headerConfig.buttons?.find((btn: ButtonType) => {
+      return btn.type === 'dropdown';
+    });
+    if (btn && btn?.dropDownData) {
+      return btn.dropDownData;
+    }
+    return [];
+  }
 
-  onButtonClick(type: Button, selected?: SelectedFilter) {
+
+  onButtonClick(type: Button, params?: params) {
+
+    const { selected, selectedOption } = params || {};
 
     if (type === 'main') {
       this.clickedBtn = {
@@ -169,6 +187,13 @@ export class ContentHeaderComponent {
 
       }
 
+    } else if (type === 'dropdown') {
+
+      this.clickedBtn = {
+        triggeredFor: this.headerConfig.title,
+        type: 'dropdown',
+        selectedOption
+      }
     } else {
       return;
     }
@@ -176,6 +201,12 @@ export class ContentHeaderComponent {
     this.buttonClicked.emit(this.clickedBtn);
   }
 
+
+  onSelection(event: Event) {
+
+    const selected = (event.target as HTMLSelectElement).value;
+    this.onButtonClick('dropdown', { selectedOption: selected });
+  }
 
   ngOnDestroy() {
     this.destroy$.next();

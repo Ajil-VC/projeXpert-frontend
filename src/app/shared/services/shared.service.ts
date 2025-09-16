@@ -6,6 +6,7 @@ import { Team } from '../../core/domain/entities/team.model';
 import { Project } from '../../core/domain/entities/project.model';
 import { Task } from '../../core/domain/entities/task.model';
 import { NotificationService } from '../../core/data/notification.service';
+import { Sprint } from '../../core/domain/entities/sprint.model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,24 @@ export class SharedService {
 
     return this.http.get(`${environment.apiUserUrl}tasks/kanban?projectId=${projectId}`);
 
+  }
+
+  completedSprintData(): Observable<{ status: boolean, message: string, result: Array<Sprint> | null }> {
+
+    const projectId = localStorage.getItem('projectId');
+    if (!projectId) {
+      this.toast.showInfo('Create or select a project');
+      return of({ status: false, message: '', result: null });
+    }
+    return this.http.get<{ status: boolean, message: string, result: Array<Sprint> | null }>(`${environment.apiUserUrl}completed-sprints?projectId=${projectId}`);
+  }
+
+  getTasksInSelectedSprint(sprintId: string): Observable<{ status: boolean, message: string, result: Task[] }> {
+    return this.http.get<{
+      status: boolean,
+      message: string,
+      result: Task[]
+    }>(`${environment.apiUserUrl}tasks/sprint/${sprintId}`);
   }
 
 

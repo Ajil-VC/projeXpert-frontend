@@ -142,7 +142,6 @@ export class SettingsComponent {
       .subscribe({
         next: (response: any) => {
           this.toast.showSuccess('Profile updated successfully');
-          console.log(response);
           this.isLoading = false;
           this.selectedFile = null;
         },
@@ -165,13 +164,6 @@ export class SettingsComponent {
     return formData;
   }
 
-  logFormData(): void {
-    const formData = this.getFormData();
-    console.log('FormData contents:');
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
-  }
 
   resetForm(): void {
     if (this.userLoaded) {
