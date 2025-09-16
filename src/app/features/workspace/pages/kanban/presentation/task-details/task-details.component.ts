@@ -21,6 +21,7 @@ import { LoaderService } from '../../../../../../core/data/loader.service';
 import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
 import { catchError, EMPTY, iif, map, of, switchMap, tap } from 'rxjs';
 import { TaskHistory } from '../../../../../../core/domain/entities/taskhistory.model';
+import { Lightbox, LightboxModule } from 'ngx-lightbox';
 
 @Component({
   selector: 'app-task-details',
@@ -40,7 +41,8 @@ import { TaskHistory } from '../../../../../../core/domain/entities/taskhistory.
     SearchPipe,
     CommentSectionComponent,
     MatIcon,
-    LoaderComponent
+    LoaderComponent,
+    LightboxModule
   ],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.css'
@@ -67,7 +69,8 @@ export class TaskDetailsComponent {
     private cd: ChangeDetectorRef,
     private toast: NotificationService,
     private loader: LoaderService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _lightbox: Lightbox
   ) {
     this.task = this.data.task;
     this.subTasks = this.data.subtasks;
@@ -75,6 +78,19 @@ export class TaskDetailsComponent {
       this.toggleSubtasksView();
     }
   }
+
+  private _albums = [
+    {
+      src: 'https://picsum.photos/600/400',
+      thumb: 'https://picsum.photos/100/67',
+      caption: 'Image 1'
+    },
+    {
+      src: 'https://picsum.photos/600/401',
+      thumb: 'https://picsum.photos/100/68',
+      caption: 'Image 2'
+    }
+  ];
 
   email: string = '';
   endDate: any = '';
@@ -302,20 +318,34 @@ export class TaskDetailsComponent {
 
   removeAttachment(publicId: string) {
 
-    const confirmed = confirm('Are you sure you want to delete this attachment?');
-    if (!confirmed) return;
-
-    this.kanbanSer.deleteAttachmentFromCloudinary(publicId, this.task._id).subscribe({
-      next: (res) => {
-        const data = res as { status: boolean, message: string, result: Task };
-        if (data.status) {
-          this.task = data.result;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to delete attachment:', err);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Heads Up!!!',
+        message: `Are you sure you want to delete this attachment?`,
+        confirmButton: 'Delete',
+        cancelButton: 'Cancel'
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.kanbanSer.deleteAttachmentFromCloudinary(publicId, this.task._id).subscribe({
+          next: (res) => {
+            const data = res as { status: boolean, message: string, result: Task };
+            if (data.status) {
+              this.task = data.result;
+            }
+          },
+          error: (err) => {
+            console.error('Failed to delete attachment:', err);
+          }
+        });
+      }
+
+    });
+
   }
 
   setTaskTitle() {
@@ -552,6 +582,25 @@ export class TaskDetailsComponent {
       }
     })
 
+  }
+
+
+  open(index: number): void {
+
+    if (this.task && this.task.attachments) {
+      const album = this.task.attachments.map((att: any) => ({
+        src: att.url,
+        caption: att.public_id,
+        thumb: att.url
+      }));
+      this._lightbox.open(album, index);
+    }
+    return;
+
+  }
+
+  close(): void {
+    this._lightbox.close();
   }
 
 }

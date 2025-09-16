@@ -68,6 +68,14 @@ export class TaskCardComponent {
     const sprint = this.task?.sprintId as Sprint;
     return sprint?.name as string ?? null;
   }
+  get canShowStoryPoints(): boolean {
+    if (this.task.sprintId && typeof this.task.sprintId !== 'string') {
+      if (this.task.sprintId.status === 'completed') {
+        return false;
+      }
+    }
+    return true;
+  }
 
 
   ngOnInit() {

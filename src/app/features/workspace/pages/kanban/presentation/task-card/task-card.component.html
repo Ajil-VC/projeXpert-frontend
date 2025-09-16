@@ -30,7 +30,13 @@
       <span *ngIf="task.status === 'done'">✔</span>
 
       <select class="point-input" [(ngModel)]="task.storyPoints" (change)="updateStoryPoint($event)">
-        <option *ngFor="let p of fibo" [value]="p">{{ p }}</option>
+        <ng-container *ngIf="canShowStoryPoints; else showSelected">
+          <option *ngFor="let p of fibo" [value]="p">{{ p }}</option>
+        </ng-container>
+
+        <ng-template #showSelected>
+          <option [value]="task.storyPoints">{{ task.storyPoints }}</option>
+        </ng-template>
       </select>
 
     </div>

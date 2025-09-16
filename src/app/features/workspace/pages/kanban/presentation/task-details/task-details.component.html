@@ -147,8 +147,8 @@
 
         <div class="attachment-thumbnails" *ngIf="task?.attachments?.length">
             <ng-container>
-                <div *ngFor="let image of task.attachments" class="thumbnail-wrapper">
-                    <img [src]="image.url" [alt]="image.public_id" class="thumbnail" />
+                <div *ngFor="let image of task.attachments ; let i = index" class="thumbnail-wrapper">
+                    <img [src]="image.url" [alt]="image.public_id" class="thumbnail" (click)="open(i)" />
                     <button (click)="removeAttachment(image.public_id)">Remove</button>
                 </div>
             </ng-container>
