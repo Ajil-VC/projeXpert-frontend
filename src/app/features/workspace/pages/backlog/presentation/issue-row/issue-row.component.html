@@ -67,11 +67,11 @@
             <input type="text" [(ngModel)]="searchText" placeholder="Search team member..." class="search-input" />
 
             <ul class="member-list">
-                <li (click)="assignIssueTo('')">UnAssign</li>
+                <li (click)="assignIssueTo('')">Remove Assignee</li>
                 <li *ngFor="let member of filteredMembers()" (click)="assignIssueTo(member)">
                     <div class="member-info">
                         <div class="email">{{ member.email }}</div>
-                        <div class="role">{{ member.role }}</div>
+                        <div class="role">{{ member.role.name }}</div>
                     </div>
                 </li>
             </ul>
