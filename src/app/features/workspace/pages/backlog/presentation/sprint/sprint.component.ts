@@ -59,6 +59,11 @@ export class SprintComponent implements OnChanges {
       moveItemInArray(this.filteredIssuesShallow, event.previousIndex, event.currentIndex);
     } else {
 
+      if (this.sprint.status === 'active') {
+        this.toast.showError('Cannot move tasks into active sprint!');
+        return;
+      }
+
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         width: '400px',
         data: {

@@ -210,6 +210,8 @@ export class TaskDetailsComponent {
       formData.append('attachments', file);
     });
 
+    this.loader.show();
+
     iif(
       () => !!this.assigningUserId,
       this.kanbanSer.assignIssue(this.task._id, this.assigningUserId),
@@ -243,9 +245,11 @@ export class TaskDetailsComponent {
           this.toast.showSuccess('Task updated successfully');
         }
 
+        this.loader.hide();
         return;
       },
       error: (err) => {
+        this.loader.hide();
         this.dialogRef.close();
       }
     });
