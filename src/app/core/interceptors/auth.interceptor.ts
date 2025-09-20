@@ -60,22 +60,28 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status === 403) {
 
         if (error.error['issue']) {
+
           notificationService.showInfo(error.error['message']);
           return throwError(() => error);
-        } else if (error.error && error.error['message']) {
+        } else if (error.error && error.error['code']) {
+
+          if (error.error.code === "USER_BLOCKED" || error.error.code === "COMPANY_BLOCKED") {
+
+
+            router.navigate(['forbidden'], {
+              state: {
+                message: `${error.error['message']}`,
+                code: 'COMPANY_BLOCKED'
+              }
+            });
+          }
+
+        } else {
 
           loader.hide();
           permissionService.resetPermissions();
           notificationService.showError(error.error['message']);
           return of();
-
-        } else if (error.error && error.error['message'] && (error.error['message'] === 'Company blocked' || error.error['message'] === 'User account is blocked.')) {
-          router.navigate(['forbidden'], {
-            state: {
-              message: `${error.error['message']}`,
-              code: 'COMPANY_BLOCKED'
-            }
-          });
         }
 
       } else if (error.status === 404 || error.status === 400) {

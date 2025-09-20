@@ -20,16 +20,21 @@
         <!-- Task Title -->
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Task Title</mat-label>
-            <input matInput [(ngModel)]="task.title" name="title" required />
+            <input matInput [disabled]="isSprintCompleted" [(ngModel)]="task.title" name="title" required />
         </mat-form-field>
 
         <!-- Status -->
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Status</mat-label>
             <mat-select [(ngModel)]="task.status" name="status">
-                <mat-option value="todo">To Do</mat-option>
-                <mat-option value="in-progress">In Progress</mat-option>
-                <mat-option value="done">Done</mat-option>
+                <ng-container *ngIf="!isSprintCompleted ; else showSelectedStatus">
+                    <mat-option value="todo">To Do</mat-option>
+                    <mat-option value="in-progress">In Progress</mat-option>
+                    <mat-option value="done">Done</mat-option>
+                </ng-container>
+                <ng-template #showSelectedStatus>
+                    <mat-option [value]="task.status">{{task.status}}</mat-option>
+                </ng-template>
             </mat-select>
         </mat-form-field>
 
@@ -37,15 +42,20 @@
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Priority</mat-label>
             <mat-select [(ngModel)]="task.priority" name="priority">
-                <mat-option value="low">Low</mat-option>
-                <mat-option value="medium">Medium</mat-option>
-                <mat-option value="high">High</mat-option>
-                <mat-option value="critical">Critical</mat-option>
+                <ng-container *ngIf="!isSprintCompleted ; else showSelectedPriority">
+                    <mat-option value="low">Low</mat-option>
+                    <mat-option value="medium">Medium</mat-option>
+                    <mat-option value="high">High</mat-option>
+                    <mat-option value="critical">Critical</mat-option>
+                </ng-container>
+                <ng-template #showSelectedPriority>
+                    <mat-option [value]="task.priority">{{task.priority}}</mat-option>
+                </ng-template>
             </mat-select>
         </mat-form-field>
 
 
-        <div class="assignee-section">
+        <div class="assignee-section" *ngIf="!isSprintCompleted">
             <h3>Assign To</h3>
             <mat-form-field class="full-width">
                 <mat-label>Change Assignee</mat-label>
@@ -122,7 +132,8 @@
         <!-- Description -->
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput rows="4" [(ngModel)]="task.description" name="description"></textarea>
+            <textarea matInput [disabled]="isSprintCompleted" rows="4" [(ngModel)]="task.description"
+                name="description"></textarea>
         </mat-form-field>
 
 
@@ -130,7 +141,7 @@
 
 
         <!-- Attachments (Placeholder for now) -->
-        <div class="attachments-section">
+        <div class="attachments-section" *ngIf="!isSprintCompleted">
 
             <div class="dropzone" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
                 <p>Drop images here or drag them in</p>
@@ -236,10 +247,10 @@
 <mat-dialog-actions align="end" class="buttons">
 
     <button mat-button class="secondary" (click)="showHistory()">History</button>
-
     <button mat-button class="secondary" (click)="toggleComments()">{{ showComments ? 'Hide' : 'Show' }}
         Comments</button>
     <button mat-button class="secondary" (click)="onCancel()">Cancel</button>
-    <button mat-button color="primary" *ngIf="!showSubtasks && !showComments && !isHistoryActive" (click)="onSave()"
-        [disabled]="!form || form.invalid">Save</button>
+    <button mat-button color="primary" *ngIf="!showSubtasks && !showComments && !isHistoryActive && !isSprintCompleted"
+        (click)="onSave()" [disabled]="!form || form.invalid">Save</button>
+
 </mat-dialog-actions>

@@ -44,7 +44,8 @@ import { HaspermissionDirective } from '../../../../core/directives/haspermissio
     LoaderComponent,
     ContentHeaderComponent,
     PaginationComponent,
-    HaspermissionDirective
+    HaspermissionDirective,
+    MatTooltipModule
   ],
   templateUrl: './group-call.component.html',
   styleUrl: './group-call.component.css',

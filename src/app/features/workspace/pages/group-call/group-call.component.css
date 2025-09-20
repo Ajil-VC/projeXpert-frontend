@@ -186,11 +186,20 @@
 /* Card Header */
 .card-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
+    flex-direction: column;
+    width: 100%;
+    align-items: start;
+    padding: 10px 20px;
     border-bottom: 1px solid var(--text-color);
     background: var(--darkish-gray);
+}
+
+.card-header-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
 }
 
 .meeting-status {
@@ -288,21 +297,8 @@
     color: white;
 }
 
-.meeting-description {
-    margin-bottom: 20px;
-}
-
-.meeting-description p {
-    margin: 0;
-    color: #64748b;
-    line-height: 1.5;
-    font-size: 14px;
-}
 
 /* Members Section */
-.meeting-members {
-    margin-bottom: 16px;
-}
 
 .members-label {
     font-size: 12px;
@@ -357,17 +353,16 @@
 .meeting-meta {
     display: flex;
     justify-content: space-between;
+    gap: 8px;
     align-items: center;
     font-size: 12px;
     color: #64748b;
-    padding-top: 12px;
-    border-top: 1px solid var(--text-color);
+    padding-top: 3px;
 }
 
 /* Card Footer */
 .card-footer {
-    padding: 16px 20px;
-    background: var(--darkish-gray);
+    padding: 8px 20px;
 
 }
 

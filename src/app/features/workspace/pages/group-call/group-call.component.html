@@ -29,46 +29,52 @@
             <!-- Card Header -->
             <div class="card-header">
 
-                <!-- <div class="meeting-status" [class]="meeting.status">
-                    {{ meeting.status | titlecase }}
-                </div> -->
-                <div class="time-until" [ngClass]="{
-                        'greenlabel' : getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) !== 'Meeting time passed',
-                        'redlabel':getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) === 'Meeting time passed'
-                        }" *ngIf="!meeting.recurring">
-                    {{ getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) }}
+                <div class="card-header-top">
+                    <div class="time-until" [ngClass]="{
+                            'greenlabel' : getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) !== 'Meeting time passed',
+                            'redlabel':getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) === 'Meeting time passed'
+                            }" *ngIf="!meeting.recurring">
+                        {{ getTimeUntilMeeting(meeting.meetingDate, meeting.meetingTime) }}
+                    </div>
+
+                    <div class="time-until recurring" *ngIf="meeting.recurring">
+                        {{ meeting.recurring ? 'Recurring' : '' }}
+                    </div>
+
+                    <div class="card-actions">
+                        <!-- <button class="action-btn edit" (click)="editMeeting(meeting)"
+                            [attr.aria-label]="'Edit ' + meeting.roomName">
+                            ✏️
+                        </button> -->
+                        <button class="action-btn delete" *appHaspermission="['remove_room']"
+                            (click)="deleteMeeting(meeting)" [attr.aria-label]="'Delete ' + meeting.roomName">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="time-until recurring" *ngIf="meeting.recurring">
-                    {{ meeting.recurring ? 'Recurring' : '' }}
-                </div>
-
-                <div class="card-actions">
-                    <!-- <button class="action-btn edit" (click)="editMeeting(meeting)"
-                        [attr.aria-label]="'Edit ' + meeting.roomName">
-                        ✏️
-                    </button> -->
-                    <button class="action-btn delete" *appHaspermission="['remove_room']"
-                        (click)="deleteMeeting(meeting)" [attr.aria-label]="'Delete ' + meeting.roomName">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                <!-- Meeting Meta -->
+                <div class="meeting-meta">
+                    <span class="created-by">Created by {{ meeting.createdBy.email }}</span>
+                    <span class="created-date" *ngIf="!meeting.recurring">{{ formatDate(meeting?.createdAt) }}</span>
                 </div>
             </div>
 
             <!-- Meeting Info -->
             <div class="meeting-info">
-                <h3 class="meeting-title">{{ meeting.roomName }}</h3>
+                <h3 class="meeting-title" [matTooltip]="meeting.description" matTooltipPosition="above">{{
+                    meeting.roomName }}</h3>
 
                 <div class="meeting-datetime">
-                    <div class="datetime-item" *ngIf="!meeting.recurring">
-                        <span class="datetime-icon">📅</span>
-                        <span class="datetime-text">{{ formatDate(meeting.meetingDate) }}</span>
-                    </div>
 
                     <div class="time-area">
                         <div class="datetime-item">
                             <span class="datetime-icon">⏰</span>
                             <span class="datetime-text">{{ formatTime(meeting.meetingTime) }}</span>
+                        </div>
+                        <div class="datetime-item" *ngIf="!meeting.recurring">
+                            <span class="datetime-icon">📅</span>
+                            <span class="datetime-text">{{ formatDate(meeting.meetingDate) }}</span>
                         </div>
 
                         <div class="days">
@@ -78,10 +84,6 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="meeting-description" *ngIf="meeting.description">
-                    <p>{{ meeting.description }}</p>
                 </div>
 
                 <!-- Meeting Members -->
@@ -98,11 +100,7 @@
                     </div>
                 </div>
 
-                <!-- Meeting Meta -->
-                <div class="meeting-meta">
-                    <span class="created-by">Created by {{ meeting.createdBy.email }}</span>
-                    <span class="created-date" *ngIf="!meeting.recurring">{{ formatDate(meeting?.createdAt) }}</span>
-                </div>
+
             </div>
 
 
