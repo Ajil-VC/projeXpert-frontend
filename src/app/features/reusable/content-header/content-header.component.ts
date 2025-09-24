@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { HeaderConfig } from '../../../core/domain/entities/UI Interface/header.interface';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ButtonType } from '../../../core/domain/entities/UI Interface/button.interface';
+import { boardSwitcher, ButtonType } from '../../../core/domain/entities/UI Interface/button.interface';
 import { debounceTime, distinctUntilChanged, startWith, Subject, takeUntil } from 'rxjs';
 import { Button, ReportFilter, SelectedFilter } from '../../../core/domain/entities/UI Interface/headerTypes';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -43,6 +43,9 @@ export class ContentHeaderComponent {
 
   viewMode: 'grid' | 'list' = 'grid';
   filter: ReportFilter = 'year';
+  boardView: boardSwitcher = {
+    viewType: 'board'
+  }
 
   statusFilters = {
     active: true,
@@ -110,6 +113,20 @@ export class ContentHeaderComponent {
         triggeredFor: this.headerConfig.title,
         type: 'main'
       }
+    } else if (type === 'select') {
+      if (selected) {
+        if (selected === 'board' || selected === 'sprint_report') {
+          this.boardView.viewType = selected;
+         this.clickedBtn = {
+          triggeredFor :this.headerConfig.title,
+          type:'select',
+          action:{
+            viewType: selected
+          }
+         }
+        }
+      }
+
     } else if (type === 'filter') {
       if (selected) {
         if (selected === 'active' || selected === 'archived' || selected === 'completed') {

@@ -25,11 +25,32 @@
                 </button>
             </ng-container>
 
-            <div class="dropdown" *ngIf="getButton('dropdown')">
-                <select (change)="onSelection($event)">
-                    <option value="active" selected>Active sprtint</option>
-                    <option *ngFor="let op of dropDownData" value="{{op.value}}">{{op.name}}</option>
-                </select>
+
+            <div class="dropdownandselect">
+
+                <div class="filtering-area" *ngIf="getButton('select')">
+                    <div class="status-filters">
+
+                        <button class="filter-btn" [class.active]="boardView.viewType==='board' "
+                            (click)="onButtonClick('select',{selected:'board'})">
+                            Board
+                        </button>
+                        <button class="filter-btn" [class.active]="boardView.viewType==='sprint_report'"
+                            (click)="onButtonClick('select',{selected:'sprint_report'})">
+                            Sprint Report
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="dropdown" *ngIf="getButton('dropdown')">
+                    <select (change)="onSelection($event)">
+                        <option value="active" selected>Active sprtint</option>
+                        <option *ngFor="let op of dropDownData" value="{{op.value}}">{{op.name}}</option>
+                    </select>
+                </div>
+
             </div>
 
             <div class="filter-actions">
@@ -84,6 +105,7 @@
                     <button *ngIf="custom" (click)="onButtonClick('radio',{selected:'date'})">Apply</button>
 
                 </div>
+
 
                 <div class="view-toggle" *ngIf="getButton('view')">
                     <button class="toggle-btn" [class.active]="viewMode === 'grid'" *ngIf="!buttonHasPermission('view')"

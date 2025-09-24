@@ -5,7 +5,7 @@
     <app-content-header [headerConfig]="headerConfig" (searchQuery)="handleSearchEvent($event)"
         (buttonClicked)="handlebuttonClick($event)"></app-content-header>
 
-    <div class="board">
+    <div class="board" *ngIf="viewChanger('board')">
 
         <div class="kanban-column" id="todo" cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoTasks"
             [cdkDropListConnectedTo]="[inProgressList, doneList]" (cdkDropListDropped)="onDrop($event)">
@@ -42,6 +42,10 @@
                     [cdkDragData]="task" [task]="task" (taskUpdation)="handleTaskUpdationEvent($event)"></app-task-card>
             </div>
         </div>
+
+    </div>
+
+    <div *ngIf="viewChanger('sprint_report')">
 
     </div>
 

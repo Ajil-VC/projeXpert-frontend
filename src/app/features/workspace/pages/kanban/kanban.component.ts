@@ -16,7 +16,7 @@ import { Sprint, SprintTaskGroup } from '../../../../core/domain/entities/sprint
 import { NotificationService } from '../../../../core/data/notification.service';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
-import { ButtonType, DropDown } from '../../../../core/domain/entities/UI Interface/button.interface';
+import { boardSwitcher, ButtonType, DropDown } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { LoaderComponent } from '../../../../core/presentation/loader/loader.component';
 import { LoaderService } from '../../../../core/data/loader.service';
 import { Roles } from '../../../../core/domain/entities/roles.model';
@@ -59,6 +59,10 @@ export class KanbanComponent {
       {
         type: 'dropdown',
         dropDownData: []
+      },
+      {
+        type: 'select',
+
       }
     ]
 
@@ -82,6 +86,10 @@ export class KanbanComponent {
             this.getTasksInSelectedSprint(btn.selectedOption);
           }
         }
+      } else if (btn.type === 'select') {
+        if (btn.action && 'viewType' in btn.action) {
+          this.view.viewType = btn.action.viewType;
+        }
       }
     }
   }
@@ -100,6 +108,9 @@ export class KanbanComponent {
     }
   }
 
+  view: boardSwitcher = {
+    viewType: 'board'
+  }
   searchQuery = '';
 
   allTasks: Task[] = [];
@@ -122,7 +133,9 @@ export class KanbanComponent {
     this.setHeaderViewPermissions();
   }
 
-
+  viewChanger(type: 'board' | 'sprint_report') {
+    return this.view.viewType === type;
+  }
   onDrop(event: CdkDragDrop<any[]>) {
     // this.loadService.
     const droppedTask = event.item.data;

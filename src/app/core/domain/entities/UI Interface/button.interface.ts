@@ -25,12 +25,16 @@ export interface DropDown {
 
 }
 
+export interface boardSwitcher {
+    viewType?: 'board' | 'sprint_report';
+}
+
 export interface ButtonType {
 
     triggeredFor?: string;
     label?: string;
     type: Button;
-    action?: StatusAction | ViewModeAction | TimeFilter;
+    action?: StatusAction | ViewModeAction | TimeFilter | boardSwitcher;
     icon?: string;
     color?: string;
     dropDownData?: DropDown[];

@@ -1,6 +1,6 @@
 <div class="dialog-container">
 
-    <h2 mat-dialog-title class="modal-title">Create Sprint</h2>
+    <h2 mat-dialog-title class="modal-title">Start Sprint</h2>
 
     <form [formGroup]="sprintForm" (ngSubmit)="onSave()">
         <mat-dialog-content class="modal-content">
@@ -13,6 +13,16 @@
                     Sprint name is required
                 </mat-error> -->
             </mat-form-field>
+
+            <!-- Sprint Goal -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Sprint Goal</mat-label>
+                <input matInput formControlName="sprintGoal" placeholder="Oneline of the final sprint result." />
+                <mat-error *ngIf="sprintForm.get('sprintGoal')?.hasError('required')">
+                    Sprint Goal is required
+                </mat-error>
+            </mat-form-field>
+
 
             <!-- Duration -->
             <mat-form-field appearance="outline" class="full-width">
@@ -35,10 +45,17 @@
                 </mat-error>
             </mat-form-field>
 
+            <!-- Sprint Description -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" placeholder="Give additional details here." rows="4">
+                </textarea>
+            </mat-form-field>
+
         </mat-dialog-content>
 
         <mat-dialog-actions align="end" class="modal-actions">
-            <button mat-button type="button" (click)="onCancel()" class="cancel-button" >Cancel</button>
+            <button mat-button type="button" (click)="onCancel()" class="cancel-button">Cancel</button>
             <button mat-flat-button color="primary" type="submit" class="save-button" [disabled]="sprintForm.invalid">
                 Save
             </button>

@@ -270,12 +270,18 @@ export class SprintComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe({
-      next: (result: { sprintName: string, duration: number, startDate: Date }) => {
+      next: (result: { sprintName: string, duration: number, startDate: Date, sprintGoal: string, description: string }) => {
         if (result) {
+          result.sprintGoal = result.sprintGoal.trim();
+          result.description = result.description.trim();
+          if (result.sprintGoal === '') {
+            this.toast.showError('Please provide a sprintgoal.');
+            return;
+          }
           if (result.sprintName == '') {
             result.sprintName = this.sprint.name as string;
           }
-          this.backlogSer.startSprint(this.sprint._id as string, result.sprintName, result.duration, result.startDate).subscribe({
+          this.backlogSer.startSprint(this.sprint._id as string, result.sprintName, result.duration, result.startDate, result.sprintGoal, result.description).subscribe({
             next: (res: { status: boolean, message: string, result: Sprint }) => {
               this.sprint.name = res.result.name;
               this.sprint.status = res.result.status;

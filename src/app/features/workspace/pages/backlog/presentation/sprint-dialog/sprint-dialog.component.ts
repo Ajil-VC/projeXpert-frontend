@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -27,14 +27,16 @@ export class SprintDialogComponent {
   ) {
     this.sprintForm = this.fb.group({
       sprintName: [''],
+      sprintGoal: ['', [Validators.required, this.noWhitespaceValidator()]],
       duration: ['', [Validators.required, Validators.min(1)]],
-      startDate: ['', Validators.required]
+      startDate: ['', Validators.required],
+      description: ['']
     });
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.authSer.logout$.subscribe({
-      next : ()=> this.dialogRef.close(null)
+      next: () => this.dialogRef.close(null)
     })
   }
 
@@ -46,6 +48,13 @@ export class SprintDialogComponent {
 
   onCancel(): void {
     this.dialogRef.close(null);
+  }
+
+  noWhitespaceValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isWhitespace = (control.value || '').trim().length === 0;
+      return isWhitespace ? { whitespace: true } : null;
+    };
   }
 
 }

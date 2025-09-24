@@ -79,9 +79,9 @@ export class BacklogService {
     return this.http.put(`${environment.apiUserUrl}change-taskstatus`, { taskId, status });
   }
 
-  startSprint(sprintId: string, sprintName: string, duration: number, startDate: Date): Observable<any> {
+  startSprint(sprintId: string, sprintName: string, duration: number, startDate: Date, goal: string, description: string): Observable<any> {
     const projectId = this.layoutSer.getProjectId();
-    return this.http.put(`${environment.apiUserUrl}sprints`, { sprintId, sprintName, duration, startDate, projectId });
+    return this.http.put(`${environment.apiUserUrl}sprints`, { sprintId, sprintName, duration, startDate, projectId, goal, description });
   }
 
   updateStoryPoint(storyPoints: number, taskId: string): Observable<{ status: boolean, message: string, result: Task }> {
