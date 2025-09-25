@@ -86,6 +86,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
       } else if (error.status === 404 || error.status === 400) {
 
+        if (error.status === 400 && error.error.code === 'NOT_ACTIVE_SPRINT') {
+          return throwError(() => new Error('NOT_ACTIVE_SPRINT'));
+        }
         userFriendlyMessage = error.error?.message || 'Something went wrong. Please try again.';
         notificationService.showError(userFriendlyMessage);
       } else if (error.status === 409) {

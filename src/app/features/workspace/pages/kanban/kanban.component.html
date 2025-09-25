@@ -45,7 +45,85 @@
 
     </div>
 
-    <div *ngIf="viewChanger('sprint_report')">
+    <div class="sprintreport-container" *ngIf="viewChanger('sprint_report')">
+
+        <div class="left">
+            Left Content (60%)
+        </div>
+
+        <div class="right">
+
+            <div class="make-center" *ngIf="!selectedSprint">
+                <p style="align-items: center;">Try changing sprint from dropdown!</p>
+            </div>
+
+            <div *ngIf="selectedSprint">
+                <!-- Header -->
+                <div class="sprint-header">
+                    <h2>Sprint Goal: {{selectedSprint.goal || ''}}</h2>
+                    <p><strong>Start Date:</strong> {{selectedSprint.startDate | date:'MMM d, y'}} &nbsp; | &nbsp;
+                        <strong>Updated:</strong> {{selectedSprint.updatedAt | date:'MMM d, y'}}
+                    </p>
+                    <p><strong>Started By:</strong> {{sprintCreatedBy}}</p>
+                </div>
+
+                <!-- Metrics -->
+                <div class="sprint-section grid">
+                    <div class="card">
+                        <h3>{{selectedSprint.plannedPoints}}</h3>
+                        <p>Planned Points</p>
+                    </div>
+                    <div class="card">
+                        <h3>{{selectedSprint.completedPoints}}</h3>
+                        <p>Completed Points</p>
+                    </div>
+                    <div class="card">
+                        <h3>{{spillOver}}</h3>
+                        <p>Spilled Over</p>
+                    </div>
+                </div>
+
+                <div class="sprint-section grid">
+                    <div class="card">
+                        <h3>{{completedTasksCount.tasks}}</h3>
+                        <p>Tasks Done</p>
+                    </div>
+                    <div class="card">
+                        <h3>{{completedTasksCount.story}}</h3>
+                        <p>Stories Done</p>
+                    </div>
+                    <div class="card">
+                        <h3>{{completedTasksCount.bugs}}</h3>
+                        <p>Bugs Fixed</p>
+                    </div>
+                </div>
+
+                <div class="sprint-section grid">
+                    <div class="card">
+                        <h3>{{selectedSprint.velocity}}</h3>
+                        <p>Velocity</p>
+                    </div>
+                    <div class="card">
+                        <h3>{{selectedSprint.velocitySnapshot}}</h3>
+                        <p>Velocity Snapshot</p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">
+                    <p><em>Report generated automatically at sprint completion.</em></p>
+                    <button>See Challenges</button>
+                </div>
+
+                <div class="description">
+                    <p><strong>Description:</strong>
+                        {{selectedSprint.description}}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 

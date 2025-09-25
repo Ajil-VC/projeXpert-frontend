@@ -71,12 +71,19 @@ export class SharedService {
     return this.http.get<{ status: boolean, message: string, result: Array<Sprint> | null }>(`${environment.apiUserUrl}completed-sprints?projectId=${projectId}`);
   }
 
-  getTasksInSelectedSprint(sprintId: string): Observable<{ status: boolean, message: string, result: Task[] }> {
+  getSprintWithTasks(sprintId: string, activeSprint?: boolean): Observable<{ status: boolean, message: string, result: Sprint }> {
+
+    let projectId = null;
+    if (activeSprint) {
+      projectId = localStorage.getItem('projectId');
+      sprintId = 'active_sprint'
+    }
+
     return this.http.get<{
       status: boolean,
       message: string,
-      result: Task[]
-    }>(`${environment.apiUserUrl}tasks/sprint/${sprintId}`);
+      result: Sprint
+    }>(`${environment.apiUserUrl}tasks/sprint/${sprintId}?projectId=${projectId}`);
   }
 
 

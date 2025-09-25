@@ -77,18 +77,21 @@ export class KanbanComponent {
         this.completeSprint();
       } else if (btn.type === 'dropdown') {
         if (btn.selectedOption) {
-
           if (btn.selectedOption === 'active') {
 
             this.refreshKanbanView();
           } else {
 
-            this.getTasksInSelectedSprint(btn.selectedOption);
+            this.getSprintWithTasks(btn.selectedOption);
           }
         }
       } else if (btn.type === 'select') {
+
         if (btn.action && 'viewType' in btn.action) {
           this.view.viewType = btn.action.viewType;
+          if (this.view.viewType === 'sprint_report') {
+            this.getSprintWithTasks();
+          }
         }
       }
     }
@@ -118,8 +121,14 @@ export class KanbanComponent {
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
   userRole?: Roles;
-
+  selectedSprint!: Sprint | null;
+  completedTasksCount: {
+    tasks: number,
+    bugs: number,
+    story: number
+  } = { tasks: 0, bugs: 0, story: 0 };
   isLoading: boolean = false;
+
 
   constructor(
     private shared: SharedService,
@@ -133,6 +142,22 @@ export class KanbanComponent {
     this.setHeaderViewPermissions();
   }
 
+  get spillOver() {
+    if (this.selectedSprint) {
+      if (this.selectedSprint.plannedPoints && this.selectedSprint.completedPoints) {
+        return Number(this.selectedSprint.plannedPoints) - Number(this.selectedSprint.completedPoints)
+      }
+    }
+    return 0;
+  }
+  get sprintCreatedBy() {
+    if (this.selectedSprint) {
+      if (typeof this.selectedSprint.createdBy !== 'string') {
+        return this.selectedSprint.createdBy.email;
+      }
+    }
+    return 'Not Available'
+  }
   viewChanger(type: 'board' | 'sprint_report') {
     return this.view.viewType === type;
   }
@@ -181,13 +206,55 @@ export class KanbanComponent {
     }
   }
 
-  getTasksInSelectedSprint(sprintId: string) {
+  getSprintWithTasks(sprintId: string = '', activeSprint?: boolean) {
     this.loader.show();
-    this.shared.getTasksInSelectedSprint(sprintId).subscribe({
+    if (!sprintId && !this.selectedSprint) {
+      activeSprint = true;
+    } else if (!sprintId && this.selectedSprint) {
+      sprintId = this.selectedSprint._id as string;
+    }
+    this.shared.getSprintWithTasks(sprintId, activeSprint).subscribe({
       next: (res) => {
-        this.allTasks = res.result;
-        this.seperatingOnStatus();
-        this.loader.hide();
+        this.selectedSprint = res.result;
+        if (Array.isArray(res.result.tasks)) {
+          this.allTasks = res.result.tasks as Task[];
+          this.completedTasksCount.bugs = 0;
+          this.completedTasksCount.story = 0;
+          this.completedTasksCount.tasks = 0;
+          for (let issue of this.allTasks) {
+            if (issue.status === 'done') {
+
+              if (issue.type === 'bug') {
+                if (issue.subtasks && issue.subtasks.length > 0) {
+                  this.completedTasksCount.bugs += issue.subtasks.length;
+                } else {
+                  this.completedTasksCount.bugs++;
+                }
+              } else if (issue.type === 'story') {
+                if (issue.subtasks && issue.subtasks.length > 0) {
+                  this.completedTasksCount.story += issue.subtasks.length;
+                } else {
+                  this.completedTasksCount.story++;
+                }
+
+              } else if (issue.type === 'task') {
+
+                if (issue.subtasks && issue.subtasks.length > 0) {
+                  this.completedTasksCount.tasks += issue.subtasks.length;
+                } else {
+                  this.completedTasksCount.tasks++;
+                }
+              }
+            }
+          }
+          this.seperatingOnStatus();
+          this.loader.hide();
+        }
+      },
+      error: (err) => {
+        if (err === 'NOT_ACTIVE_SPRINT') {
+
+        }
       }
     })
   }
@@ -197,6 +264,7 @@ export class KanbanComponent {
     this.shared.completedSprintData().subscribe({
       next: (res) => {
         if (res.status && res.result) {
+
           this.dropDownData = res.result?.map(s => {
             return { name: s.name as string, value: s._id as string }
           });
@@ -204,6 +272,8 @@ export class KanbanComponent {
         }
       }
     });
+
+    this.getSprintWithTasks('', true);
 
     this.shared.getTasksInActiveSprints().subscribe({
       next: (res: { status: boolean, result: Task[] }) => {
@@ -224,6 +294,7 @@ export class KanbanComponent {
         this.toast.showError('Failed to get tasks in active sprint.');
       }
     });
+
 
   }
 
@@ -329,6 +400,14 @@ export class KanbanComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.status) {
+        console.log(result)
+        const sprint = result.completedTasks[0].sprintId as Sprint;
+        this.dropDownData.push({ name: sprint.name as string, value: sprint._id as string });
+        if (this.headerConfig.buttons) {
+          const ind = this.headerConfig.buttons.findIndex(b => b.type === 'dropdown');
+          this.headerConfig.buttons[ind].dropDownData = this.dropDownData;
+          this.setHeaderViewPermissions()
+        }
         this.toast.showSuccess('Sprint completed successfully')
         this.allTasks = [];
         this.seperatingOnStatus();
