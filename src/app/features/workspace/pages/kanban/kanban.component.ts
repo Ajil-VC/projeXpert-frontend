@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from "./presentation/task-card/task-card.component";
-import { StoryPoint, Task } from '../../../../core/domain/entities/task.model';
+import { Task } from '../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../shared/services/shared.service';
 import { CdkDrag, CdkDragDrop, CdkDropList, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { BacklogService } from '../backlog/data/backlog.service';
 import { SearchPipe } from '../../../../core/pipes/search.pipe';
 import { MatDialog } from '@angular/material/dialog';
-import { TaskDetailsComponent } from './presentation/task-details/task-details.component';
 import { AuthService } from '../../../auth/data/auth.service';
 import { User } from '../../../../core/domain/entities/user.model';
 import { SprintCompleteComponent } from './presentation/sprint-complete/sprint-complete.component';
@@ -21,7 +20,8 @@ import { LoaderComponent } from '../../../../core/presentation/loader/loader.com
 import { LoaderService } from '../../../../core/data/loader.service';
 import { Roles } from '../../../../core/domain/entities/roles.model';
 import { PermissionsService } from '../../../../shared/utils/permissions.service';
-
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-kanban',
@@ -34,14 +34,15 @@ import { PermissionsService } from '../../../../shared/utils/permissions.service
     CdkDrag,
     SearchPipe,
     ContentHeaderComponent,
-    LoaderComponent
+    LoaderComponent,
+    BaseChartDirective
   ],
   templateUrl: './kanban.component.html',
   styleUrl: './kanban.component.css'
 })
 export class KanbanComponent {
 
-
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   dropDownData: DropDown[] = [];
   headerConfig: HeaderConfig = {
 
@@ -215,6 +216,13 @@ export class KanbanComponent {
     }
     this.shared.getSprintWithTasks(sprintId, activeSprint).subscribe({
       next: (res) => {
+
+        if (!res.status && res.code === 'NOT_ACTIVE_SPRINT') {
+          this.selectedSprint = null;
+          this.loader.hide();
+          return;
+        }
+
         this.selectedSprint = res.result;
         if (Array.isArray(res.result.tasks)) {
           this.allTasks = res.result.tasks as Task[];
@@ -248,13 +256,16 @@ export class KanbanComponent {
             }
           }
           this.seperatingOnStatus();
+          if (this.chart) {
+            this.setBurnDownData();
+            this.chart.update();
+          }
           this.loader.hide();
         }
       },
       error: (err) => {
-        if (err === 'NOT_ACTIVE_SPRINT') {
-
-        }
+        this.selectedSprint = null;
+        this.loader.hide();
       }
     })
   }
@@ -425,5 +436,90 @@ export class KanbanComponent {
       this.seperatingOnStatus();
     }
   }
+
+
+
+  lineChartLabels: string[] = [];
+
+  lineChartData: ChartData<'line'> = {
+    labels: this.lineChartLabels,
+    datasets: []
+  };
+  lineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    plugins: {
+      legend: { display: true, position: 'top' as const },
+      title: { display: true, text: 'Sprint Burndown Chart' }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    }
+  };
+
+  setBurnDownData() {
+    if (this.selectedSprint && this.selectedSprint.startDate && this.selectedSprint.endDate) {
+      const start = new Date(this.selectedSprint.startDate);
+      const end = new Date(this.selectedSprint.endDate);
+
+      this.lineChartLabels = this.generateSprintDays(start, end);
+
+      this.lineChartData = {
+        labels: this.lineChartLabels,
+        datasets: [
+          {
+            label: 'Actual Burndown',
+            data: this.selectedSprint.burndownData?.map(d => d.remainingPoints) || [],
+            borderColor: '#42A5F5',
+            fill: false,
+            tension: 0.3,
+          },
+          {
+            label: 'Ideal Burndown',
+            data: this.generateIdealBurndown(this.selectedSprint.plannedPoints as number, start, end),
+            borderColor: '#FF7043',
+            borderDash: [5, 5],
+            fill: false,
+            tension: 0,
+          }
+        ]
+      };
+    }
+  }
+
+  generateSprintDays(startDate: Date, endDate: Date): string[] {
+    const days: string[] = [];
+    const current = new Date(startDate);
+
+    while (current <= endDate) {
+
+      const formatted = current.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+
+      days.push(formatted);
+
+      current.setDate(current.getDate() + 1);
+    }
+
+    return days;
+  }
+
+  generateIdealBurndown(plannedPoints: number, startDate: Date, endDate: Date): number[] {
+    const dayCount =
+      Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+    const pointsPerDay = plannedPoints / (dayCount - 1);
+    const data: number[] = [];
+
+    for (let i = 0; i < dayCount; i++) {
+      data.push(Math.max(plannedPoints - (i * pointsPerDay), 0));
+    }
+
+    return data;
+  }
+
+
+
 
 }

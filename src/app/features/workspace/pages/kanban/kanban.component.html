@@ -48,7 +48,16 @@
     <div class="sprintreport-container" *ngIf="viewChanger('sprint_report')">
 
         <div class="left">
-            Left Content (60%)
+
+            <div class="make-center" *ngIf="!selectedSprint">
+                <p style="align-items: center;">Try changing sprint from dropdown!</p>
+            </div>
+
+            <div class='graph' *ngIf="selectedSprint">
+                <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="'line'">
+                </canvas>
+
+            </div>
         </div>
 
         <div class="right">
@@ -112,7 +121,7 @@
                 <!-- Footer -->
                 <div class="footer">
                     <p><em>Report generated automatically at sprint completion.</em></p>
-                    <button>See Challenges</button>
+                    <!-- <button>See Challenges</button> -->
                 </div>
 
                 <div class="description">

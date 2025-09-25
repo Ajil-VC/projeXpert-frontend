@@ -71,7 +71,7 @@ export class SharedService {
     return this.http.get<{ status: boolean, message: string, result: Array<Sprint> | null }>(`${environment.apiUserUrl}completed-sprints?projectId=${projectId}`);
   }
 
-  getSprintWithTasks(sprintId: string, activeSprint?: boolean): Observable<{ status: boolean, message: string, result: Sprint }> {
+  getSprintWithTasks(sprintId: string, activeSprint?: boolean): Observable<{ status: boolean, message: string, result: Sprint, code:  string }> {
 
     let projectId = null;
     if (activeSprint) {
@@ -82,7 +82,8 @@ export class SharedService {
     return this.http.get<{
       status: boolean,
       message: string,
-      result: Sprint
+      result: Sprint,
+      code:  string
     }>(`${environment.apiUserUrl}tasks/sprint/${sprintId}?projectId=${projectId}`);
   }
 
