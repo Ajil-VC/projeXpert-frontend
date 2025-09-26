@@ -61,17 +61,17 @@ export class SharedService {
 
   }
 
-  completedSprintData(): Observable<{ status: boolean, message: string, result: Array<Sprint> | null }> {
+  allSprintDataInProject(): Observable<{ status: boolean, message: string, result: Array<Sprint> | null }> {
 
     const projectId = localStorage.getItem('projectId');
     if (!projectId) {
       this.toast.showInfo('Create or select a project');
       return of({ status: false, message: '', result: null });
     }
-    return this.http.get<{ status: boolean, message: string, result: Array<Sprint> | null }>(`${environment.apiUserUrl}completed-sprints?projectId=${projectId}`);
+    return this.http.get<{ status: boolean, message: string, result: Array<Sprint> | null }>(`${environment.apiUserUrl}all-sprints?projectId=${projectId}`);
   }
 
-  getSprintWithTasks(sprintId: string, activeSprint?: boolean): Observable<{ status: boolean, message: string, result: Sprint, code:  string }> {
+  getSprintWithTasks(sprintId: string, activeSprint?: boolean): Observable<{ status: boolean, message: string, result: Sprint, code: string }> {
 
     let projectId = null;
     if (activeSprint) {
@@ -83,7 +83,7 @@ export class SharedService {
       status: boolean,
       message: string,
       result: Sprint,
-      code:  string
+      code: string
     }>(`${environment.apiUserUrl}tasks/sprint/${sprintId}?projectId=${projectId}`);
   }
 

@@ -272,7 +272,7 @@ export class KanbanComponent {
   refreshKanbanView() {
 
     this.loader.show();
-    this.shared.completedSprintData().subscribe({
+    this.shared.allSprintDataInProject().subscribe({
       next: (res) => {
         if (res.status && res.result) {
 

@@ -42,7 +42,11 @@ export class TaskCardComponent {
   setDaysLeft(task: Task) {
 
     this.endDate = (task?.sprintId !== null && typeof task?.sprintId !== 'string') ? task?.sprintId.endDate : '';
-
+    if (!this.endDate) {
+      this.endDate = null;
+      this.daysLeft = '';
+      return;
+    }
     const endDate = new Date(this.endDate);
     const today = new Date();
 

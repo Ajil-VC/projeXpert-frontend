@@ -23,7 +23,8 @@
   <div class="task-meta">
 
     <div>
-      <span>{{ endDate | date }} </span>
+      <span>{{ endDate ? (endDate | date:'MMM d, y') : 'Planning Stage' }}</span>
+
       <span class="flag" [class.red]="task.priority === 'critical'" [class.orange]="task.priority === 'high'"
         [class.yellow]="task.priority === 'medium'" [class.green]="task.priority === 'low'"
         *ngIf="task.priority"></span>
