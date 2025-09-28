@@ -1,19 +1,17 @@
-
+<div class="landpage-container">
     <header>
         <nav class="navbar">
             <div class="navbar-brand">
                 <img [src]="'assets/icons/Projexpert.png'">
             </div>
-            <div class="navbar-menu" [class.active]="isNavbarActive" >
-                <ul class="navbar-links">
-                    <li><a href="#" class="active">Features</a></li>
-                    <li><a href="#">Solutions</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Resources</a></li>
-                </ul>
+            <div class="navbar-menu" [class.active]="isNavbarActive">
                 <div class="auth-buttons">
-                    <a [routerLink]="['login']" class="sign-in">Sign in</a>
+                    <a [routerLink]="['login']" class="sign-in">
+                        Sign in
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </a>
                 </div>
+
             </div>
             <div class="navbar-toggle" (click)="toggleNavBar()">
                 <i class="fas fa-bars"></i>
@@ -24,13 +22,14 @@
     <main>
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-text">
-                    <h1>Streamline Your Projects, Amplify Your Success</h1>
-                    <p>Empower your team with our intuitive project management platform. Collaborate seamlessly, track progress effortlessly, and deliver results consistently.</p>
-                    <button class="cta-button" [routerLink]="['register']" >Get Start</button>
-                </div>
                 <div class="hero-image">
-                    <img [src]="'assets/images/team.jpg'" alt="ProjeXpert Dashboard Preview">
+                    <img [src]="'assets/images/task_distribution.webp'" alt="ProjeXpert Dashboard Preview">
+                </div>
+                <div class="hero-text">
+                    <h1>Organize Smarter<br> Achieve Faster</h1>
+                    <p>Seamlessly collaborate, track every milestone, and bring your projects to life without the chaos.
+                    </p>
+                    <button class="cta-button" [routerLink]="['register']">Get Start</button>
                 </div>
             </div>
         </section>
@@ -39,7 +38,7 @@
             <div class="features">
                 <h2 class="section-title">FEATURES</h2>
                 <h3 class="section-subtitle">Everything you need to manage projects effectively</h3>
-                
+
                 <div class="feature-cards">
                     <div class="feature-card">
                         <div class="feature-icon">
@@ -48,7 +47,7 @@
                         <h4>Task Management</h4>
                         <p>Create, assign, and track tasks with ease. Set priorities, deadlines, and dependencies.</p>
                     </div>
-    
+
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-users"></i>
@@ -56,7 +55,7 @@
                         <h4>Team Collaboration</h4>
                         <p>Work together seamlessly with real-time updates, file sharing, and team chat.</p>
                     </div>
-    
+
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-chart-line"></i>
@@ -68,5 +67,4 @@
             </div>
         </section>
     </main>
-    
-
+</div>
