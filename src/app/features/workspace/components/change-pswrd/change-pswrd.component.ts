@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { AuthService, PswdChangeService } from '../../../auth/data/auth.service';
 import { MatInputModule } from '@angular/material/input';
@@ -18,18 +18,16 @@ import { CanComponentDeactivate } from '../../../../core/domain/entities/canComp
   styleUrl: './change-pswrd.component.css'
 })
 export class ChangePswrdComponent implements CanComponentDeactivate {
+  private pswdService = inject(PswdChangeService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   passWord!: string;
   oldPassWord!: string;
-  passwordChanged: boolean = false;
+  passwordChanged = false;
   errorMsg!: string;
 
   @ViewChild('passWordField') passWordField!: NgModel;
-
-  constructor(
-    private pswdService: PswdChangeService,
-    private authService: AuthService,
-    private router: Router
-  ) { }
 
   onPasswordChange(): void {
     if (this.passWordField?.control) {

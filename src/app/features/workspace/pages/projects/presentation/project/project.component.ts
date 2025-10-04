@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectsUseCase } from '../../domain/projects.domain';
 import { ProjectService } from '../../data/project.service';
@@ -18,21 +18,21 @@ import { NotificationService } from '../../../../../../core/data/notification.se
     { provide: ProjectsUseCase, useClass: ProjectService }
   ]
 })
-export class ProjectComponent {
+export class ProjectComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private projectsInterface = inject(ProjectsUseCase);
+  private router = inject(Router);
+  private layoutSer = inject(LayoutService);
+  private toast = inject(NotificationService);
+
 
 
   projectForm!: FormGroup;
-  isButtonDisabled: boolean = false;
+  isButtonDisabled = false;
 
-  workSpaces!: Array<{ value: String, name: String }>;
+  workSpaces!: { value: string, name: string }[];
   priorityOptions = ['low', 'medium', 'high', 'critical']
-  constructor(
-    private fb: FormBuilder,
-    private projectsInterface: ProjectsUseCase,
-    private router: Router,
-    private layoutSer: LayoutService,
-    private toast: NotificationService
-  ) {
+  constructor() {
 
     this.projectForm = this.fb.group({
       projectName: ['', Validators.required],

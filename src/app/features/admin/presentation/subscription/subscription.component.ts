@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
 import { AdminService } from '../../data/admin.service';
 import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.model';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
@@ -14,12 +14,14 @@ import { PaginationComponent } from '../../../reusable/pagination/pagination.com
   templateUrl: './subscription.component.html',
   styleUrl: './subscription.component.css'
 })
-export class SubscriptionDetailComponent {
+export class SubscriptionDetailComponent implements OnInit, OnDestroy {
+  private adminSer = inject(AdminService);
+
 
   subscribedCompanies: any[] = [];
-  searchTerm: string = '';
-  currentPage: number = 1;
-  totalPages: number = 1;
+  searchTerm = '';
+  currentPage = 1;
+  totalPages = 1;
   sort: 1 | -1 = 1;
 
   private $destroy = new Subject<void>();
@@ -63,9 +65,6 @@ export class SubscriptionDetailComponent {
     this.currentPage = page;
     this.applyFilters();
   }
-
-
-  constructor(private adminSer: AdminService) { }
   ngOnInit() {
 
     this.applyFilters();

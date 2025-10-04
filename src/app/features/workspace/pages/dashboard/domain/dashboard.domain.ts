@@ -25,10 +25,10 @@ export interface SummaryCard {
     title: string;
     time: string;
     duration: string;
-    attendees: Array<{
+    attendees: {
       name: string;
       avatar: string;
       initials: string;
-    }>;
+    }[];
   }
   

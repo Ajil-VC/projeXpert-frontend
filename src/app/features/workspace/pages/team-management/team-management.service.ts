@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { User } from '../../../../core/domain/entities/user.model';
@@ -9,14 +9,14 @@ import { Roles } from '../../../../core/domain/entities/roles.model';
   providedIn: 'root'
 })
 export class TeamManagementService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   getUsers(
     page: number,
-    searchTerm: string = '',
-    role: string = '',
-    status: string = ''
+    searchTerm = '',
+    role = '',
+    status = ''
   ): Observable<{ status: boolean, result: { users: User[], totalPages: number } }> {
 
     return this.http.get<{
@@ -34,7 +34,7 @@ export class TeamManagementService {
   }
 
   createOrUpdateRole(
-    formData: { roleName: string, permissions: Array<string>, description: string },
+    formData: { roleName: string, permissions: string[], description: string },
     role: Roles | null): Observable<{ message: string, result: Roles, status: boolean }> {
 
     if (!role) {
@@ -45,8 +45,8 @@ export class TeamManagementService {
     }
   }
 
-  getRoles(): Observable<{ message: string, result: Array<Roles>, status: boolean }> {
-    return this.http.get<{ message: string, result: Array<Roles>, status: boolean }>(`${environment.apiUserUrl}roles`);
+  getRoles(): Observable<{ message: string, result: Roles[], status: boolean }> {
+    return this.http.get<{ message: string, result: Roles[], status: boolean }>(`${environment.apiUserUrl}roles`);
   }
 
   deleteRole(roleId: string): Observable<{ status: boolean, message: string }> {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/data/auth.service';
 import { Project } from '../../../core/domain/entities/project.model';
@@ -30,25 +30,21 @@ interface MenuItem {
   styleUrl: './sidebar.component.css',
 
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  private authSer = inject(AuthService);
+  private shared = inject(SharedService);
+  private toast = inject(NotificationService);
+  private projSer = inject(ProjectDataService);
+  private loadSer = inject(LoaderService);
+  private permission = inject(PermissionsService);
+
 
   @Input() systemRole!: string;
-  public currentProjectName: string = '';
+  public currentProjectName = '';
   private currentProject!: Project;
   menuItems: MenuItem[] = [];
   isProjectSelected!: boolean;
   @Output() response = new EventEmitter();
-
-  constructor(
-    private authSer: AuthService,
-    private shared: SharedService,
-    private toast: NotificationService,
-    private projSer: ProjectDataService,
-    private loadSer: LoaderService,
-    private permission: PermissionsService
-  ) {
-
-  }
 
   isPlatformAdmin() {
     return this.systemRole === 'platform-admin';

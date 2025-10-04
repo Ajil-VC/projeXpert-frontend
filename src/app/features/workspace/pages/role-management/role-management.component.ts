@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
@@ -20,7 +20,13 @@ import { HaspermissionDirective } from '../../../../core/directives/haspermissio
   templateUrl: './role-management.component.html',
   styleUrl: './role-management.component.css'
 })
-export class RoleManagementComponent {
+export class RoleManagementComponent implements OnInit {
+  private dialog = inject(MatDialog);
+  private teamSer = inject(TeamManagementService);
+  private toast = inject(NotificationService);
+  private permission = inject(PermissionsService);
+  private shared = inject(SharedService);
+
 
   headerConfig: HeaderConfig = {
 
@@ -42,7 +48,7 @@ export class RoleManagementComponent {
   setHeaderViewPermissions() {
     this.headerConfig.hideSearchBar = !this.permission.hasAny(['assign_role']);
     if (this.headerConfig?.buttons) {
-      for (let btn of this.headerConfig.buttons) {
+      for (const btn of this.headerConfig.buttons) {
         if (btn.type === 'main') {
           btn.restriction = !this.permission.has(['assign_role']);
         } else if (btn.type === 'filter' || btn.type === 'view') {
@@ -85,19 +91,11 @@ export class RoleManagementComponent {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
-  searchTerm: string = '';
+  searchTerm = '';
   roles: Roles[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
   viewMode: 'grid' | 'list' = 'grid';
   filteredRoles: Roles[] = [];
-
-  constructor(
-    private dialog: MatDialog,
-    private teamSer: TeamManagementService,
-    private toast: NotificationService,
-    private permission: PermissionsService,
-    private shared: SharedService
-  ) { }
   ngOnInit() {
     this.teamSer.getRoles().subscribe({
       next: (res) => {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, SimpleChange, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,28 +21,26 @@ import { SharedService } from '../../../../../shared/services/shared.service';
   templateUrl: './message-area.component.html',
   styleUrl: './message-area.component.css'
 })
-export class MessageAreaComponent {
+export class MessageAreaComponent implements AfterViewInit, AfterViewChecked, OnInit, OnDestroy {
+  private chatSer = inject(ChatService);
+  private authSer = inject(AuthService);
+  private socketService = inject(SocketService);
+  private router = inject(Router);
+  private sharedSer = inject(SharedService);
+
 
   currentUser: User | null = null;
   messages: Message[] = [];
-  messageText: string = '';
+  messageText = '';
   chat!: Conversation;
   reciever!: Team | undefined;
-  isChatOpened: boolean = false;
+  isChatOpened = false;
 
   onlineUsers = new Set<string>();
-  onlieStatus: boolean = false;
+  onlieStatus = false;
 
   private destroy$ = new Subject<void>();
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
-
-  constructor(
-    private chatSer: ChatService,
-    private authSer: AuthService,
-    private socketService: SocketService,
-    private router: Router,
-    private sharedSer: SharedService
-  ) { }
 
   ngAfterViewInit() {
     this.scrollToBottom();

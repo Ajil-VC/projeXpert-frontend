@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, SimpleChanges, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoryPoint, Task } from '../../../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../../../shared/services/shared.service';
@@ -19,31 +19,30 @@ import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
   templateUrl: './issue-row.component.html',
   styleUrl: './issue-row.component.css'
 })
-export class IssueRowComponent {
+export class IssueRowComponent implements OnInit {
+  private shared = inject(SharedService);
+  private eleRef = inject(ElementRef);
+  private backlogSer = inject(BacklogService);
+  private dialog = inject(MatDialog);
+  private toast = inject(NotificationService);
+
 
   @Input() daysLeft!: string;
   @Input() issue!: Task;
   @Output() assign = new EventEmitter<any>();
 
-  @Input() openIdFromBacklog: string = '';
+  @Input() openIdFromBacklog = '';
   @Output() idFromIssueRow = new EventEmitter<string>();
   @Output() seletedIssueResponse = new EventEmitter<string>();
 
-  constructor(
-    private shared: SharedService,
-    private eleRef: ElementRef,
-    private backlogSer: BacklogService,
-    private dialog: MatDialog,
-    private toast: NotificationService) { }
-
-  isClicked: boolean = false;
+  isClicked = false;
 
   showAssigneeDropdown = false;
   searchText = '';
   teamMembers: Team[] = [];
 
   fibo: StoryPoint[] = [0, 1, 2, 3, 5, 8, 13, 21];
-  defaultStatus: string = 'status-default';
+  defaultStatus = 'status-default';
 
   ngOnInit() {
 
@@ -181,7 +180,7 @@ export class IssueRowComponent {
 
 
 
-  taskDetails(subtaskView: boolean = false): void {
+  taskDetails(subtaskView = false): void {
 
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',

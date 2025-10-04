@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
@@ -11,8 +11,10 @@ import { NotificationService } from '../../../../../core/data/notification.servi
   providedIn: 'root'
 })
 export class BacklogService {
+  private http = inject(HttpClient);
+  private layoutSer = inject(LayoutService);
+  private toast = inject(NotificationService);
 
-  constructor(private http: HttpClient, private layoutSer: LayoutService, private toast: NotificationService) { }
 
   createOrUpdateEpic(title: string, description: string, startDate: string, endDate: string, status: string, epic: Task | null): Observable<any> {
 
@@ -25,7 +27,7 @@ export class BacklogService {
   }
 
 
-  createIssue(projectId: string, issueType: string, issueName: string, taskGroup: string, epicId: string = ''): Observable<any> {
+  createIssue(projectId: string, issueType: string, issueName: string, taskGroup: string, epicId = ''): Observable<any> {
     return this.http.post(`${environment.apiUserUrl}issue`, { projectId, issueType, issueName, taskGroup, epicId });
   }
 
@@ -66,7 +68,7 @@ export class BacklogService {
     return this.http.patch(`${environment.apiUserUrl}issue`, { issueId, assigneeId });
   }
 
-  createSprint(issueIds: Array<string>): Observable<any> {
+  createSprint(issueIds: string[]): Observable<any> {
     const projectId = localStorage.getItem('projectId');
     return this.http.post(`${environment.apiUserUrl}sprints`, { projectId, issueIds });
   }

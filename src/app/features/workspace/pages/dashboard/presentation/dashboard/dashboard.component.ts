@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ScheduleItem, SummaryCard } from '../../domain/dashboard.domain';
 import { DashboardService } from '../../data/dashboard.service';
 import { NotificationService } from '../../../../../../core/data/notification.service';
@@ -17,7 +17,12 @@ import { LoaderService } from '../../../../../../core/data/loader.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit, OnDestroy {
+  private shared = inject(SharedService);
+  private loader = inject(LoaderService);
+  private dashboardSer = inject(DashboardService);
+  private toast = inject(NotificationService);
+
 
 
   profilePic(user: User) {
@@ -93,12 +98,6 @@ export class DashboardComponent {
     }
   ];
 
-  constructor(
-    private shared: SharedService,
-    private loader: LoaderService,
-    private dashboardSer: DashboardService,
-    private toast: NotificationService) { }
-
   private destroy$ = new Subject<void>();
 
   ngOnInit() {
@@ -120,7 +119,7 @@ export class DashboardComponent {
 
   refreshDashboardView(res: any) {
 
-    for (let card of this.summaryCards) {
+    for (const card of this.summaryCards) {
       if (card.label === 'Completed') {
         card.count = res?.result?.completed?.length || 0;
       } else if (card.label === 'Open Tasks') {

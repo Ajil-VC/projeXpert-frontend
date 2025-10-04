@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, OnInit, inject } from '@angular/core';
 import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
 import { Task } from '../../../../../../core/domain/entities/task.model';
@@ -21,7 +21,13 @@ import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/c
   templateUrl: './sprint.component.html',
   styleUrl: './sprint.component.css'
 })
-export class SprintComponent implements OnChanges {
+export class SprintComponent implements OnChanges, OnInit {
+  private backlogSer = inject(BacklogService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private shared = inject(SharedService);
+  private toast = inject(NotificationService);
+
 
   @Input() sprint!: Sprint;
   @Input() allSprintIds: string[] = [];
@@ -30,27 +36,18 @@ export class SprintComponent implements OnChanges {
   issues: Task[] = [];
   connectedDropListIds: string[] = [];
 
-  daysLeft: string = '';
+  daysLeft = '';
 
-  currentDivId: string = '';
-  selectedIssue: Set<string> = new Set();
+  currentDivId = '';
+  selectedIssue = new Set<string>();
   filteredIssuesShallow: Task[] = [];
-  selectedEpics: Set<string> = new Set();
+  selectedEpics = new Set<string>();
 
   issueCount = 0;
 
 
   issueCreationButton: string = this.sprint?._id as string || '';
-  isIssueInSprint: boolean = false;
-
-  constructor(private backlogSer: BacklogService,
-    private dialog: MatDialog,
-    private router: Router,
-    private shared: SharedService,
-    private toast: NotificationService
-  ) {
-
-  }
+  isIssueInSprint = false;
 
 
   onDrop(event: CdkDragDrop<Task[]>) {

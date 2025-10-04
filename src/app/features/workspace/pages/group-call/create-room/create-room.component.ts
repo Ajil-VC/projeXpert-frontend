@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../../../../core/domain/entities/user.model';
 import { CommonModule } from '@angular/common';
@@ -16,14 +16,21 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   templateUrl: './create-room.component.html',
   styleUrl: './create-room.component.css'
 })
-export class CreateRoomComponent {
+export class CreateRoomComponent implements OnInit {
+  dialogRef = inject<MatDialogRef<CreateRoomComponent>>(MatDialogRef);
+  private fb = inject(FormBuilder);
+  private sharedSer = inject(SharedService);
+  private toast = inject(NotificationService);
+  private callSer = inject(GroupcallService);
+  private authSer = inject(AuthService);
+
 
   roomForm!: FormGroup;
   isSubmitting = false;
   minDate: string;
   minTime: string;
 
-  isRecurring: boolean = false;
+  isRecurring = false;
 
   availableUsers: Team[] = [];
   selectedMembers: Team[] = [];
@@ -31,16 +38,9 @@ export class CreateRoomComponent {
   searchQuery = '';
   showUserDropdown = false;
   days: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thirsday', 'Friday', 'Saturday'];
-  isDays: boolean = true;
+  isDays = true;
 
-  constructor(
-    public dialogRef: MatDialogRef<CreateRoomComponent>,
-    private fb: FormBuilder,
-    private sharedSer: SharedService,
-    private toast: NotificationService,
-    private callSer: GroupcallService,
-    private authSer: AuthService
-  ) {
+  constructor() {
     // Set minimum date to today
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
@@ -130,7 +130,7 @@ export class CreateRoomComponent {
   }
 
   private getFieldDisplayName(fieldName: string): string {
-    const displayNames: { [key: string]: string } = {
+    const displayNames: Record<string, string> = {
       'roomName': 'Room name',
       'meetingDate': 'Meeting date',
       'meetingTime': 'Meeting time',

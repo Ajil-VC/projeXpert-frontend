@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Project } from '../../core/domain/entities/project.model';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../features/auth/data/auth.service';
@@ -9,19 +9,17 @@ import { AuthService } from '../../features/auth/data/auth.service';
   providedIn: 'root'
 })
 export class ProjectDataService {
+  private http = inject(HttpClient);
+  private service = inject(AuthService);
 
-  constructor(
-    private http: HttpClient,
-    private service: AuthService
-  ) { }
 
-  private projects!: Array<Project> | null;
+  private projects!: Project[] | null;
 
   public delProject = new Subject<Project>();
   public delProject$ = this.delProject.asObservable();
 
 
-  getProjectData(page: number = 1, filter: {
+  getProjectData(page = 1, filter: {
     active: boolean,
     archived: boolean,
     completed: boolean
@@ -30,7 +28,7 @@ export class ProjectDataService {
     const workSpace = this.service.getWorkSpace();
     const workSpaceId = workSpace?._id;
 
-    return this.http.get<{ status: boolean, projects: Array<Project> | null, totalPages: number }>(`${environment.apiUserUrl}init-projects?workspace_id=${workSpaceId}&page=${page}&active=${filter.active}&archived=${filter.archived}&completed=${filter.completed}`);
+    return this.http.get<{ status: boolean, projects: Project[] | null, totalPages: number }>(`${environment.apiUserUrl}init-projects?workspace_id=${workSpaceId}&page=${page}&active=${filter.active}&archived=${filter.archived}&completed=${filter.completed}`);
   }
 
   updateProject(projectData: Project): Observable<{ status: boolean, data: Project }> {

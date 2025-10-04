@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, inject } from '@angular/core';
 import { AdminService } from '../../data/admin.service';
 import { NotificationService } from '../../../../core/data/notification.service';
 import { CommonModule } from '@angular/common';
@@ -15,10 +15,12 @@ import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
+  private adminSer = inject(AdminService);
+  private toast = inject(NotificationService);
+
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-  constructor(private adminSer: AdminService, private toast: NotificationService) { }
 
   ngOnInit() {
 
@@ -45,18 +47,18 @@ export class AdminDashboardComponent {
     })
   };
 
-  top5Companies: Array<{
+  top5Companies: {
     totalAmount: number,
     subscriptionCount: number,
     companyId: any,
     companyName: string
-  }> = [];
+  }[] = [];
 
-  largestEmployer: Array<{
+  largestEmployer: {
     employerCount: number,
     email: string,
     companyName: string
-  }> = [];
+  }[] = [];
 
   summaryCards: SummaryCard[] = [
     {

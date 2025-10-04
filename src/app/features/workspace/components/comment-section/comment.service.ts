@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Comment } from '../../../../core/domain/entities/task.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CommentService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   getCommentsForTask(taskId: string): Observable<any> {
 

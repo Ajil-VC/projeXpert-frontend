@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { TeamMemberListComponent } from "../team-member-list/team-member-list.component";
 import { MessageAreaComponent } from "../message-area/message-area.component";
 import { SharedService } from '../../../../../shared/services/shared.service';
@@ -15,10 +15,13 @@ import { NotificationService } from '../../../../../core/data/notification.servi
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.css'
 })
-export class ChatPageComponent {
+export class ChatPageComponent implements OnInit, OnDestroy {
+  private shared = inject(SharedService);
+  private authSer = inject(AuthService);
+  private toast = inject(NotificationService);
+
 
   private destroy$ = new Subject<void>();
-  constructor(private shared: SharedService, private authSer: AuthService, private toast: NotificationService) { }
 
   teamMembers!: Team[];
   currentUserObj: { id: string } = { id: '' };

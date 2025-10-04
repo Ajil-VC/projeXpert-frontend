@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 
@@ -7,8 +7,8 @@ import { environment } from '../../../../../../environments/environment';
   providedIn: 'root'
 })
 export class ChatService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   messagesSubject = new Subject();
   messages$ = this.messagesSubject.asObservable();

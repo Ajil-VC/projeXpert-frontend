@@ -19,24 +19,24 @@ interface Challenge {
 
 export interface Sprint extends Document {
 
-    _id: String;
-    sprintCount: Number;
-    name: String;
-    description?: String;
+    _id: string;
+    sprintCount: number;
+    name: string;
+    description?: string;
     goal?: string,
     startDate?: Date;
     endDate?: Date;
     status: 'not-started' | 'active' | 'completed';
-    projectId: String;
+    projectId: string;
     createdBy: string | Team;
-    tasks: Array<string> | Array<Task>;
+    tasks: string[] | Task[];
     createdAt?: Date;
     updatedAt?: Date;
 
-    plannedPoints?: Number,
-    completedPoints?: Number,
-    velocity?: Number,
-    velocitySnapshot?: Number,
+    plannedPoints?: number,
+    completedPoints?: number,
+    velocity?: number,
+    velocitySnapshot?: number,
     burndownData?: BurndownEntry[],
     challenges?: Challenge[]
 

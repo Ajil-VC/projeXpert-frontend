@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommentService } from './comment.service';
 import { Comment, Task } from '../../../../core/domain/entities/task.model';
 import { CommonModule } from '@angular/common';
@@ -11,15 +11,15 @@ import { User } from '../../../../core/domain/entities/user.model';
   templateUrl: './comment-section.component.html',
   styleUrl: './comment-section.component.css'
 })
-export class CommentSectionComponent {
+export class CommentSectionComponent implements OnInit {
+  private commentService = inject(CommentService);
+
 
 
   @Input() task!: Task;
 
   comments: Comment[] = [];
   newComment = '';
-
-  constructor(private commentService: CommentService) { }
 
   ngOnInit() {
 

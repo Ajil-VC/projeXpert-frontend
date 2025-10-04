@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
@@ -18,19 +18,23 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './create-epic.component.html',
   styleUrl: './create-epic.component.css'
 })
-export class CreateEpicComponent {
+export class CreateEpicComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<CreateEpicComponent>>(MatDialogRef);
+  data = inject<{
+    issue: Task;
+}>(MAT_DIALOG_DATA);
+  private authSer = inject(AuthService);
+
 
   epicForm: FormGroup;
   minDate = new Date();
   minEndDate: Date | null = null;
-  epicHeader: string = 'Create Epic';
+  epicHeader = 'Create Epic';
 
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<CreateEpicComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { issue: Task },
-    private authSer: AuthService
-  ) {
+  constructor() {
+    const data = this.data;
+
 
     this.epicForm = this.fb.group({
       title: ['', Validators.required],

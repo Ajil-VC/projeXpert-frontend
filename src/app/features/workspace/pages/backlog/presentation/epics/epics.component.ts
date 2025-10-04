@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { TransformButtonComponent } from "../transform-button/transform-button.component";
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { FormsModule } from '@angular/forms';
@@ -21,20 +21,23 @@ import { SharedService } from '../../../../../../shared/services/shared.service'
   styleUrl: './epics.component.css'
 })
 export class EpicsComponent {
+  private backlogSer = inject(BacklogService);
+  private dialog = inject(MatDialog);
+  private toast = inject(NotificationService);
+  private sharedSer = inject(SharedService);
 
 
-  isHidden: boolean = false;
+
+  isHidden = false;
 
   @Input() epics: Task[] = [];
   epicCount = this.epics.length;
   selectedEpic = this.epics[0];
 
-  expandedEpics: Set<string> = new Set();
-  checkedEpics: Set<string> = new Set();
+  expandedEpics = new Set<string>();
+  checkedEpics = new Set<string>();
 
   epicView: 'active' | 'compelted' = 'active';
-
-  constructor(private backlogSer: BacklogService, private dialog: MatDialog, private toast: NotificationService, private sharedSer: SharedService) { }
 
   toggleEpicDetails(epic: Task): void {
     const epicId = epic._id;

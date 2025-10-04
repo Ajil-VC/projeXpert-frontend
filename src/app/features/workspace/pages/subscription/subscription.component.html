@@ -5,7 +5,7 @@
 
     <div class="cards">
         <div class="card" *ngFor="let plan of plans"
-            [ngClass]="plan.billingCycle == 'year' ? 'glass-green': 'glass-blue'">
+            [ngClass]="plan.billingCycle === 'year' ? 'glass-green': 'glass-blue'">
             <h3 class="plan-name">{{ plan.name }}</h3>
             <p class="price">&#8377;{{ plan.price }}</p>
 

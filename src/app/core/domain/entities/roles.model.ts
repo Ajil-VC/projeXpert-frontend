@@ -41,7 +41,7 @@ export interface Roles {
     companyId: string;
     name: string;
     description: string;
-    permissions: Array<Permissions>;
+    permissions: Permissions[];
     canMutate: boolean;
     createdAt?: Date;
     updatedAt?: Date;

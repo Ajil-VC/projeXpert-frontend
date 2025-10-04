@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Company } from '../../../../core/domain/entities/company.model';
@@ -20,7 +20,12 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './company.component.html',
   styleUrl: './company.component.css'
 })
-export class CompanyComponent {
+export class CompanyComponent implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private adminSer = inject(AdminService);
+  private toast = inject(NotificationService);
+  dialog = inject(MatDialog);
+
 
   private $destroy = new Subject<void>();
   headerConfig: HeaderConfig = {
@@ -58,19 +63,16 @@ export class CompanyComponent {
     }
   }
 
-  currentPage: number = 1;
-  totalPages: number = 1;
+  currentPage = 1;
+  totalPages = 1;
 
   viewMode: 'grid' | 'list' = 'grid';
   isLoading = false;
-  companyDataRetrieved: Array<{ companyDetails: Company, companyId: string, users: Array<User> }> | [] = [];
-  companyData: Array<{ companyDetails: Company, companyId: string, users: Array<User> }> | [] = [];
+  companyDataRetrieved: { companyDetails: Company, companyId: string, users: User[] }[] | [] = [];
+  companyData: { companyDetails: Company, companyId: string, users: User[] }[] | [] = [];
   sortField = 'name';
   sortDirection = 'asc';
-  searchTerm: string = '';
-
-  constructor(private route: ActivatedRoute, private adminSer: AdminService, private toast: NotificationService,
-    public dialog: MatDialog) { }
+  searchTerm = '';
 
   ngOnInit() {
 
@@ -79,7 +81,7 @@ export class CompanyComponent {
     this.loadCompanyData();
 
     if (companyData.status) {
-      this.companyDataRetrieved = companyData.result as Array<{ companyDetails: Company, companyId: string, users: Array<User> }> | [];
+      this.companyDataRetrieved = companyData.result as { companyDetails: Company, companyId: string, users: User[] }[] | [];
     }
 
   }
@@ -89,7 +91,7 @@ export class CompanyComponent {
     this.loadCompanyData(event);
   }
 
-  loadCompanyData(page: number = 1, searchTerm: string = '') {
+  loadCompanyData(page = 1, searchTerm = '') {
 
     this.adminSer.getCompleteCompanyDetails(page, searchTerm).pipe(takeUntil(this.$destroy))
       .subscribe({

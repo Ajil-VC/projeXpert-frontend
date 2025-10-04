@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -51,7 +51,14 @@ import { HaspermissionDirective } from '../../../../core/directives/haspermissio
   styleUrl: './group-call.component.css',
 
 })
-export class GroupCallComponent {
+export class GroupCallComponent implements OnInit {
+  dialog = inject(MatDialog);
+  private callService = inject(GroupcallService);
+  private toast = inject(NotificationService);
+  private router = inject(Router);
+  private loader = inject(LoaderService);
+  private permission = inject(PermissionsService);
+
 
   headerConfig: HeaderConfig = {
 
@@ -90,19 +97,12 @@ export class GroupCallComponent {
   searchQuery = '';
   selectedFilter = 'all';
   isLoading = false;
-  restrictMeetingCreation: boolean = false;
+  restrictMeetingCreation = false;
 
-  currentPage: number = 1;
-  totalPages: number = 1;
+  currentPage = 1;
+  totalPages = 1;
 
-  constructor(
-    public dialog: MatDialog,
-    private callService: GroupcallService,
-    private toast: NotificationService,
-    private router: Router,
-    private loader: LoaderService,
-    private permission: PermissionsService
-  ) {
+  constructor() {
     this.setHeaderViewPermissions();
     this.restrictMeetingCreation = this.permission.has(['create_room']);
   }
@@ -118,7 +118,7 @@ export class GroupCallComponent {
 
     }
   }
-  private loadMeetings(page: number = 1, searchTerm: string = ''): void {
+  private loadMeetings(page = 1, searchTerm = ''): void {
 
     this.loader.show();
 

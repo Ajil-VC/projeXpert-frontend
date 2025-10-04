@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { Task } from '../../../../../core/domain/entities/task.model';
@@ -8,8 +8,8 @@ import { Task } from '../../../../../core/domain/entities/task.model';
   providedIn: 'root'
 })
 export class KanbanService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   updateTaskDetails(formData: FormData, skipStatus?: boolean): Observable<any> {
 

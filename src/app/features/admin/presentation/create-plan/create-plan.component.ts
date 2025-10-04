@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminService } from '../../data/admin.service';
 import { NotificationService } from '../../../../core/data/notification.service';
@@ -19,7 +19,11 @@ import { LoaderComponent } from '../../../../core/presentation/loader/loader.com
   templateUrl: './create-plan.component.html',
   styleUrl: './create-plan.component.css'
 })
-export class CreatePlanComponent {
+export class CreatePlanComponent implements OnInit {
+  private service = inject(AdminService);
+  private dialog = inject(MatDialog);
+  private toast = inject(NotificationService);
+
 
   headerConfig: HeaderConfig = {
 
@@ -38,8 +42,8 @@ export class CreatePlanComponent {
 
   }
 
-  currentPage: number = 1;
-  totalPages: number = 1;
+  currentPage = 1;
+  totalPages = 1;
 
   handleSearchEvent(event: string) {
 
@@ -71,13 +75,6 @@ export class CreatePlanComponent {
   sortDirection: 'asc' | 'desc' = 'asc';
   isLoading = false;
   viewMode = 'grid';
-
-
-  constructor(
-    private service: AdminService,
-    private dialog: MatDialog,
-    private toast: NotificationService
-  ) { }
 
   ngOnInit(): void {
     this.loadSubscriptions(this.currentPage);

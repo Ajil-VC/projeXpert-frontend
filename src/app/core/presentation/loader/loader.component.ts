@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, Input } from '@angular/core';
+import { Component, effect, Input, OnInit, inject } from '@angular/core';
 import { LoaderService } from '../../data/loader.service';
 
 @Component({
@@ -8,12 +8,14 @@ import { LoaderService } from '../../data/loader.service';
   templateUrl: './loader.component.html',
   styleUrl: './loader.component.css'
 })
-export class LoaderComponent {
+export class LoaderComponent implements OnInit {
+  private loadSer = inject(LoaderService);
+
 
   @Input() isLoading = false;
   isCollapsed!: boolean;
 
-  constructor(private loadSer: LoaderService) {
+  constructor() {
 
     effect(() => {
 

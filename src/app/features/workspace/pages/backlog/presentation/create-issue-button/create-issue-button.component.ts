@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild, OnInit, AfterViewChecked, inject } from '@angular/core';
 import { LayoutService } from '../../../../../../shared/services/layout.service';
 import { FormsModule } from '@angular/forms';
 import { BacklogService } from '../../data/backlog.service';
@@ -15,7 +15,11 @@ import { NotificationService } from '../../../../../../core/data/notification.se
   templateUrl: './create-issue-button.component.html',
   styleUrl: './create-issue-button.component.css'
 })
-export class CreateIssueButtonComponent {
+export class CreateIssueButtonComponent implements OnInit, AfterViewChecked {
+  private layoutSer = inject(LayoutService);
+  private backlogSer = inject(BacklogService);
+  private toast = inject(NotificationService);
+
 
   @Input() from!: string;
 
@@ -29,13 +33,11 @@ export class CreateIssueButtonComponent {
     }
   }
 
-  isEditing: boolean = false;
-  inputValue: string = '';
+  isEditing = false;
+  inputValue = '';
   private focusInput = false;
-  issueType: string = 'task';
-  selectedEpic: string = '';
-
-  constructor(private layoutSer: LayoutService, private backlogSer: BacklogService, private toast: NotificationService) { }
+  issueType = 'task';
+  selectedEpic = '';
 
   ngOnInit() {
     this.backlogSer.selectedEpics$.subscribe({

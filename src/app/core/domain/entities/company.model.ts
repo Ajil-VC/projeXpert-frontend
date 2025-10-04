@@ -4,8 +4,8 @@ import { Workspace } from "./workspace.model";
 export interface Company {
 
     _id: string;
-    name: String;
-    email: String;
+    name: string;
+    email: string;
 
     subscriptionStatus: 'active' | 'canceled' | 'past_due' | 'other';
     plan?: SubscriptionPlan;
@@ -14,7 +14,7 @@ export interface Company {
     stripeSubscriptionId?: string;
 
     defaultWorkspace: Workspace;
-    workspaces: Array<Workspace>;
+    workspaces: Workspace[];
 
     isBlocked: boolean,
 

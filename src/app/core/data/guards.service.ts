@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { AuthResponse } from '../../features/auth/domain/auth.domain';
 import { User } from '../domain/entities/user.model';
@@ -8,8 +8,8 @@ import { User } from '../domain/entities/user.model';
   providedIn: 'root'
 })
 export class GuardsService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   getWorkSpaceData() {
 

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { Meeting } from '../../../../core/domain/entities/meeting.model';
@@ -8,8 +8,8 @@ import { Meeting } from '../../../../core/domain/entities/meeting.model';
   providedIn: 'root'
 })
 export class GroupcallService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   getZegoToken(): Observable<any> {
     return this.http.get(`${environment.apiUserUrl}get-zegotoken`);
@@ -21,9 +21,9 @@ export class GroupcallService {
     return this.http.post(`${environment.apiUserUrl}create-room`, FormData);
   }
 
-  upcomingMeetings(pageNum: number = 1, searchTerm: string = ''): Observable<{ status: boolean, meetings: Array<Meeting>, totalPages: number }> {
+  upcomingMeetings(pageNum = 1, searchTerm = ''): Observable<{ status: boolean, meetings: Meeting[], totalPages: number }> {
 
-    return this.http.get<{ status: boolean, meetings: Array<Meeting>, totalPages: number }>(`${environment.apiUserUrl}get-upcoming-meetings?page_num=${pageNum}&searchTerm=${searchTerm}`);
+    return this.http.get<{ status: boolean, meetings: Meeting[], totalPages: number }>(`${environment.apiUserUrl}get-upcoming-meetings?page_num=${pageNum}&searchTerm=${searchTerm}`);
   }
 
   removeMeeting(meetId: string): Observable<any> {

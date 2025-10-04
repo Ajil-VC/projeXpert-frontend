@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { OtpUseCase, RegisterUseCase } from '../domain/auth.domain';
 import { User } from '../../../core/domain/entities/user.model';
 import { Workspace } from '../../../core/domain/entities/workspace.model';
@@ -16,6 +16,11 @@ import { PermissionsService } from '../../../shared/utils/permissions.service';
   providedIn: 'root'
 })
 export class AuthService implements RegisterUseCase {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  private shared = inject(SharedService);
+  private permission = inject(PermissionsService);
+
 
   private logoutSubject = new Subject<void>();
   logout$ = this.logoutSubject.asObservable();
@@ -72,17 +77,6 @@ export class AuthService implements RegisterUseCase {
     this.shared.curProject.next(workspaceWithProjects[0]);
 
   }
-  //** For Initial loading **//
-  //******************************//
-
-
-
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private shared: SharedService,
-    private permission: PermissionsService
-  ) { }
 
   signup(email: string): Observable<any> {
 
@@ -146,10 +140,10 @@ export class AuthService implements RegisterUseCase {
   providedIn: 'root'
 })
 export class AuthFlowService implements OtpUseCase {
+  private http = inject(HttpClient);
 
-  private email: string = '';
 
-  constructor(private http: HttpClient) { }
+  private email = '';
 
   resendOtp(email: string): Observable<any> {
     return this.http.post(`${environment.apiCompanyUrl}resend-otp`, { email });
@@ -177,8 +171,8 @@ export class AuthFlowService implements OtpUseCase {
   providedIn: 'root'
 })
 export class PswdChangeService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   changePassword(oldPassword: string, passWord: string): Observable<any> {
     return this.http.post(`${environment.apiUserUrl}change-password`, { passWord, oldPassword });

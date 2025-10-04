@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from "./presentation/task-card/task-card.component";
 import { Task } from '../../../../core/domain/entities/task.model';
@@ -40,7 +40,15 @@ import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
   templateUrl: './kanban.component.html',
   styleUrl: './kanban.component.css'
 })
-export class KanbanComponent {
+export class KanbanComponent implements OnInit {
+  private shared = inject(SharedService);
+  private backlogSer = inject(BacklogService);
+  dialog = inject(MatDialog);
+  private authSer = inject(AuthService);
+  private toast = inject(NotificationService);
+  private loader = inject(LoaderService);
+  private permission = inject(PermissionsService);
+
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   dropDownData: DropDown[] = [];
@@ -101,7 +109,7 @@ export class KanbanComponent {
   setHeaderViewPermissions() {
     this.headerConfig.hideSearchBar = !this.permission.hasAny(['view_task', 'view_project', 'view_all_task']);
     if (this.headerConfig?.buttons) {
-      for (let btn of this.headerConfig.buttons) {
+      for (const btn of this.headerConfig.buttons) {
         if (btn.type === 'main') {
           btn.restriction = !this.permission.has(['close_sprint']);
         } else if (btn.type === 'dropdown') {
@@ -128,18 +136,10 @@ export class KanbanComponent {
     bugs: number,
     story: number
   } = { tasks: 0, bugs: 0, story: 0 };
-  isLoading: boolean = false;
+  isLoading = false;
 
 
-  constructor(
-    private shared: SharedService,
-    private backlogSer: BacklogService,
-    public dialog: MatDialog,
-    private authSer: AuthService,
-    private toast: NotificationService,
-    private loader: LoaderService,
-    private permission: PermissionsService
-  ) {
+  constructor() {
     this.setHeaderViewPermissions();
   }
 
@@ -207,7 +207,7 @@ export class KanbanComponent {
     }
   }
 
-  getSprintWithTasks(sprintId: string = '', activeSprint?: boolean) {
+  getSprintWithTasks(sprintId = '', activeSprint?: boolean) {
     this.loader.show();
     if (!sprintId && !this.selectedSprint) {
       activeSprint = true;
@@ -229,7 +229,7 @@ export class KanbanComponent {
           this.completedTasksCount.bugs = 0;
           this.completedTasksCount.story = 0;
           this.completedTasksCount.tasks = 0;
-          for (let issue of this.allTasks) {
+          for (const issue of this.allTasks) {
             if (issue.status === 'done') {
 
               if (issue.type === 'bug') {
@@ -376,7 +376,7 @@ export class KanbanComponent {
   groupTasksBySprint(): SprintTaskGroup[] {
 
     const sprintMap = new Map<string, SprintTaskGroup>();
-    for (let task of this.allTasks) {
+    for (const task of this.allTasks) {
 
       let sprint!: Sprint;
       let key = '';

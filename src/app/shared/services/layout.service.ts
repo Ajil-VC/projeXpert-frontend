@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../features/auth/data/auth.service';
@@ -8,8 +8,9 @@ import { AuthService } from '../../features/auth/data/auth.service';
   providedIn: 'root'
 })
 export class LayoutService {
+  private http = inject(HttpClient);
+  private authSer = inject(AuthService);
 
-  constructor(private http: HttpClient, private authSer: AuthService) { }
 
   public prSubject = new Subject()
   public pro$ = this.prSubject.asObservable();
@@ -48,7 +49,7 @@ export class LayoutService {
     }
   }
 
-  makeNotificationsAsRead(notificaionId: string | null = null, removeAll: boolean = false) {
+  makeNotificationsAsRead(notificaionId: string | null = null, removeAll = false) {
     return this.http.patch(`${environment.apiUserUrl}notifications`, { notificaionId, removeAll });
   }
 }

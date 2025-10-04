@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -35,24 +35,26 @@ import { AuthService } from '../../../../auth/data/auth.service';
   templateUrl: './create-role-modal.component.html',
   styleUrl: './create-role-modal.component.css'
 })
-export class CreateRoleModalComponent {
+export class CreateRoleModalComponent implements OnInit {
+  dialogRef = inject<MatDialogRef<CreateRoleModalComponent>>(MatDialogRef);
+  data = inject<{
+    role: Roles;
+}>(MAT_DIALOG_DATA);
+  private fb = inject(FormBuilder);
+  private teamSer = inject(TeamManagementService);
+  private toast = inject(NotificationService);
+  private loader = inject(LoaderService);
+  private authSer = inject(AuthService);
+
 
   roleForm!: FormGroup;
   permissions = PERMISSIONS;
   selectedPermissions: string[] = [];
   isAllSelected = false;
   isLoading = false;
-  roleHeader: string = 'Create New Role';
+  roleHeader = 'Create New Role';
 
-  constructor(
-    public dialogRef: MatDialogRef<CreateRoleModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { role: Roles },
-    private fb: FormBuilder,
-    private teamSer: TeamManagementService,
-    private toast: NotificationService,
-    private loader: LoaderService,
-    private authSer: AuthService
-  ) {
+  constructor() {
 
     this.initializeForm();
   }

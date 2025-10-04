@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SubscriptionService } from './data/subscription.service';
 import { NotificationService } from '../../../../core/data/notification.service';
@@ -13,24 +13,25 @@ import { Company } from '../../../../core/domain/entities/company.model';
   templateUrl: './subscription.component.html',
   styleUrl: './subscription.component.css'
 })
-export class SubscriptionComponent {
+export class SubscriptionComponent implements OnInit {
+  private subSer = inject(SubscriptionService);
+  private toast = inject(NotificationService);
 
-  isButtonDisabled: boolean = false;
-  isSubscribed: boolean = false;
+
+  isButtonDisabled = false;
+  isSubscribed = false;
   companySubscription!: Company;
-  isLoading: boolean = true;
+  isLoading = true;
 
   currentPage = 1;
   totalPages = 1;
   plans: SubscriptionPlan[] = [];
 
-  constructor(private subSer: SubscriptionService, private toast: NotificationService) { }
-
   ngOnInit() {
     this.loadSubscription();
   }
 
-  loadSubscription(page: number = 1): void {
+  loadSubscription(page = 1): void {
     this.isLoading = true;
     this.subSer.getSubscriptionDetails(page).subscribe({
       next: (res) => {

@@ -16,7 +16,7 @@ export interface User {
     role: string | Roles;
     isBlocked: boolean;
     defaultWorkspace: Workspace;
-    workSpaces: Array<Workspace>;
+    workSpaces: Workspace[];
     forceChangePassword?: boolean;
     systemRole: 'platform-admin' | 'company-user';
     companyId: string;

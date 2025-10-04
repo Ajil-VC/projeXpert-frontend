@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { EditProjectUseCase } from '../domain/projectEditing.domain';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -9,8 +9,8 @@ import { Project } from '../../../../../core/domain/entities/project.model';
   providedIn: 'root'
 })
 export class EditProjectService implements EditProjectUseCase {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   removeMember(userId: string, projectId: string): Observable<any> {
 

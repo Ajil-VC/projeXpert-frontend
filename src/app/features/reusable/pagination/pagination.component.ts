@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -8,9 +8,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.css'
 })
-export class PaginationComponent {
+export class PaginationComponent implements OnChanges {
 
-  @Input() currentPage: number = 1;
+  @Input() currentPage = 1;
   @Input() totalPages!: number;
   @Output() pageChanged = new EventEmitter<number>();
   visiblePages: number[] = [];

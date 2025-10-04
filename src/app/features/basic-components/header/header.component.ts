@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, ViewChild, OnInit, inject } from '@angular/core';
 import { AuthService } from '../../auth/data/auth.service';
 import { User } from '../../../core/domain/entities/user.model';
 import { Workspace } from '../../../core/domain/entities/workspace.model';
@@ -26,7 +26,20 @@ import { PermissionsService } from '../../../shared/utils/permissions.service';
   styleUrl: './header.component.css'
 })
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private layoutSer = inject(LayoutService);
+  private shared = inject(SharedService);
+  private cdr = inject(ChangeDetectorRef);
+  private backlogSer = inject(BacklogService);
+  private ngZone = inject(NgZone);
+  private dialog = inject(MatDialog);
+  private socketSer = inject(SocketService);
+  private toast = inject(NotificationService);
+  private projectSer = inject(ProjectDataService);
+  private permission = inject(PermissionsService);
+
 
   @Input() systemRole!: string;
 
@@ -41,30 +54,17 @@ export class HeaderComponent {
 
   isDropdownOpen = false;
 
-  notifications: Array<Notification> = [];
+  notifications: Notification[] = [];
 
   currentUser!: User;
   workspaces: Workspace[] = [];
   currentWorkspace!: Workspace | null;
 
-  isAdmin: boolean = false;
+  isAdmin = false;
 
-  canCreateWorkspace: boolean = false;
-  canCreateProject: boolean = false;
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private layoutSer: LayoutService,
-    private shared: SharedService,
-    private cdr: ChangeDetectorRef,
-    private backlogSer: BacklogService,
-    private ngZone: NgZone,
-    private dialog: MatDialog,
-    private socketSer: SocketService,
-    private toast: NotificationService,
-    private projectSer: ProjectDataService,
-    private permission: PermissionsService
-  ) {
+  canCreateWorkspace = false;
+  canCreateProject = false;
+  constructor() {
 
     if (this.permission.has(['create_workspace'])) {
       this.canCreateWorkspace = true;
@@ -105,7 +105,7 @@ export class HeaderComponent {
     this.layoutSer.getNotifications(this.systemRole).subscribe({
       next: (res) => {
 
-        const result = res as { status: boolean, result: Array<Notification> };
+        const result = res as { status: boolean, result: Notification[] };
         this.notifications = result.result;
 
       }
@@ -268,7 +268,7 @@ export class HeaderComponent {
 
   }
 
-  selectProject(projectId: String | undefined | null = null) {
+  selectProject(projectId: string | undefined | null = null) {
 
     this.showProjectMenu = false;
     if (!projectId) return;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,14 +17,15 @@ import { Router, RouterModule } from '@angular/router';
   ]
 })
 export class SignupComponent {
+  private fb = inject(FormBuilder);
+  private signupuseCaseInterface = inject(RegisterUseCase);
+  private router = inject(Router);
+  private setEmail = inject(AuthFlowService);
+
 
   signUpForm: FormGroup;
-  isEmailExists: boolean = false;
-  constructor(
-    private fb: FormBuilder,
-    private signupuseCaseInterface: RegisterUseCase,
-    private router: Router,
-    private setEmail: AuthFlowService) {
+  isEmailExists = false;
+  constructor() {
 
     this.signUpForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -36,7 +37,7 @@ export class SignupComponent {
     return this.signUpForm.get('email');
   }
 
-  isBtnDisabled: boolean = false;
+  isBtnDisabled = false;
 
   onContinue(): void {
     // Handle form submission

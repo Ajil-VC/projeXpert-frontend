@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -31,17 +31,20 @@ import { AuthService } from '../../../../auth/data/auth.service';
   templateUrl: './edit-company-modal.component.html',
   styleUrl: './edit-company-modal.component.css'
 })
-export class EditCompanyModalComponent {
+export class EditCompanyModalComponent implements OnInit {
+  dialogRef = inject<MatDialogRef<EditCompanyModalComponent>>(MatDialogRef);
+  data = inject<{
+    companyDetails: Company;
+    companyId: string;
+    users: User[];
+}>(MAT_DIALOG_DATA);
+  private adminService = inject(AdminService);
+  private authSer = inject(AuthService);
 
-  userSearchTerm: string = '';
+
+  userSearchTerm = '';
   editCompanyForm!: FormGroup;
   newMemberEmailControl = new FormControl('', [Validators.email]);
-
-  constructor(public dialogRef: MatDialogRef<EditCompanyModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { companyDetails: Company, companyId: string, users: Array<User> },
-    private adminService: AdminService,
-    private authSer: AuthService
-  ) { }
 
   removeUser(i: any, userId: any) { }
 

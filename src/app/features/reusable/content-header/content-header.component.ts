@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, OnDestroy, inject } from '@angular/core';
 import { HeaderConfig } from '../../../core/domain/entities/UI Interface/header.interface';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -22,15 +22,17 @@ interface params {
   templateUrl: './content-header.component.html',
   styleUrl: './content-header.component.css'
 })
-export class ContentHeaderComponent {
+export class ContentHeaderComponent implements OnDestroy {
+  private toast = inject(NotificationService);
+
 
   @Output() searchQuery = new EventEmitter();
   @Output() buttonClicked = new EventEmitter<ButtonType>();
   clickedBtn!: ButtonType;
   searchControl = new FormControl('');
-  custom: boolean = false;
+  custom = false;
   private destroy$ = new Subject<void>();
-  hideSearchBar: boolean = false;
+  hideSearchBar = false;
 
   @Input() headerConfig: HeaderConfig = {
     title: 'Loading...',
@@ -53,10 +55,8 @@ export class ContentHeaderComponent {
     completed: false
   };
 
-  constructor(private toast: NotificationService) { }
-
-  startDateValue: string = '';
-  endDateValue: string = '';
+  startDateValue = '';
+  endDateValue = '';
 
   // Handle date selection
   onStartDateChange(date: any) {

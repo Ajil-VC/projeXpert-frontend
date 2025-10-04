@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../auth/data/auth.service';
 import { User } from '../../../../core/domain/entities/user.model';
@@ -13,7 +13,12 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
+  private auth = inject(AuthService);
+  private setting = inject(SettingsService);
+  private toast = inject(NotificationService);
+  private route = inject(ActivatedRoute);
+
 
   user!: User;
   isEditingName = false;
@@ -22,8 +27,6 @@ export class SettingsComponent {
   isLoading = false;
   userLoaded = false;
   systemRole!: string;
-
-  constructor(private auth: AuthService, private setting: SettingsService, private toast: NotificationService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthFlowService } from '../../data/auth.service';
@@ -15,21 +15,22 @@ import { CommonModule } from '@angular/common';
     { provide: OtpUseCase, useExisting: AuthFlowService }
   ]
 })
-export class OtpComponent {
+export class OtpComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private getEmail = inject(AuthFlowService);
+  private otpUseCaseInterface = inject(OtpUseCase);
+  private router = inject(Router);
+
 
   timeLeft = 15;
   timerInterval: any;
-  isBtnDisabled: boolean = false;
-  isLinkVisible: boolean = true;
+  isBtnDisabled = false;
+  isLinkVisible = true;
   otpForm: FormGroup;
-  isValideOtp: boolean = false;
-  otpMsg: string = 'Enter OTP below';
+  isValideOtp = false;
+  otpMsg = 'Enter OTP below';
 
-  constructor(
-    private fb: FormBuilder,
-    private getEmail: AuthFlowService,
-    private otpUseCaseInterface: OtpUseCase,
-    private router: Router) {
+  constructor() {
     this.otpForm = this.fb.group({
       otp: []
     })

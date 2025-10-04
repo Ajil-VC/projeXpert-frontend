@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, OnInit, OnDestroy, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketService } from '../../../../shared/services/socket.service';
@@ -16,7 +16,13 @@ import { Team } from '../../../../core/domain/entities/team.model';
   templateUrl: './video-call.component.html',
   styleUrl: './video-call.component.css'
 })
-export class VideoCallComponent implements AfterViewInit {
+export class VideoCallComponent implements AfterViewInit, OnInit, OnDestroy {
+  private router = inject(Router);
+  private socketService = inject(SocketService);
+  private chatSer = inject(ChatService);
+  private authSer = inject(AuthService);
+  private route = inject(ActivatedRoute);
+
 
   @ViewChild('localVideo') localVideoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideoRef!: ElementRef<HTMLVideoElement>;
@@ -24,11 +30,11 @@ export class VideoCallComponent implements AfterViewInit {
   private localMediaReady = false;
   private peerConnectionReady = false;
   private offerReceived = false;
-  private hasOfferSent: boolean = false;
+  private hasOfferSent = false;
   private pendingSignal: any;
 
   private bufferedCandidates: RTCIceCandidate[] = [];
-  private remoteDescriptionSet: boolean = false;
+  private remoteDescriptionSet = false;
 
   check = 0;
 
@@ -36,7 +42,7 @@ export class VideoCallComponent implements AfterViewInit {
   camOn = true;
   localStream!: MediaStream;
   peerConnection!: RTCPeerConnection;
-  isCaller: boolean = false;
+  isCaller = false;
 
   private listenersSetup = false;
 
@@ -56,13 +62,7 @@ export class VideoCallComponent implements AfterViewInit {
   private currentUserReady = false;
   private remoteUserReady = false;
 
-  constructor(
-    private router: Router,
-    private socketService: SocketService,
-    private chatSer: ChatService,
-    private authSer: AuthService,
-    private route: ActivatedRoute
-  ) {
+  constructor() {
 
     const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as { signal: any, from?: string };

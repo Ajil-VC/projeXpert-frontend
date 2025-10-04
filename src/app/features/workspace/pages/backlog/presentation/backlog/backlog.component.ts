@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { BacklogHeaderComponent } from "../backlog-header/backlog-header.component";
 import { EpicsComponent } from "../epics/epics.component";
 import { SprintComponent } from '../sprint/sprint.component';
@@ -21,11 +21,18 @@ import { PermissionsService } from '../../../../../../shared/utils/permissions.s
   templateUrl: './backlog.component.html',
   styleUrl: './backlog.component.css'
 })
-export class BacklogComponent {
+export class BacklogComponent implements OnInit, OnDestroy {
+  private shared = inject(SharedService);
+  private backlogSer = inject(BacklogService);
+  private cdRef = inject(ChangeDetectorRef);
+  private loader = inject(LoaderService);
+  private toast = inject(NotificationService);
+  private permission = inject(PermissionsService);
+
 
 
   title = 'scrum-board';
-  isProjectSelected: boolean = true;
+  isProjectSelected = true;
   epics!: Task[];
   backlogs!: Task[];
   sprints: Sprint[] = [];
@@ -34,17 +41,6 @@ export class BacklogComponent {
 
 
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private shared: SharedService,
-    private backlogSer: BacklogService,
-    private cdRef: ChangeDetectorRef,
-    private loader: LoaderService,
-    private toast: NotificationService,
-    private permission: PermissionsService
-  ) {
-
-  }
 
   trackBySprintId(index: number, sprint: Sprint) {
     return sprint._id;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, OnInit, AfterViewInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
@@ -47,31 +47,36 @@ import { Lightbox, LightboxModule } from 'ngx-lightbox';
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.css'
 })
-export class TaskDetailsComponent {
+export class TaskDetailsComponent implements OnInit, AfterViewInit {
+  dialogRef = inject<MatDialogRef<TaskDetailsComponent>>(MatDialogRef);
+  data = inject<{
+    task: Task;
+    daysLeft: string;
+    subtaskView: boolean;
+    subtasks: Task[];
+}>(MAT_DIALOG_DATA);
+  private shared = inject(SharedService);
+  private kanbanSer = inject(KanbanService);
+  private authSer = inject(AuthService);
+  private cd = inject(ChangeDetectorRef);
+  private toast = inject(NotificationService);
+  private loader = inject(LoaderService);
+  private dialog = inject(MatDialog);
+  private _lightbox = inject(Lightbox);
+
 
   @ViewChild('form') form!: NgForm;
 
   task!: Task;
   subTasks: Task[] = [];
   teamMembers: Team[] = [];
-  isSaved: boolean = false;
-  newSubtaskTitle: string = '';
-  showSubtasks: boolean = false;
-  taskTitle: string = `Edit task`;
-  isLoading: boolean = false;
+  isSaved = false;
+  newSubtaskTitle = '';
+  showSubtasks = false;
+  taskTitle = `Edit task`;
+  isLoading = false;
 
-  constructor(
-    public dialogRef: MatDialogRef<TaskDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { task: Task, daysLeft: string, subtaskView: boolean, subtasks: Task[] },
-    private shared: SharedService,
-    private kanbanSer: KanbanService,
-    private authSer: AuthService,
-    private cd: ChangeDetectorRef,
-    private toast: NotificationService,
-    private loader: LoaderService,
-    private dialog: MatDialog,
-    private _lightbox: Lightbox
-  ) {
+  constructor() {
     this.task = this.data.task;
     this.subTasks = this.data.subtasks;
     if (this.data.subtaskView) {
@@ -79,24 +84,24 @@ export class TaskDetailsComponent {
     }
   }
 
-  email: string = '';
+  email = '';
   endDate: any = '';
   daysLeft = '';
 
-  userSearchTerm: string = '';
-  assigningUser: string = '';
-  customEmailError: boolean = false;
-  assigningUserId: string = '';
+  userSearchTerm = '';
+  assigningUser = '';
+  customEmailError = false;
+  assigningUserId = '';
 
-  showComments: boolean = false;
-  isHistoryActive: Boolean = false;
+  showComments = false;
+  isHistoryActive = false;
   history: TaskHistory[] = [];
 
   imagePreviews: string[] = [];
   droppedFiles: File[] = [];
 
   activeSubtaskIndex: number | null = null;
-  searchTerm: string = '';
+  searchTerm = '';
 
   ngOnInit() {
 
@@ -534,7 +539,7 @@ export class TaskDetailsComponent {
         task = `subtask ${history.details.subtaskTitle}`;
       }
 
-      let assignedTo = history.details?.assignedTo?.email ?
+      const assignedTo = history.details?.assignedTo?.email ?
         `Assigned the ${task} to ${history.details?.assignedTo?.email}` : `Removed assignee`;
 
       return assignedTo;

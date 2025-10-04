@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, OnInit, inject } from '@angular/core';
 import { CreateIssueButtonComponent } from "../create-issue-button/create-issue-button.component";
 import { CommonModule } from '@angular/common';
 import { IssueRowComponent } from "../issue-row/issue-row.component";
@@ -24,7 +24,12 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './create-backlog.component.html',
   styleUrl: './create-backlog.component.css'
 })
-export class CreateBacklogComponent implements OnChanges {
+export class CreateBacklogComponent implements OnChanges, OnInit {
+  private backlogSer = inject(BacklogService);
+  private toast = inject(NotificationService);
+  private shared = inject(SharedService);
+  private dialog = inject(MatDialog);
+
 
   @Input() backlogs!: Task[];
   @Input() connectedSprintIds: string[] = [];
@@ -34,14 +39,12 @@ export class CreateBacklogComponent implements OnChanges {
   filteredBacklogs: Task[] = [];
   issues = [];
   issueCount = 0;
-  selectedEpics: Set<string> = new Set();
-  currentDivId: string = '';
-  selectedIssue: Set<string> = new Set();
+  selectedEpics = new Set<string>();
+  currentDivId = '';
+  selectedIssue = new Set<string>();
 
-  issueCreationButton: string = 'backlog';
-  isBacklog: boolean = false;
-
-  constructor(private backlogSer: BacklogService, private toast: NotificationService, private shared: SharedService, private dialog: MatDialog) { }
+  issueCreationButton = 'backlog';
+  isBacklog = false;
 
   onDrop(event: CdkDragDrop<Task[]>) {
 

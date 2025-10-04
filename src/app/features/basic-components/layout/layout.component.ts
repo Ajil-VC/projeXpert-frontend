@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -16,16 +16,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit, OnDestroy {
+  private shared = inject(SharedService);
+  private socketService = inject(SocketService);
+  private route = inject(ActivatedRoute);
+  dialog = inject(MatDialog);
+
 
   systemRole!: string;
   isCollapsed!: boolean;
-  constructor(
-    private shared: SharedService,
-    private socketService: SocketService,
-    private route: ActivatedRoute,
-    public dialog: MatDialog
-  ) {
+  constructor() {
 
     this.systemRole = this.route.snapshot.data['systemRole'];
   }

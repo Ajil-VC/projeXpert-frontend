@@ -10,7 +10,7 @@ export interface Meeting {
     meetingTime: string;
     recurring: boolean;
     description: string;
-    days: Array<string>;
+    days: string[];
     members: User[];
     status: 'upcoming' | 'ongoing' | 'completed';
     createdBy: User;

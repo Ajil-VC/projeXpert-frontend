@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, OnInit, OnDestroy, inject } from '@angular/core';
 import { Team } from '../../../../../core/domain/entities/team.model';
 
 import { CommonModule } from '@angular/common';
@@ -18,13 +18,18 @@ import { SharedService } from '../../../../../shared/services/shared.service';
   templateUrl: './team-member-list.component.html',
   styleUrl: './team-member-list.component.css'
 })
-export class TeamMemberListComponent {
+export class TeamMemberListComponent implements OnChanges, OnInit, OnDestroy {
+  private sharedSer = inject(SharedService);
+  private chatService = inject(ChatService);
+  private authSer = inject(AuthService);
+  private socketService = inject(SocketService);
+
 
   @Input() teamMembers: Team[] = [];
   filteredTeamMembers!: Team[];
 
   currentUser: any;
-  searchText: string = '';
+  searchText = '';
   availableChatIds = new Set();
   chatStartedUserId = new Set();
   searchControl = new FormControl('');
@@ -34,11 +39,6 @@ export class TeamMemberListComponent {
   activeChat: any;
 
   private destroy$ = new Subject<void>();
-
-
-  constructor(private sharedSer: SharedService, private chatService: ChatService, private authSer: AuthService, private socketService: SocketService) {
-
-  }
 
 
   ngOnChanges() {
@@ -119,7 +119,7 @@ export class TeamMemberListComponent {
           this.filteredChats = this.chats;
           this.chats.forEach((item) => {
             this.availableChatIds.add(item._id);
-            for (let user of item.participants) {
+            for (const user of item.participants) {
               this.chatStartedUserId.add(user._id);
             }
           });
@@ -131,7 +131,7 @@ export class TeamMemberListComponent {
     })
   }
 
-  getUserEmail(users: Array<Team>) {
+  getUserEmail(users: Team[]) {
 
     const userData = users.find(user => user._id !== this.currentUser._id);
     return userData?.email;

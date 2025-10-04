@@ -7,7 +7,7 @@ export interface Notification {
     type: "task" | "message",
     message: string,
     link: string,
-    data: Object,
+    data: object,
     read: boolean,
     createdAt: Date
 }

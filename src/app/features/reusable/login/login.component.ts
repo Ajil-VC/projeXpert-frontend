@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegisterUseCase } from '../../auth/domain/auth.domain';
@@ -15,16 +15,17 @@ import { CommonModule } from '@angular/common';
     { provide: RegisterUseCase, useExisting: AuthService }
   ]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private registerUseCaseInterface = inject(RegisterUseCase);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
 
   loginForm: FormGroup;
   systemRole!: string;
 
-  constructor(
-    private fb: FormBuilder,
-    private registerUseCaseInterface: RegisterUseCase,
-    private router: Router,
-    private route: ActivatedRoute) {
+  constructor() {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -41,7 +42,7 @@ export class LoginComponent {
     return this.loginForm.get('email');
   }
 
-  isBtnDisabled: boolean = false;
+  isBtnDisabled = false;
   errorMsg!: string;
 
   onContinue(): void {

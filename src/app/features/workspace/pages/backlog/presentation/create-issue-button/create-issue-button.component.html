@@ -8,9 +8,9 @@
 
         <div class="input-with-type">
             <select [(ngModel)]="issueType" class="type-dropdown">
-                <option [hidden]="issueType == 'task' " value="task">Task</option>
-                <option [hidden]="issueType == 'story'" value="story">Story</option>
-                <option [hidden]="issueType == 'bug'" value="bug">Bug</option>
+                <option [hidden]="issueType === 'task' " value="task">Task</option>
+                <option [hidden]="issueType === 'story'" value="story">Story</option>
+                <option [hidden]="issueType === 'bug'" value="bug">Bug</option>
             </select>
         </div>
 

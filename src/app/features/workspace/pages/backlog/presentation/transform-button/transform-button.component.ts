@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { LayoutService } from '../../../../../../shared/services/layout.service';
 import { BacklogService } from '../../data/backlog.service';
 import { Task } from '../../../../../../core/domain/entities/task.model';
@@ -13,6 +13,9 @@ import { Task } from '../../../../../../core/domain/entities/task.model';
   styleUrl: './transform-button.component.css'
 })
 export class TransformButtonComponent implements AfterViewChecked {
+  private backlogSer = inject(BacklogService);
+  private layoutSer = inject(LayoutService);
+
 
   @ViewChild('inputField') inputField!: ElementRef<HTMLInputElement>;
   @Output() response = new EventEmitter();
@@ -21,8 +24,6 @@ export class TransformButtonComponent implements AfterViewChecked {
   epicName!: string;
   inputValue = '';
   private focusInput = false;
-
-  constructor(private backlogSer: BacklogService, private layoutSer: LayoutService) { }
 
   toggleEdit(): void {
     this.isEditing = true;

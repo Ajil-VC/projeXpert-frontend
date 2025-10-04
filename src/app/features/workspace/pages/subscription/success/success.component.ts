@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubscriptionService } from '../data/subscription.service';
 import { CommonModule, TitleCasePipe } from '@angular/common';
@@ -9,16 +9,17 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
   templateUrl: './success.component.html',
   styleUrl: './success.component.css'
 })
-export class SuccessComponent {
+export class SuccessComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private subService = inject(SubscriptionService);
 
-  sessionId: string = '';
-  planName: string = '';
-  billingCycle: string = '';
+
+  sessionId = '';
+  planName = '';
+  billingCycle = '';
   isLoading = true;
-  header: string = '';
-  message: string = '';
-
-  constructor(private route: ActivatedRoute, private subService: SubscriptionService) { }
+  header = '';
+  message = '';
 
   ngOnInit(): void {
     this.sessionId = this.route.snapshot.queryParamMap.get('session_id') || '';

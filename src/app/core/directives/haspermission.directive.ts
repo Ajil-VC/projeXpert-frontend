@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 import { PermissionsService } from '../../shared/utils/permissions.service';
 import { Permissions } from '../domain/entities/roles.model';
 
@@ -6,12 +6,10 @@ import { Permissions } from '../domain/entities/roles.model';
   selector: '[appHaspermission]'
 })
 export class HaspermissionDirective {
+  private tpl = inject<TemplateRef<any>>(TemplateRef);
+  private vcr = inject(ViewContainerRef);
+  private permission = inject(PermissionsService);
 
-  constructor(
-    private tpl: TemplateRef<any>,
-    private vcr: ViewContainerRef,
-    private permission: PermissionsService
-  ) { }
 
   @Input('appHaspermission') set hasPermission(required: Permissions[]) {
 

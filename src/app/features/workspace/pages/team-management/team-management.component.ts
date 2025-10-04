@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { MatSlideToggle, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -36,7 +36,12 @@ import { PermissionsService } from '../../../../shared/utils/permissions.service
   templateUrl: './team-management.component.html',
   styleUrl: './team-management.component.css'
 })
-export class TeamManagementComponent {
+export class TeamManagementComponent implements OnInit, OnDestroy {
+  private teamSer = inject(TeamManagementService);
+  private toast = inject(NotificationService);
+  private authService = inject(AuthService);
+  private permission = inject(PermissionsService);
+
 
   private destroy$ = new Subject<void>();
 
@@ -45,26 +50,19 @@ export class TeamManagementComponent {
   displayedColumns = ['profile', 'name', 'email', 'role', 'block'];
 
   currentUser!: User | null;
-  selectedRole: string = '';
-  selectedStatus: string = '';
+  selectedRole = '';
+  selectedStatus = '';
 
-  searchTerm: string = '';
-  role: string = '';
-  status: string = '';
+  searchTerm = '';
+  role = '';
+  status = '';
 
   searchControl = new FormControl('');
   statusControl = new FormControl('');
   roleControl = new FormControl('');
 
-  currentPage: number = 1;
-  totalPages: number = 1;
-
-  constructor(
-    private teamSer: TeamManagementService,
-    private toast: NotificationService,
-    private authService: AuthService,
-    private permission: PermissionsService
-  ) { }
+  currentPage = 1;
+  totalPages = 1;
 
   ngOnInit() {
 
@@ -125,7 +123,7 @@ export class TeamManagementComponent {
     return role1 && role2 ? role1._id === role2._id : role1 === role2;
   }
 
-  fetchUsers(page: number = 1) {
+  fetchUsers(page = 1) {
 
     this.teamSer.getUsers(page, this.searchTerm, this.role).subscribe({
       next: (res) => {

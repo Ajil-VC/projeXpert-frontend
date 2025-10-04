@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, inject } from '@angular/core';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
@@ -16,7 +16,10 @@ import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.
   templateUrl: './revenue.component.html',
   styleUrl: './revenue.component.css'
 })
-export class RevenueComponent {
+export class RevenueComponent implements OnInit {
+  private adminSer = inject(AdminService);
+  private toast = inject(NotificationService);
+
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
@@ -37,7 +40,7 @@ export class RevenueComponent {
   }
 
   plans: SubscriptionPlan[] = [];
-  searchTerm: string = '';
+  searchTerm = '';
   startDate: Date | undefined = undefined;
   endDate: Date | undefined = undefined;
 
@@ -75,12 +78,6 @@ export class RevenueComponent {
 
     }
   }
-
-
-  constructor(
-    private adminSer: AdminService,
-    private toast: NotificationService
-  ) { }
 
   filter: ReportFilter = 'year';
   totalRevenue = 0;

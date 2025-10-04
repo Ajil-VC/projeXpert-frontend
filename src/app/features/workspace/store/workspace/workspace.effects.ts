@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, concatMap } from 'rxjs/operators';
 import { Observable, EMPTY, of } from 'rxjs';
@@ -7,6 +7,8 @@ import { WorkspaceActions } from './workspace.actions';
 
 @Injectable()
 export class WorkspaceEffects {
+  private actions$ = inject(Actions);
+
 
   workspaceWorkspaces$ = createEffect(() => {
     return this.actions$.pipe(
@@ -20,7 +22,4 @@ export class WorkspaceEffects {
       )
     );
   });
-
-
-  constructor(private actions$: Actions) {}
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoryPoint, Task } from '../../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
@@ -13,7 +13,10 @@ import { BacklogService } from '../../../backlog/data/backlog.service';
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.css'
 })
-export class TaskCardComponent {
+export class TaskCardComponent implements OnChanges, OnInit {
+  private dialog = inject(MatDialog);
+  private _backlogSer = inject(BacklogService);
+
 
   @Input() task!: Task;
   @Output() taskUpdation = new EventEmitter<Task>();
@@ -35,9 +38,6 @@ export class TaskCardComponent {
     }
 
   }
-
-
-  constructor(private dialog: MatDialog, private _backlogSer: BacklogService) { }
 
   setDaysLeft(task: Task) {
 
@@ -89,7 +89,7 @@ export class TaskCardComponent {
 
 
 
-  taskDetails(subtaskView: boolean = false): void {
+  taskDetails(subtaskView = false): void {
 
     const dialogRef = this.dialog.open(TaskDetailsComponent, {
       width: '500px',

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 import { Observable, Subject } from 'rxjs';
@@ -10,15 +10,14 @@ import { LayoutService } from './layout.service';
   providedIn: 'root'
 })
 export class SocketService {
+  private sharedSer = inject(SharedService);
+  private layoutSer = inject(LayoutService);
+
 
   public socket!: Socket;
   private readonly URL = environment.ultraBaseURL;
   private videoSignalSubject = new Subject<any>();
   private lastOfferSignal: any = null;
-
-  constructor(private sharedSer: SharedService, private layoutSer: LayoutService) {
-
-  }
 
   handleSignal(signal: any) {
     if (signal.type == 'offer') {

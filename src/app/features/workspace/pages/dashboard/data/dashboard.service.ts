@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { Task } from '../../../../../core/domain/entities/task.model';
@@ -8,12 +8,12 @@ import { NotificationService } from '../../../../../core/data/notification.servi
 interface projectStatType {
   status: boolean,
   result: {
-    completed: Array<Task>,
-    dueSoon: Array<Task>,
-    epics: Array<Task>,
-    openTasks: Array<Task>,
-    overdue: Array<Task>,
-    unscheduled: Array<Task>
+    completed: Task[],
+    dueSoon: Task[],
+    epics: Task[],
+    openTasks: Task[],
+    overdue: Task[],
+    unscheduled: Task[]
   }
 }
 
@@ -21,8 +21,9 @@ interface projectStatType {
   providedIn: 'root'
 })
 export class DashboardService {
+  private http = inject(HttpClient);
+  private toast = inject(NotificationService);
 
-  constructor(private http: HttpClient, private toast: NotificationService) { }
 
   getProjectStats(): Observable<projectStatType> {
 

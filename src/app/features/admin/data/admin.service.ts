@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { SummaryCard } from '../../workspace/pages/dashboard/domain/dashboard.domain';
@@ -10,8 +10,8 @@ import { User } from '../../../core/domain/entities/user.model';
   providedIn: 'root',
 })
 export class AdminService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
   companySubject = new BehaviorSubject(null);
   company$ = this.companySubject.asObservable();
@@ -19,45 +19,45 @@ export class AdminService {
   getDashBoardData(): Observable<{
     status: boolean,
     result: {
-      barChartData: Array<number>,
+      barChartData: number[],
       summaryCards: SummaryCard[],
       doughnutChart: {
-        data: Array<number>,
-        labels: Array<string>
+        data: number[],
+        labels: string[]
       },
-      top5Companiesdata: Array<{
+      top5Companiesdata: {
         totalAmount: number,
         subscriptionCount: number,
         companyId: any,
         companyName: string
-      }>,
-      largestEmployer: Array<{
+      }[],
+      largestEmployer: {
         employerCount: number,
         email: string,
         companyName: string
-      }>
+      }[]
     }
   }> {
     return this.http.get<{
       status: boolean,
       result: {
-        barChartData: Array<number>,
+        barChartData: number[],
         summaryCards: SummaryCard[],
         doughnutChart: {
-          data: Array<number>,
-          labels: Array<string>
+          data: number[],
+          labels: string[]
         },
-        top5Companiesdata: Array<{
+        top5Companiesdata: {
           totalAmount: number,
           subscriptionCount: number,
           companyId: any,
           companyName: string
-        }>,
-        largestEmployer: Array<{
+        }[],
+        largestEmployer: {
           employerCount: number,
           email: string,
           companyName: string
-        }>
+        }[]
       }
     }>(`${environment.apiAdminUrl}dashboard`);
   }
@@ -99,7 +99,7 @@ export class AdminService {
     return this.http.delete<{ status: boolean, message: string }>(`${environment.apiAdminUrl}plans?plan_id=${planId}`);
   }
 
-  getAvailablePlans(pageNum: number, searchTerm: string = ''): Observable<any> {
+  getAvailablePlans(pageNum: number, searchTerm = ''): Observable<any> {
     return this.http.get(`${environment.apiAdminUrl}plans?page_num=${pageNum}&searchTerm=${searchTerm}`);
   }
 
@@ -107,27 +107,27 @@ export class AdminService {
     return this.http.patch(`${environment.apiAdminUrl}plans`, { planId });
   }
 
-  getRevenueReport(filter: 'month' | 'year' | 'date', plans: Array<string>, startDate?: Date, endDate?: Date): Observable<any> {
+  getRevenueReport(filter: 'month' | 'year' | 'date', plans: string[], startDate?: Date, endDate?: Date): Observable<any> {
     return this.http.get(`${environment.apiAdminUrl}revenue?filter=${filter}&startDate=${startDate}&endDate=${endDate}&plans=${plans}`);
   }
 
-  getCompleteCompanyDetails(pageNum: number = 1, searchTerm: string = ''): Observable<{
+  getCompleteCompanyDetails(pageNum = 1, searchTerm = ''): Observable<{
     message: string,
-    companyData: Array<{
+    companyData: {
       companyDetails: Company,
-      users: Array<User>,
+      users: User[],
       companyId: string
-    }>,
+    }[],
     totalPages: number,
     status: boolean
   }> {
     return this.http.get<{
       message: string,
-      companyData: Array<{
+      companyData: {
         companyDetails: Company,
-        users: Array<User>,
+        users: User[],
         companyId: string
-      }>,
+      }[],
       totalPages: number,
       status: boolean
     }>(`${environment.apiAdminUrl}admin-init?page_num=${pageNum}&searchTerm=${searchTerm}`);

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, AfterViewInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { AuthService } from '../../../../auth/data/auth.service';
@@ -9,15 +9,16 @@ import { AuthService } from '../../../../auth/data/auth.service';
   templateUrl: './room.component.html',
   styleUrl: './room.component.css'
 })
-export class RoomComponent {
+export class RoomComponent implements OnInit, AfterViewInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private authSer = inject(AuthService);
 
-  roomId: string = '';
-  currentUser: string = '';
+
+  roomId = '';
+  currentUser = '';
   zp: any;
 
   @ViewChild('videoContainer', { static: true }) videoContainer!: ElementRef;
-
-  constructor(private route: ActivatedRoute, private authSer: AuthService) { }
 
   ngOnInit(): void {
 

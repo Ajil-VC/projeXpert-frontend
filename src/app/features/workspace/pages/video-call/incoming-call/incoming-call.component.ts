@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { User } from '../../../../../core/domain/entities/user.model';
@@ -11,14 +11,14 @@ import { SocketService } from '../../../../../shared/services/socket.service';
   styleUrl: './incoming-call.component.css'
 })
 export class IncomingCallComponent {
+  data = inject(MAT_DIALOG_DATA);
+  private dialogRef = inject<MatDialogRef<IncomingCallComponent>>(MatDialogRef);
+  private router = inject(Router);
+  private socketService = inject(SocketService);
+
 
   caller!: User;
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<IncomingCallComponent>,
-    private router: Router,
-    private socketService: SocketService
-  ) {
+  constructor() {
     this.caller = this.data.signal.caller;
   }
 

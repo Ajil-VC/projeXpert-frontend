@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { LoaderComponent } from "../../../../../core/presentation/loader/loader.component";
 import { MAT_DIALOG_DATA, MatDialogContent, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField } from '@angular/material/select';
@@ -19,17 +19,17 @@ import { AuthService } from '../../../../auth/data/auth.service';
   templateUrl: './plan-creation-modal.component.html',
   styleUrl: './plan-creation-modal.component.css'
 })
-export class PlanCreationModalComponent {
+export class PlanCreationModalComponent implements OnInit {
+  private authSer = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private dialogRef = inject<MatDialogRef<PlanCreationModalComponent>>(MatDialogRef);
+  data = inject(MAT_DIALOG_DATA);
+
 
   planForm: FormGroup;
   isLoading = false;
 
-  constructor(
-    private authSer: AuthService,
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<PlanCreationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+  constructor() {
     this.planForm = this.fb.group({
       name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0)]],

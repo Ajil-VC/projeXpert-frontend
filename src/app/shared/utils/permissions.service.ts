@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Permissions, Roles } from '../../core/domain/entities/roles.model';
 import { GuardsService } from '../../core/data/guards.service';
-import { AuthService } from '../../features/auth/data/auth.service';
 import { SharedService } from '../services/shared.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionsService {
+  private guardSer = inject(GuardsService);
+  private sharedSer = inject(SharedService);
+
 
   private permissions: Permissions[] = [];
-  constructor(private guardSer: GuardsService, private sharedSer: SharedService) {
+  constructor() {
     this.loadPermissions();
   }
 

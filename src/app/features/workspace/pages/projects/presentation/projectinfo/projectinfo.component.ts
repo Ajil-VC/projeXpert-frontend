@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -23,7 +23,15 @@ import { PermissionsService } from '../../../../../../shared/utils/permissions.s
   templateUrl: './projectinfo.component.html',
   styleUrl: './projectinfo.component.css'
 })
-export class ProjectinfoComponent {
+export class ProjectinfoComponent implements OnInit, OnDestroy {
+  private projectService = inject(ProjectDataService);
+  private router = inject(Router);
+  dialog = inject(MatDialog);
+  private shared = inject(SharedService);
+  private auth = inject(AuthService);
+  private toast = inject(NotificationService);
+  private permission = inject(PermissionsService);
+
 
   private destroy$ = new Subject<void>();
 
@@ -51,7 +59,7 @@ export class ProjectinfoComponent {
   setHeaderViewPermissions() {
     this.headerConfig.hideSearchBar = !this.permission.has(['view_project']);
     if (this.headerConfig?.buttons) {
-      for (let btn of this.headerConfig.buttons) {
+      for (const btn of this.headerConfig.buttons) {
         if (btn.type === 'main') {
           btn.restriction = !this.permission.has(['create_project']);
         } else if (btn.type === 'filter' || btn.type === 'view') {
@@ -70,8 +78,8 @@ export class ProjectinfoComponent {
   isLoading = false;
   viewMode: 'grid' | 'list' = 'grid';
 
-  currentPage: number = 1;
-  totalPages: number = 1;
+  currentPage = 1;
+  totalPages = 1;
 
   statusFilters = {
     active: true,
@@ -103,16 +111,7 @@ export class ProjectinfoComponent {
   }
 
 
-  constructor(
-    private projectService: ProjectDataService,
-    private router: Router,
-    public dialog: MatDialog,
-    private shared: SharedService,
-    private auth: AuthService,
-    private toast: NotificationService,
-    private permission: PermissionsService
-
-  ) {
+  constructor() {
     this.setHeaderViewPermissions();
   }
 
@@ -147,7 +146,7 @@ export class ProjectinfoComponent {
     this.getProjectData(page, this.statusFilters);
   }
 
-  getProjectData(page: number = 1, filter: {
+  getProjectData(page = 1, filter: {
     active: boolean,
     archived: boolean,
     completed: boolean

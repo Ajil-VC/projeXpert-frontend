@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 
@@ -7,10 +7,10 @@ import { environment } from '../../../../../environments/environment';
   providedIn: 'root'
 })
 export class SettingsService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
 
-  updateProfile(formData: FormData, isAdmin: boolean = false): Observable<any> {
+  updateProfile(formData: FormData, isAdmin = false): Observable<any> {
     if (!isAdmin) {
       return this.http.put(`${environment.apiUserUrl}profile`, formData);
     }

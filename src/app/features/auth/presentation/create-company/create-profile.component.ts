@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthFlowService, AuthService } from '../../data/auth.service';
 import { RegisterUseCase } from '../../domain/auth.domain';
@@ -15,18 +15,18 @@ import { NotificationService } from '../../../../core/data/notification.service'
   ]
 })
 export class CreateProfileComponent {
+  private fb = inject(FormBuilder);
+  private getEmail = inject(AuthFlowService);
+  private createProfileInterface = inject(RegisterUseCase);
+  private router = inject(Router);
+  private toast = inject(NotificationService);
 
-  showPassword: boolean = false;
-  isBtnDisabled: boolean = true;
+
+  showPassword = false;
+  isBtnDisabled = true;
   createProfileForm: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private getEmail: AuthFlowService,
-    private createProfileInterface: RegisterUseCase,
-    private router: Router,
-    private toast: NotificationService
-  ) {
+  constructor() {
 
     this.createProfileForm = this.fb.group({
       username: [''],

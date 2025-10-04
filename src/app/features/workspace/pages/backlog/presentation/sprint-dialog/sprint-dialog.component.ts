@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,15 +16,15 @@ import { AuthService } from '../../../../../auth/data/auth.service';
   templateUrl: './sprint-dialog.component.html',
   styleUrl: './sprint-dialog.component.css'
 })
-export class SprintDialogComponent {
+export class SprintDialogComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  dialogRef = inject<MatDialogRef<SprintDialogComponent>>(MatDialogRef);
+  private authSer = inject(AuthService);
+
 
   sprintForm: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<SprintDialogComponent>,
-    private authSer: AuthService
-  ) {
+  constructor() {
     this.sprintForm = this.fb.group({
       sprintName: [''],
       sprintGoal: ['', [Validators.required, this.noWhitespaceValidator()]],

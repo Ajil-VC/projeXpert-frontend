@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -48,27 +48,27 @@ import { ConfirmDialogComponent } from '../../../../../../reusable/confirm-dialo
   templateUrl: './edit-project-modal.component.html',
   styleUrl: './edit-project-modal.component.css'
 })
-export class EditProjectModalComponent {
+export class EditProjectModalComponent implements OnInit {
+  dialogRef = inject<MatDialogRef<EditProjectModalComponent>>(MatDialogRef);
+  data = inject<Project>(MAT_DIALOG_DATA);
+  private editProjectSer = inject(EditProjectUseCase);
+  private toast = inject(NotificationService);
+  private shared = inject(SharedService);
+  private authSer = inject(AuthService);
+  private teamSer = inject(TeamManagementService);
+  private dialog = inject(MatDialog);
+
 
   editProjectForm!: FormGroup;
   newMemberEmailControl = new FormControl('', [Validators.email]);
   newMemberEmail = '';
   selectedRole: string | null = null;
   projectData!: projectView;
-  isLoading: boolean = false;
+  isLoading = false;
 
   roles: Roles[] = [];
 
-  constructor(
-    public dialogRef: MatDialogRef<EditProjectModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Project,
-    private editProjectSer: EditProjectUseCase,
-    private toast: NotificationService,
-    private shared: SharedService,
-    private authSer: AuthService,
-    private teamSer: TeamManagementService,
-    private dialog: MatDialog
-  ) {
+  constructor() {
 
     this.setupProjectDataForView(this.data);
 
@@ -101,7 +101,7 @@ export class EditProjectModalComponent {
       members: [] as { _id: string, email: string; role: Roles }[]
     };
     const d = data?.members as unknown;
-    const mems = d as Array<User> || [];
+    const mems = d as User[] || [];
 
     initData.members = mems.map(ele => {
 

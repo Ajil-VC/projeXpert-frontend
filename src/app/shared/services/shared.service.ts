@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Team } from '../../core/domain/entities/team.model';
 import { Project } from '../../core/domain/entities/project.model';
@@ -12,6 +12,9 @@ import { Sprint } from '../../core/domain/entities/sprint.model';
   providedIn: 'root'
 })
 export class SharedService {
+  private http = inject(HttpClient);
+  private toast = inject(NotificationService);
+
 
   private reloadSubject = new Subject<boolean>();
   reload$ = this.reloadSubject.asObservable();
@@ -20,9 +23,7 @@ export class SharedService {
     this.reloadSubject.next(true);
   }
 
-  constructor(private http: HttpClient, private toast: NotificationService) { }
-
-  activeChatUserId: string = '';
+  activeChatUserId = '';
 
   public curProject = new BehaviorSubject<Project | null>(null);
   public currentPro$ = this.curProject.asObservable();
@@ -40,13 +41,13 @@ export class SharedService {
   public taskUpdateSubject = new Subject<Task>();
   public taskUpdate$ = this.taskUpdateSubject.asObservable();
 
-  getTasksInProject(): Observable<any> {
+  getTasksInProject(): Observable<{ status: boolean, result: any[] }> {
     const projectId = localStorage.getItem('projectId');
     if (!projectId) {
       this.toast.showInfo('Create or select a project');
       return of({ status: false, result: [] });
     }
-    return this.http.get(`${environment.apiUserUrl}tasks?projectId=${projectId}`);
+    return this.http.get<{ status: boolean, result: any }>(`${environment.apiUserUrl}tasks?projectId=${projectId}`);
   }
 
   getTasksInActiveSprints(): Observable<any> {
@@ -61,14 +62,14 @@ export class SharedService {
 
   }
 
-  allSprintDataInProject(): Observable<{ status: boolean, message: string, result: Array<Sprint> | null }> {
+  allSprintDataInProject(): Observable<{ status: boolean, message: string, result: Sprint[] | null }> {
 
     const projectId = localStorage.getItem('projectId');
     if (!projectId) {
       this.toast.showInfo('Create or select a project');
       return of({ status: false, message: '', result: null });
     }
-    return this.http.get<{ status: boolean, message: string, result: Array<Sprint> | null }>(`${environment.apiUserUrl}all-sprints?projectId=${projectId}`);
+    return this.http.get<{ status: boolean, message: string, result: Sprint[] | null }>(`${environment.apiUserUrl}all-sprints?projectId=${projectId}`);
   }
 
   getSprintWithTasks(sprintId: string, activeSprint?: boolean): Observable<{ status: boolean, message: string, result: Sprint, code: string }> {
@@ -106,7 +107,7 @@ export class SharedService {
     const projectId = localStorage.getItem('projectId');
     if (!projectId) {
       this.toast.showInfo('Create or select a project');
-      return new Observable<any>(observer => observer.complete());
+      return EMPTY;
     }
     return this.http.get<{ status: boolean, message: string, data: Team[] }>(`${environment.apiUserUrl}team?projectId=${projectId}`)
 

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { KanbanService } from '../../data/kanban.service';
@@ -27,25 +27,27 @@ import { AuthService } from '../../../../../auth/data/auth.service';
   templateUrl: './sprint-complete.component.html',
   styleUrl: './sprint-complete.component.css'
 })
-export class SprintCompleteComponent {
+export class SprintCompleteComponent implements OnInit {
+  dialogRef = inject<MatDialogRef<SprintCompleteComponent>>(MatDialogRef);
+  data = inject<{
+    groupedTasks: SprintTaskGroup[];
+}>(MAT_DIALOG_DATA);
+  private shared = inject(SharedService);
+  private kanbanSer = inject(KanbanService);
+  private authSer = inject(AuthService);
+
 
   moveToSprintId: string | null = null;
   activeSprints: SprintTaskGroup[] = [];
-  availableSprints: Array<Sprint> = [];
+  availableSprints: Sprint[] = [];
   selectedSprint!: Sprint;
-  isCompleting: boolean = false;
-  incompletedTasks: number = 0;
-  canShow: boolean = false;
+  isCompleting = false;
+  incompletedTasks = 0;
+  canShow = false;
 
-  completedTasksInSelectedSprint: Array<Task> = [];
+  completedTasksInSelectedSprint: Task[] = [];
 
-  constructor(
-    public dialogRef: MatDialogRef<SprintCompleteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { groupedTasks: Array<SprintTaskGroup> },
-    private shared: SharedService,
-    private kanbanSer: KanbanService,
-    private authSer: AuthService
-  ) {
+  constructor() {
     this.activeSprints = this.data.groupedTasks;
   }
 
