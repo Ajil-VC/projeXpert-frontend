@@ -8,10 +8,6 @@ export const forceChangePasswordGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const user = authService.getCurrentUser();
-// console.log(user,'This is user');
-//   if(user?.forceChangePassword){
-//     return router.createUrlTree(['/change-password']);
-//   }
 
   authService.user$.subscribe({
     next: (res) => {

@@ -95,7 +95,7 @@ export class CreateBacklogComponent implements OnChanges, OnInit {
 
               }
             },
-            error: (err) => {
+            error: () => {
               this.toast.showError('Something went wrong while moving tasks.');
             }
           })
@@ -255,7 +255,7 @@ export class CreateBacklogComponent implements OnChanges, OnInit {
         this.filteredIssues()
 
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Something went wrong while creating sprint')
       }
     })

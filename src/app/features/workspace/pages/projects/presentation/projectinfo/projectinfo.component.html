@@ -27,7 +27,9 @@
 
       <!-- Grid View -->
       <div *ngIf="viewMode === 'grid'" class="projects-grid">
-        <div *ngFor="let project of filteredProjects" class="project-card" (click)="editProject($event, project)">
+        <div *ngFor="let project of filteredProjects" class="project-card" (click)="editProject($event, project)"
+          tabindex="0" role="button" (keydown.enter)="editProject($event, project)"
+          (keydown.space)="editProject($event, project)">
 
 
 
@@ -121,7 +123,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let project of filteredProjects">
-              <!-- (click)="openProject(project)" -->
               <td>
                 <div class="project-name-cell">
                   <div class="project-icon">

@@ -106,8 +106,6 @@ export class CompanyComponent implements OnInit, OnDestroy {
       })
   }
 
-  openCompany(company: any) { }
-
   editCompany(event: Event, company: any): void {
 
     event.stopPropagation();

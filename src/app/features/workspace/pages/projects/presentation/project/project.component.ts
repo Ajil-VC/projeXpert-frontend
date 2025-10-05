@@ -92,7 +92,7 @@ export class ProjectComponent implements OnInit {
         return;
 
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt create the project due to some error');
       }
 

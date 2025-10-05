@@ -118,7 +118,7 @@ export class ProjectinfoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setHeaderViewPermissions();
     this.getProjectData(1, this.statusFilters);
-    this.shared.currentPro$.subscribe((project) => {
+    this.shared.currentPro$.subscribe(() => {
       this.projects = [];
       this.setHeaderViewPermissions();
       this.applyFilters();
@@ -129,7 +129,7 @@ export class ProjectinfoComponent implements OnInit, OnDestroy {
     });
 
     this.shared.reload$.subscribe({
-      next: (res) => {
+      next: () => {
         this.setHeaderViewPermissions();
         this.projects = [];
         this.applyFilters();
@@ -250,10 +250,6 @@ export class ProjectinfoComponent implements OnInit, OnDestroy {
 
     this.router.navigate(['/user/create-project']);
 
-  }
-
-  openProject(project: Project): void {
-    // this.router.navigate(['/projects', project]);
   }
 
   editProject(event: Event, project: Project): void {

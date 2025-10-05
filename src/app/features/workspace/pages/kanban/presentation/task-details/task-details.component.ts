@@ -19,7 +19,7 @@ import { NotificationService } from '../../../../../../core/data/notification.se
 import { LoaderComponent } from '../../../../../../core/presentation/loader/loader.component';
 import { LoaderService } from '../../../../../../core/data/loader.service';
 import { ConfirmDialogComponent } from '../../../../../reusable/confirm-dialog/confirm-dialog.component';
-import { catchError, EMPTY, iif, map, of, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, iif, map, of, switchMap } from 'rxjs';
 import { TaskHistory } from '../../../../../../core/domain/entities/taskhistory.model';
 import { Lightbox, LightboxModule } from 'ngx-lightbox';
 
@@ -54,7 +54,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
     daysLeft: string;
     subtaskView: boolean;
     subtasks: Task[];
-}>(MAT_DIALOG_DATA);
+  }>(MAT_DIALOG_DATA);
   private shared = inject(SharedService);
   private kanbanSer = inject(KanbanService);
   private authSer = inject(AuthService);
@@ -112,7 +112,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
         this.teamMembers = res.data;
 
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Error while getting team members.');
       }
     });
@@ -233,7 +233,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
 
           return this.kanbanSer.updateIssueStatus(this.task._id, this.form.value.status).pipe(
             map(() => false),
-            catchError(err => {
+            catchError(() => {
               return of(true);
             }),
             switchMap((skipStatus: boolean) => this.kanbanSer.updateTaskDetails(formData, skipStatus))
@@ -253,7 +253,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
         this.loader.hide();
         return;
       },
-      error: (err) => {
+      error: () => {
         this.loader.hide();
         this.dialogRef.close();
       }
@@ -420,7 +420,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
               this.toast.showSuccess('Task removed succesfully.');
             }
           },
-          error: (err) => {
+          error: () => {
             this.toast.showError('Couldnt remove the task.');
           }
         })
@@ -440,7 +440,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
           this.loader.hide();
         }
       },
-      error: (err) => {
+      error: () => {
         this.loader.hide();
         this.toast.showError('Couldnt create subtask.');
       }
@@ -506,7 +506,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
               this.loader.hide();
             }
           },
-          error: (err) => {
+          error: () => {
             this.loader.hide();
             this.toast.showError('Please try again, Couldnt assign user to the particular task.');
           }
@@ -582,7 +582,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit {
         this.setTaskTitle();
         this.cd.detectChanges();
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt retrieve the history.');
       }
     })

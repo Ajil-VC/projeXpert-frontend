@@ -18,6 +18,7 @@ import { Notification } from '../../../core/domain/entities/notification.model';
 import { NotificationService } from '../../../core/data/notification.service';
 import { ProjectDataService } from '../../../shared/services/project-data.service';
 import { PermissionsService } from '../../../shared/utils/permissions.service';
+import { WorkspaceConverter } from '../../../shared/utils/converter';
 
 @Component({
   selector: 'app-header',
@@ -256,12 +257,14 @@ export class HeaderComponent implements OnInit {
     this.layoutSer.selectWorkspace(workspace._id as string).subscribe({
       next: (res) => {
 
-        this.availableProjects = res.result?.projects as Project[] | [];
+        this.availableProjects = res.result?.projects || [];
         this.shared.setProject(res.result?.projects[0]?._id);
-        this.authService.setCurrentWorkSpace(res.result);
+        const converter = new WorkspaceConverter();
+        const workspace = converter.convert(res.result);
+        this.authService.setCurrentWorkSpace(workspace);
 
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt change the workspace.');
       }
     })

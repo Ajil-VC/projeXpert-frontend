@@ -3,7 +3,6 @@ import { CommentService } from './comment.service';
 import { Comment, Task } from '../../../../core/domain/entities/task.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../../core/domain/entities/user.model';
 
 @Component({
   selector: 'app-comment-section',
@@ -37,9 +36,6 @@ export class CommentSectionComponent implements OnInit {
         if (res.status) {
           this.comments = res.result;
         }
-      },
-      error: (err) => {
-
       }
     });
   }
@@ -62,9 +58,6 @@ export class CommentSectionComponent implements OnInit {
       next: (res: { status: boolean, result: Comment }) => {
         if (res.status)
           this.comments.unshift(res.result);
-          console.log(res)
-      },
-      error: (err) => {
 
       }
     });

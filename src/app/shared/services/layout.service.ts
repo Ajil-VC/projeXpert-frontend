@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../features/auth/data/auth.service';
+import { Workspace } from '../../core/domain/entities/workspace.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,9 @@ export class LayoutService {
     return this.http.post(`${environment.apiUserUrl}workspace`, { workspaceName });
   }
 
-  selectWorkspace(workspaceId: string): Observable<any> {
-    return this.http.get(`${environment.apiUserUrl}workspace?workspace_id=${workspaceId}`);
+
+  selectWorkspace(workspaceId: string): Observable<{ result: Workspace<true>, message: string, status: boolean }> {
+    return this.http.get<{ result: Workspace<true>, message: string, status: boolean }>(`${environment.apiUserUrl}workspace?workspace_id=${workspaceId}`);
   }
 
 

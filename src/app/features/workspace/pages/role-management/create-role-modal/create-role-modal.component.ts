@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogContent, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
@@ -39,7 +39,7 @@ export class CreateRoleModalComponent implements OnInit {
   dialogRef = inject<MatDialogRef<CreateRoleModalComponent>>(MatDialogRef);
   data = inject<{
     role: Roles;
-}>(MAT_DIALOG_DATA);
+  }>(MAT_DIALOG_DATA);
   private fb = inject(FormBuilder);
   private teamSer = inject(TeamManagementService);
   private toast = inject(NotificationService);
@@ -99,7 +99,7 @@ export class CreateRoleModalComponent implements OnInit {
 
       this.teamSer.createOrUpdateRole(formData, this.data.role).subscribe({
         next: (res) => {
-    
+
           if (res.status) {
             this.toast.showSuccess(res.message);
             this.dialogRef.close(res);

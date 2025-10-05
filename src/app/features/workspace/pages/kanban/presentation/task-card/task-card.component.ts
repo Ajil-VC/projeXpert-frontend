@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, OnChanges, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoryPoint, Task } from '../../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../../core/domain/entities/sprint.model';
@@ -13,7 +13,7 @@ import { BacklogService } from '../../../backlog/data/backlog.service';
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.css'
 })
-export class TaskCardComponent implements OnChanges, OnInit {
+export class TaskCardComponent implements OnChanges {
   private dialog = inject(MatDialog);
   private _backlogSer = inject(BacklogService);
 
@@ -80,13 +80,6 @@ export class TaskCardComponent implements OnChanges, OnInit {
     }
     return true;
   }
-
-
-  ngOnInit() {
-    // this.task.
-    // console.log(this.task)
-  }
-
 
 
   taskDetails(subtaskView = false): void {

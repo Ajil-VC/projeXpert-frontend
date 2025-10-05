@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { MatSlideToggle, MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
@@ -73,7 +72,7 @@ export class TeamManagementComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.roles = res.result;
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt retrieve the roles.');
       }
     })
@@ -119,7 +118,7 @@ export class TeamManagementComponent implements OnInit, OnDestroy {
     return user.profilePicUrl.url;
   }
 
-  compareRoles(role1: any, role2: any): boolean {
+  compareRoles(role1: Roles, role2: Roles): boolean {
     return role1 && role2 ? role1._id === role2._id : role1 === role2;
   }
 
@@ -135,7 +134,7 @@ export class TeamManagementComponent implements OnInit, OnDestroy {
 
         }
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt retrieve users data');
       }
     })
@@ -156,11 +155,7 @@ export class TeamManagementComponent implements OnInit, OnDestroy {
     if (typeof user.role !== 'string') {
 
       this.teamSer.updateUserRoleAndStatus(user._id, user.role._id, blockedStatus).subscribe({
-        next: (res) => {
-          if (res.status) {
-          }
-        },
-        error: (err) => {
+        error: () => {
           this.toast.showError('Couldnt update user.');
         }
       })

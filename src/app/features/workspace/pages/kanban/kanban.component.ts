@@ -21,7 +21,7 @@ import { LoaderService } from '../../../../core/data/loader.service';
 import { Roles } from '../../../../core/domain/entities/roles.model';
 import { PermissionsService } from '../../../../shared/utils/permissions.service';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-kanban',
@@ -189,7 +189,7 @@ export class KanbanComponent implements OnInit {
             droppedTask.status = event.container.id;
           }
         },
-        error: (err) => {
+        error: () => {
           this.loader.hide();
           this.toast.showError('Failed to update the task status');
         }
@@ -263,7 +263,7 @@ export class KanbanComponent implements OnInit {
           this.loader.hide();
         }
       },
-      error: (err) => {
+      error: () => {
         this.selectedSprint = null;
         this.loader.hide();
       }
@@ -300,7 +300,7 @@ export class KanbanComponent implements OnInit {
         this.seperatingOnStatus();
         this.loader.hide();
       },
-      error: (err) => {
+      error: () => {
         this.loader.hide();
         this.toast.showError('Failed to get tasks in active sprint.');
       }
@@ -326,7 +326,7 @@ export class KanbanComponent implements OnInit {
 
     this.refreshKanbanView();
 
-    this.shared.currentPro$.subscribe((project) => {
+    this.shared.currentPro$.subscribe(() => {
 
       this.refreshKanbanView();
 

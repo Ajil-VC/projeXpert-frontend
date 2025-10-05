@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
-import { TransformButtonComponent } from "../transform-button/transform-button.component";
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { FormsModule } from '@angular/forms';
 import { BacklogService } from '../../data/backlog.service';
@@ -64,10 +63,7 @@ export class EpicsComponent {
   addEpicToList(res: Task) {
     this.epics.push(res);
   }
-  deleteProject(epic: any, epicId: string) {
-
-    console.log(epicId);
-  }
+  
   updateCheckStatus(epicId: string | null, event: any) {
     if (!epicId) {
       this.checkedEpics.clear();

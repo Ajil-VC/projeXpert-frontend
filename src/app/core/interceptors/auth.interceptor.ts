@@ -3,7 +3,6 @@ import { inject, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../features/auth/data/auth.service';
-import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from '../data/notification.service';
 import { LoaderService } from '../data/loader.service';
 import { PermissionsService } from '../../shared/utils/permissions.service';
@@ -51,7 +50,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             });
             return next(newReq);
           }),
-          catchError(refreshError => {
+          catchError(() => {
             // Refresh token is also invalid => logout and clear everything
             authService.logout();
             return throwError(() => new Error('Session expired. Please log in again.'));

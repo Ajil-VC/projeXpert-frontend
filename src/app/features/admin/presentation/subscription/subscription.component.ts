@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { AdminService } from '../../data/admin.service';
-import { SubscriptionPlan } from '../../../../core/domain/entities/subscription.model';
 import { HeaderConfig } from '../../../../core/domain/entities/UI Interface/header.interface';
 import { ContentHeaderComponent } from '../../../reusable/content-header/content-header.component';
 import { ButtonType } from '../../../../core/domain/entities/UI Interface/button.interface';

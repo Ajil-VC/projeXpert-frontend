@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { OtpUseCase, RegisterUseCase } from '../domain/auth.domain';
 import { User } from '../../../core/domain/entities/user.model';
 import { Workspace } from '../../../core/domain/entities/workspace.model';
-import { BehaviorSubject, Observable, of, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { AuthResponse } from '../domain/auth.domain';

@@ -2,7 +2,8 @@
 
 <div class="task-header">
     <h2 mat-dialog-title>{{taskTitle}}</h2>
-    <span (click)="toggleSubtasksView()" *ngIf="canShowSubtaskMenu()">
+    <span (click)="toggleSubtasksView()" *ngIf="canShowSubtaskMenu()" tabindex="0" role="button"
+        (keydown.enter)="toggleSubtasksView()" (keydown.space)="toggleSubtasksView()">
         <i class="fas fa-indent"></i>
         Sub tasks({{subTasks.length}})
     </span>
@@ -73,7 +74,8 @@
             <div class="members-list" *ngIf="userSearchTerm && userSearchTerm.trim().length > 0">
                 <div class="member-row"
                     *ngFor="let user of teamMembers | search:userSearchTerm:['email','name']; let i = index;"
-                    (click)="assignUser(user)">
+                    (click)="assignUser(user)" (keydown.enter)="assignUser(user)" (keydown.space)="assignUser(user)"
+                    tabindex="0" role="button">
                     <span>{{ user.email }}</span>
                     <span>{{user.role.name}}</span>
 
@@ -159,7 +161,8 @@
         <div class="attachment-thumbnails" *ngIf="task?.attachments?.length">
             <ng-container>
                 <div *ngFor="let image of task.attachments ; let i = index" class="thumbnail-wrapper">
-                    <img [src]="image.url" [alt]="image.public_id" class="thumbnail" (click)="open(i)" />
+                    <img [src]="image.url" [alt]="image.public_id" class="thumbnail" (click)="open(i)"
+                        (keydown.enter)="open(i)" (keydown.space)="open(i)" tabindex="0" role="button" />
                     <button (click)="removeAttachment(image.public_id)">Remove</button>
                 </div>
             </ng-container>

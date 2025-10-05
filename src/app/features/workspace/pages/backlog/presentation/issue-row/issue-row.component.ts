@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, SimpleChanges, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoryPoint, Task } from '../../../../../../core/domain/entities/task.model';
 import { SharedService } from '../../../../../../shared/services/shared.service';
@@ -103,8 +103,7 @@ export class IssueRowComponent implements OnInit {
 
   onStatusChange(status: string) {
     this.backlogSer.updateIssueStatus(this.issue._id, status).subscribe({
-      next: (res) => {
-      },
+
       error: (err) => {
 
         if (err['message'] === 'Subtasks should be completed before moving the task to done') {

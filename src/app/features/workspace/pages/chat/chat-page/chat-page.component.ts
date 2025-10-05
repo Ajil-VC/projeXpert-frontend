@@ -54,7 +54,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           this.teamMembers = res.data;
         }
       },
-      error: (err) => {
+      error: () => {
         console.error('Error occurred while trying to get team members.');
       }
     });
@@ -72,7 +72,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           this.teamMembers = res.data;
         }
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Error occurred while trying to get team members.');
       }
     });

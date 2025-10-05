@@ -13,8 +13,6 @@ export class GuardsService {
 
   getWorkSpaceData() {
 
-    const projectId = localStorage.getItem('projectId');
-
     return this.http.get<AuthResponse>(`${environment.apiUserUrl}init-data`);
   }
 

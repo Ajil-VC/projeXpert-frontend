@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { SharedService } from '../../../../../../shared/services/shared.service';
 import { KanbanService } from '../../data/kanban.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
@@ -31,7 +31,7 @@ export class SprintCompleteComponent implements OnInit {
   dialogRef = inject<MatDialogRef<SprintCompleteComponent>>(MatDialogRef);
   data = inject<{
     groupedTasks: SprintTaskGroup[];
-}>(MAT_DIALOG_DATA);
+  }>(MAT_DIALOG_DATA);
   private shared = inject(SharedService);
   private kanbanSer = inject(KanbanService);
   private authSer = inject(AuthService);
@@ -76,7 +76,7 @@ export class SprintCompleteComponent implements OnInit {
       return;
     } else {
 
-      for (let task of result?.tasks) {
+      for (let task of result.tasks) {
         task = task as Task;
         if (task.status !== 'done') {
           this.incompletedTasks++;

@@ -162,14 +162,13 @@ export class RevenueComponent implements OnInit {
           }
         } else if (filter === 'date') {
           if (this.chart) {
-            const length = res.result.revenueData.length;
             this.lineChartData.datasets[0].data = res.result.revenueData.map((ele: { date: Date, totalAmount: number }) => ele.totalAmount);
             this.lineChartData.labels = res.result.revenueData.map((ele: { date: Date, totalAmount: number }) => ele.date);
             this.chart.update();
           }
         }
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt retrieve revenue report.');
       }
     })

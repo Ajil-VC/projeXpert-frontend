@@ -46,7 +46,6 @@ export class EditCompanyModalComponent implements OnInit {
   editCompanyForm!: FormGroup;
   newMemberEmailControl = new FormControl('', [Validators.email]);
 
-  removeUser(i: any, userId: any) { }
 
   ngOnInit() {
     this.authSer.logout$.subscribe({
@@ -68,9 +67,6 @@ export class EditCompanyModalComponent implements OnInit {
     this.adminService.blockOrUnblockCompany(company._id, company.isBlocked).subscribe({
       next: (res) => {
         console.log(res);
-      },
-      error: (err) => {
-        console.error('Error occured while changing company status.', err);
       }
     })
   }
@@ -80,9 +76,6 @@ export class EditCompanyModalComponent implements OnInit {
     this.adminService.blockOrUnblockUser(user._id, user.isBlocked).subscribe({
       next: (res) => {
         console.log(res, 'res');
-      },
-      error: (err) => {
-        console.error('Error occured while changing user status.');
       }
     })
   }

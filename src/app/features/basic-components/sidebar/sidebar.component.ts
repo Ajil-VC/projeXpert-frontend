@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/data/auth.service';
 import { Project } from '../../../core/domain/entities/project.model';
 import { SharedService } from '../../../shared/services/shared.service';
-import { User } from '../../../core/domain/entities/user.model';
 import { NotificationService } from '../../../core/data/notification.service';
 import { ProjectDataService } from '../../../shared/services/project-data.service';
 

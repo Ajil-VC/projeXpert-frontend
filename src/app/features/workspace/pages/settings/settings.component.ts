@@ -143,12 +143,12 @@ export class SettingsComponent implements OnInit {
 
     this.setting.updateProfile(formData, this.systemRole === 'platform-admin')
       .subscribe({
-        next: (response: any) => {
+        next: () => {
           this.toast.showSuccess('Profile updated successfully');
           this.isLoading = false;
           this.selectedFile = null;
         },
-        error: (error) => {
+        error: () => {
           this.toast.showError('Failed to update profile. Please try again.');
           this.isLoading = false;
         }

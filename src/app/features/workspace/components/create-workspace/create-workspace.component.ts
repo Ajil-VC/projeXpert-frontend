@@ -1,10 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Project } from '../../../../core/domain/entities/project.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProjectsUseCase } from '../../pages/projects/domain/projects.domain';
-import { Router } from '@angular/router';
-import { LayoutService } from '../../../../shared/services/layout.service';
-import { Company } from '../../../../core/domain/entities/company.model';
+
 import { CommonModule } from '@angular/common';
 import { MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';

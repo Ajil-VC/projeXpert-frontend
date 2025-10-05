@@ -169,7 +169,7 @@ export class SprintComponent implements OnChanges, OnInit {
 
         this.filteredIssues();
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Error occured while getting selected epics');
       }
     });
@@ -212,7 +212,7 @@ export class SprintComponent implements OnChanges, OnInit {
     if (this.selectedEpics.size === 0) {
 
       const filtered = this.issues.filter(issue => !!issue.sprintId);
-      filtered.forEach(issue => {
+      filtered.forEach(() => {
         // issue.assignedTo = issue.assignedTo as Team;
         this.issueCount++;
       });

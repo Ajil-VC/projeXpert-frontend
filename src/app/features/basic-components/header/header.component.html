@@ -92,8 +92,8 @@
           </div>
 
           <ul>
-            <li *ngIf="notificationCount == 0">No new notifications</li>
-            <li [ngClass]="note.read == false ? 'unread' : ''" *ngFor="let note of notifications"
+            <li *ngIf="notificationCount === 0">No new notifications</li>
+            <li [ngClass]="note.read === false ? 'unread' : ''" *ngFor="let note of notifications"
               (click)="readNotification(note,false)">
               {{ note.message }}
             </li>

@@ -3,11 +3,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
-import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Task } from '../../../../../../core/domain/entities/task.model';
 import { AuthService } from '../../../../../auth/data/auth.service';
-import { MatOption, MatOptionModule } from '@angular/material/core';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
@@ -23,7 +23,7 @@ export class CreateEpicComponent implements OnInit {
   dialogRef = inject<MatDialogRef<CreateEpicComponent>>(MatDialogRef);
   data = inject<{
     issue: Task;
-}>(MAT_DIALOG_DATA);
+  }>(MAT_DIALOG_DATA);
   private authSer = inject(AuthService);
 
 

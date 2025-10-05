@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
-import { StoryPoint, Task } from '../../../../../core/domain/entities/task.model';
+import { Task } from '../../../../../core/domain/entities/task.model';
 import { Sprint } from '../../../../../core/domain/entities/sprint.model';
 import { LayoutService } from '../../../../../shared/services/layout.service';
 import { NotificationService } from '../../../../../core/data/notification.service';

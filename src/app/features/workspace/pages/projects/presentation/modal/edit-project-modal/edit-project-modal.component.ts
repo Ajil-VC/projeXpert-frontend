@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angu
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,11 +16,9 @@ import { EditProjectService } from '../../../data/edit-project.service';
 import { LoaderComponent } from '../../../../../../../core/presentation/loader/loader.component';
 import { NotificationService } from '../../../../../../../core/data/notification.service';
 import { SharedService } from '../../../../../../../shared/services/shared.service';
-import { ProjectService } from '../../../data/project.service';
 import { AuthService } from '../../../../../../auth/data/auth.service';
 import { TeamManagementService } from '../../../../team-management/team-management.service';
 import { Roles } from '../../../../../../../core/domain/entities/roles.model';
-import { Team } from '../../../../../../../core/domain/entities/team.model';
 import { ConfirmDialogComponent } from '../../../../../../reusable/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -83,7 +81,7 @@ export class EditProjectModalComponent implements OnInit {
       next: (res) => {
         this.roles = res.result;
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt retrieve the roles.');
       }
     });
@@ -170,8 +168,8 @@ export class EditProjectModalComponent implements OnInit {
             this.isLoading = false;
             this.toast.showSuccess('User added to the project.');
           },
-          error: (err) => {
-            this.isLoading = false;   
+          error: () => {
+            this.isLoading = false;
           }
         })
         this.newMemberEmail = '';
@@ -201,7 +199,7 @@ export class EditProjectModalComponent implements OnInit {
 
         if (!this.projectData._id) throw new Error('Project Id not exist');
         this.editProjectSer.removeMember(member._id, this.projectData._id).subscribe({
-          next: (res) => {
+          next: () => {
 
             this.projectData.members = updatedMembers;
           },
@@ -214,7 +212,7 @@ export class EditProjectModalComponent implements OnInit {
 
   }
 
-  trackByIndex(index: number, item: any) {
+  trackByIndex(index: number) {
     return index;
   }
 

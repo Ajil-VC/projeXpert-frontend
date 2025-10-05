@@ -31,7 +31,9 @@
                     <div class="profile-picture-wrapper">
                         <img [src]="profilePic" alt="Profile Picture" class="profile-picture"
                             (error)="onProfilePictureError($event)" />
-                        <div class="profile-picture-overlay" (click)="triggerFileInput()">
+                        <div class="profile-picture-overlay" (click)="triggerFileInput()"
+                            (keydown.enter)="triggerFileInput()" (keydown.space)="triggerFileInput()" tabindex="0"
+                            role="button">
                             <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path
@@ -51,7 +53,7 @@
 
             <!-- Name Section -->
             <div class="form-group">
-                <label class="form-label">Full Name</label>
+                <span class="form-label">Full Name</span>
                 <div class="name-input-container">
                     <div *ngIf="!isEditingName" class="name-display">
                         <span class="name-text">{{ user.name }}</span>

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { BacklogHeaderComponent } from "../backlog-header/backlog-header.component";
 import { EpicsComponent } from "../epics/epics.component";
 import { SprintComponent } from '../sprint/sprint.component';
 import { CreateBacklogComponent } from "../create-backlog/create-backlog.component";
@@ -78,7 +77,7 @@ export class BacklogComponent implements OnInit, OnDestroy {
 
         this.loader.hide();
       },
-      error: (err) => {
+      error: () => {
 
         this.loader.hide();
         this.toast.showError('Failed to refresh backlog data');

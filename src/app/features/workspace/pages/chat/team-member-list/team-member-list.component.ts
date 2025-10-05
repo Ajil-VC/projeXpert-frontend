@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnChanges, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, OnDestroy, inject } from '@angular/core';
 import { Team } from '../../../../../core/domain/entities/team.model';
 
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,7 @@ import { Conversation } from '../../../../../core/domain/entities/conversation.m
 import { Message } from '../../../../../core/domain/entities/message.model';
 import { AuthService } from '../../../../auth/data/auth.service';
 import { User } from '../../../../../core/domain/entities/user.model';
-import { combineLatest, debounceTime, distinctUntilChanged, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith, Subject, takeUntil } from 'rxjs';
 import { SocketService } from '../../../../../shared/services/socket.service';
 import { SharedService } from '../../../../../shared/services/shared.service';
 
@@ -75,7 +75,7 @@ export class TeamMemberListComponent implements OnChanges, OnInit, OnDestroy {
 
     this.refreshChatView();
 
-    this.sharedSer.currentPro$.subscribe((project) => {
+    this.sharedSer.currentPro$.subscribe(() => {
 
       this.refreshChatView();
 

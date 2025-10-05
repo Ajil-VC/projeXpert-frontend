@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { LayoutService } from '../../../../../../shared/services/layout.service';
 import { BacklogService } from '../../data/backlog.service';
-import { Task } from '../../../../../../core/domain/entities/task.model';
 
 @Component({
   selector: 'app-transform-button',

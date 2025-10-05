@@ -24,8 +24,8 @@
         <ng-container *ngIf="!isLoading && companyData.length > 0">
             <!-- Grid View -->
             <div *ngIf="viewMode === 'grid'" class="companies-grid">
-                <div *ngFor="let company of companyData" class="company-card" (click)="openCompany(company)">
-                    <div class="company-header">
+                <div *ngFor="let company of companyData" class="company-card">
+                    <div class=" company-header">
                         <div class="company-icon" [style.background-color]="'#36b37e'">
                             {{ company.companyDetails.name.charAt(0).toUpperCase() }}
                         </div>

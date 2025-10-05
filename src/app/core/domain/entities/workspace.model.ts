@@ -1,8 +1,10 @@
-export interface Workspace {
+import { Project } from "./project.model";
+
+export interface Workspace<TPopulated extends boolean = false> {
     _id: string;
     name: string;
     members: string[];
     companyId: string;
-    projects: string[];
+    projects: TPopulated extends true ? Project[] : string[];
     currentProject: string;
 }

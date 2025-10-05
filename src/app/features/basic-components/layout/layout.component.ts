@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { AuthService } from '../../auth/data/auth.service';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SharedService } from '../../../shared/services/shared.service';
 import { SocketService } from '../../../shared/services/socket.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';

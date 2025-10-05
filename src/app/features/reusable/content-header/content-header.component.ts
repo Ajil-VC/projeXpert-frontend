@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, OnDestroy, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy, inject } from '@angular/core';
 import { HeaderConfig } from '../../../core/domain/entities/UI Interface/header.interface';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -117,13 +117,13 @@ export class ContentHeaderComponent implements OnDestroy {
       if (selected) {
         if (selected === 'board' || selected === 'sprint_report') {
           this.boardView.viewType = selected;
-         this.clickedBtn = {
-          triggeredFor :this.headerConfig.title,
-          type:'select',
-          action:{
-            viewType: selected
+          this.clickedBtn = {
+            triggeredFor: this.headerConfig.title,
+            type: 'select',
+            action: {
+              viewType: selected
+            }
           }
-         }
         }
       }
 

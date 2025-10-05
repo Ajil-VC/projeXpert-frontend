@@ -45,7 +45,7 @@ export class SubscriptionComponent implements OnInit {
         }
         this.isLoading = false;
       },
-      error: (err) => {
+      error: () => {
         this.toast.showInfo('It seems you havnt subscribed to any plan');
         this.isLoading = false;
       }
@@ -65,7 +65,7 @@ export class SubscriptionComponent implements OnInit {
           this.isButtonDisabled = false;
         }
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Something went wrong during subscription.');
         this.isButtonDisabled = false;
       }

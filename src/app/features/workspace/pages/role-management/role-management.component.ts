@@ -102,13 +102,13 @@ export class RoleManagementComponent implements OnInit {
         this.roles = res.result;
         this.filteredRoles = this.roles;
       },
-      error: (err) => {
+      error: () => {
         this.toast.showError('Couldnt retrieve the roles.');
       }
     });
 
     this.shared.reload$.subscribe({
-      next: (res) => {
+      next: () => {
         this.setHeaderViewPermissions();
         if (!this.permission.has(['assign_role'])) {
           this.roles = [];

@@ -149,7 +149,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loader.hide();
 
       },
-      error: (err) => {
+      error: () => {
         this.loader.hide();
         this.toast.showError('Couldnt initialize dashboard.');
       }
@@ -162,7 +162,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loader.hide();
 
       },
-      error: (err) => {
+      error: () => {
         this.loader.hide();
       }
     })
