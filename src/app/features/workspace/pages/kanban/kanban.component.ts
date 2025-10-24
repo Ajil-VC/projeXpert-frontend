@@ -22,6 +22,7 @@ import { Roles } from '../../../../core/domain/entities/roles.model';
 import { PermissionsService } from '../../../../shared/utils/permissions.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
+import { ConfirmDialogComponent } from '../../../reusable/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-kanban',
@@ -165,36 +166,84 @@ export class KanbanComponent implements OnInit {
   onDrop(event: CdkDragDrop<any[]>) {
     // this.loadService.
     const droppedTask = event.item.data;
-    this.loader.show();
 
     if (event.previousContainer === event.container) {
       // Reorder in same column
-      this.loader.hide();
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
 
-      // droppedTask.status = this.getStatusByContainer(event.container.id);
-      this.backlogSer.updateIssueStatus(droppedTask._id, event.container.id).subscribe({
-        next: (res) => {
-          if ('status' in res && res.status === true) {
+      if (event.container.id === 'done') {
 
-            this.loader.hide();
-            transferArrayItem(
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: '400px',
+          data: {
+            title: 'Heads Up!!',
+            message: "This action cannot be undone. Are you sure to move item into done?",
+            confirmButton: 'Yes',
+            cancelButton: 'Cancel'
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // droppedTask.status = this.getStatusByContainer(event.container.id);
+            this.updateTaskStatus(
+              droppedTask._id, event.container.id,
               event.previousContainer.data,
               event.container.data,
               event.previousIndex,
-              event.currentIndex
-            );
-
-            droppedTask.status = event.container.id;
+              event.currentIndex,
+              droppedTask.status,
+              event.container.id
+            )
           }
-        },
-        error: () => {
-          this.loader.hide();
-          this.toast.showError('Failed to update the task status');
-        }
-      });
+        });
+      } else {
+        this.updateTaskStatus(
+          droppedTask._id, event.container.id,
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+          droppedTask.status,
+          event.container.id
+        )
+      }
+
+
+
     }
+  }
+
+  updateTaskStatus(
+    taskId: string, status: string,
+    previousContainerData: any, containerData: any,
+    previousIndex: number, currentIndex: number,
+    droppedTaskStatus: string, containerId: string
+  ) {
+
+    this.loader.show();
+    this.backlogSer.updateIssueStatus(taskId, status).subscribe({
+      next: (res) => {
+        if ('status' in res && res.status === true) {
+
+          this.loader.hide();
+          transferArrayItem(
+            previousContainerData,
+            containerData,
+            previousIndex,
+            currentIndex
+          );
+
+          droppedTaskStatus = containerId;
+        }
+      },
+      error: (err) => {
+
+        this.loader.hide();
+        this.toast.showError(err.error.message);
+      }
+    });
   }
 
 
