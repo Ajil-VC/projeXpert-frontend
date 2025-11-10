@@ -45,6 +45,7 @@ export class CreateBacklogComponent implements OnChanges, OnInit {
 
   issueCreationButton = 'backlog';
   isBacklog = false;
+  buttonClicked: boolean = false;
 
   onDrop(event: CdkDragDrop<Task[]>) {
 
@@ -232,8 +233,10 @@ export class CreateBacklogComponent implements OnChanges, OnInit {
   };
 
   createSprint() {
+    this.buttonClicked = true;
     const issueIds = Array.from(this.selectedIssue);
     if (issueIds.length === 0) {
+      this.buttonClicked = false;
       this.toast.showError('Select issues', 'Heads Up');
       return;
     };
@@ -253,10 +256,11 @@ export class CreateBacklogComponent implements OnChanges, OnInit {
 
         this.selectedIssue.clear();
         this.filteredIssues()
-
+        this.buttonClicked = false;
       },
       error: () => {
         this.toast.showError('Something went wrong while creating sprint')
+        this.buttonClicked = false;
       }
     })
   };
