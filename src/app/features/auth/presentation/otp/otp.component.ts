@@ -22,7 +22,7 @@ export class OtpComponent implements OnInit {
   private router = inject(Router);
 
 
-  timeLeft = 15;
+  timeLeft = 60;
   timerInterval: any;
   isBtnDisabled = false;
   isLinkVisible = true;
